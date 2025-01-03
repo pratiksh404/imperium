@@ -1,6 +1,6 @@
 <template>
     <!-- Page Header -->
-    <PageHeader :page-title="pageTitle" :breadcrumbs="breadcrumbs" />
+    <PageHeader :title="title" :nav="nav" />
     <!-- Page Content -->
     <section id="page-content" class="grow">
         <slot />
@@ -10,11 +10,11 @@
 import PageHeader from '@/Layouts/Partials/PageHeader.vue';
 
 const props = defineProps({
-    pageTitle: {
+    title: {
         type: String,
         required: false,
     },
-    breadcrumbs: {
+    nav: {
         type: Array,
         required: false,
         default: () => [],

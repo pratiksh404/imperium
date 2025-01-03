@@ -7,8 +7,11 @@ import { createInertiaApp, Head, Link } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
+import { createPinia } from 'pinia'
+
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
+import ConfirmationService from 'primevue/confirmationservice';
 import Tooltip from 'primevue/tooltip';
 import FocusTrap from 'primevue/focustrap';
 
@@ -23,6 +26,8 @@ const darkMode = useDark(); // set Light/Dark Mode
 // App Layout
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
+const pinia = createPinia()
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) =>
@@ -31,7 +36,9 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.vue')
         ).then((page) => {
             // Set the default layout if not explicitly defined
-            page.default.layout = page.default.layout || AuthenticatedLayout;
+            if (name.startsWith('Admin/')) {
+                page.default.layout = page.default.layout || AuthenticatedLayout;
+            }
             return page;
         }),
     setup({ el, App, props, plugin }) {
@@ -39,10 +46,12 @@ createInertiaApp({
             .provide('darkMode', darkMode)
             .use(plugin)
             .use(ZiggyVue, Ziggy)
+            .use(pinia)
             .use(PrimeVue, {
                 theme: customThemePreset,
             })
             .use(ToastService)
+            .use(ConfirmationService)
             .component('Head', Head)
             .component('Link', Link)
             .component('Container', Container)

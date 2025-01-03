@@ -40,5 +40,11 @@ export default ({ mode }) => {
         preview: {
             port: devPort,
         },
+        resolve: {
+            alias: {
+                '@assets': '/resources/', // Update this with the correct path to your images
+                '@images': '/resources/images/', // Update this with the correct path to your images
+            },
+        },
     });
 };
