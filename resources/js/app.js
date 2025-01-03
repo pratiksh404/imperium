@@ -20,13 +20,20 @@ import Container from './Components/Container.vue';
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 const darkMode = useDark(); // set Light/Dark Mode
 
+// App Layout
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.vue`,
             import.meta.glob('./Pages/**/*.vue')
-        ),
+        ).then((page) => {
+            // Set the default layout if not explicitly defined
+            page.default.layout = page.default.layout || AuthenticatedLayout;
+            return page;
+        }),
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .provide('darkMode', darkMode)
