@@ -10,6 +10,7 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
 import Tooltip from 'primevue/tooltip';
+import FocusTrap from 'primevue/focustrap';
 
 import customThemePreset from '@/theme-preset.js';
 import { useDark } from '@vueuse/core';
@@ -39,6 +40,7 @@ createInertiaApp({
             .component('Link', Link)
             .component('Container', Container)
             .directive('tooltip', Tooltip)
+            .directive('focustrap', FocusTrap)
             .mount(el);
     },
     progress: {
