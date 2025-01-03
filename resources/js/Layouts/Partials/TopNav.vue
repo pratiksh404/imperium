@@ -14,7 +14,7 @@ const userMenu = useTemplateRef('user-menu');
 const userMenuItems = [
     {
         label: 'Profile',
-        url: route('profile.edit'),
+        route: route('profile.edit'),
         icon: 'pi pi-fw pi-user',
     },
     {

@@ -32,8 +32,6 @@ class HandleInertiaRequests extends Middleware
     {
         if (Auth::guard('web')->check()) {
             $authenticatedUser = $request->user('web');
-        } elseif (Auth::guard('admin')->check()) {
-            $authenticatedUser = $request->user('admin');
         } else {
             $authenticatedUser = null;
         }
