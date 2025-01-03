@@ -1,10 +1,11 @@
 <script setup>
 import { ref, useTemplateRef, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+
 import MobileSidebarNavDrawer from './Partials/MobileSidebarNavDrawer.vue';
-import TopNav from './Partials/TopNav.vue';
+import TopMenuBar from './Partials/TopMenuBar.vue';
 import Footer from './Partials/Footer.vue';
-import SideMenuItems from './Partials/SideMenuItems.vue';
+import SideMenu from './Partials/SideMenu.vue';
 
 
 const page = usePage();
@@ -26,14 +27,14 @@ onMounted(() => {
     <Teleport to="body">
         <Toast position="top-center" />
         <MobileSidebarNavDrawer v-model="navDrawerOpen">
-            <SideMenuItems />
+            <SideMenu />
         </MobileSidebarNavDrawer>
     </Teleport>
 
     <div class="h-screen flex flex-col">
         <header id="site-header" ref="site-header" class="block lg:fixed top-0 left-0 right-0 z-50">
             <!-- Main Nav -->
-            <TopNav @open-nav="navDrawerOpen = true" />
+            <TopMenuBar @open-nav="navDrawerOpen = true" />
         </header>
 
         <main class="flex-1">
@@ -43,7 +44,7 @@ onMounted(() => {
                 `top-[${headerHeight}]`,
             ]">
                 <div class="w-full px-8 py-6">
-                    <SideMenuItems />
+                    <SideMenu />
                 </div>
             </aside>
 
