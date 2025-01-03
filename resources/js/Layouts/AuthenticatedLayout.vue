@@ -25,7 +25,7 @@ onMounted(() => {
 
 <template>
     <Teleport to="body">
-        <Toast position="top-center" />
+        <Toast position="bottom-left" />
         <MobileSidebarNavDrawer v-model="navDrawerOpen">
             <SideMenu />
         </MobileSidebarNavDrawer>

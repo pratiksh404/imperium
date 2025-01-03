@@ -27,7 +27,7 @@ const breadcrumbs = [
 
     <Head :title="pageTitle" />
 
-    <ContentLayout :page-title="pageTitle" :breadcrumbs="breadcrumbs">
+    <ContentLayout :title="pageTitle" :nav="breadcrumbs">
         <Container :fluid="true">
             <div class="space-y-4 md:space-y-8">
                 <Card :pt="{
