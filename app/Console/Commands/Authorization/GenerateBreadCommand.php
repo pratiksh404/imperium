@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
+use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\select;
 
 class GenerateBreadCommand extends Command
@@ -70,7 +71,20 @@ class GenerateBreadCommand extends Command
             return;
         }
 
-        Permission::generateBREADForModel($model, $role);
+        $active_breads = multiselect(
+            label: 'Authorized BREAD',
+            options: [
+                Permission::BROWSE => 'Browse',
+                Permission::READ => 'Read',
+                Permission::EDIT => 'Edit',
+                Permission::ADD => 'Add',
+                Permission::DELETE => 'Delete',
+            ],
+            default: Permission::BREAD
+        );
+
+        Permission::generateBREADForModel($model, $role, $active_breads);
+
         info('BREAD generated successfully for role '.$role->name.' and module '.$module_name);
     }
 }

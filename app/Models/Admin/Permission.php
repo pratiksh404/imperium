@@ -30,6 +30,14 @@ class Permission extends Model
         self::DELETE,
     ];
 
+    const BREAD_LABELS = [
+        self::BROWSE => 'Browse',
+        self::READ => 'Read',
+        self::EDIT => 'Edit',
+        self::ADD => 'Add',
+        self::DELETE => 'Delete',
+    ];
+
     protected $guarded = [];
 
     protected $appends = ['type_label'];
@@ -44,30 +52,23 @@ class Permission extends Model
     public function getTypeLabelAttribute()
     {
         return in_array($this->type, self::BREAD) ?
-        [
-            self::BROWSE => 'Browse',
-            self::READ => 'Read',
-            self::EDIT => 'Edit',
-            self::ADD => 'Add',
-            self::DELETE => 'Delete',
-        ][$this->type]
+        self::BREAD_LABELS[$this->type]
         : 'Custom';
     }
 
     // Helper Functions
-    public static function generateBREADForModel($model, Role $role)
+    public static function generateBREADForModel($model, Role $role, ?array $active_bread = null)
     {
-
         $exploded_model = explode('\\', $model);
 
-        collect(self::BREAD)->each(function ($value, $name) use ($model, $exploded_model, $role) {
+        collect(self::BREAD)->each(function ($value) use ($model, $exploded_model, $role, $active_bread) {
             $permission = self::updateOrCreate([
-                'name' => strtolower($exploded_model[count($exploded_model) - 1]).'_'.$name,
+                'name' => strtolower($exploded_model[count($exploded_model) - 1]).'_'.strtolower(self::BREAD_LABELS[$value]),
                 'model' => $model,
                 'type' => $value,
             ]);
 
-            $role->permissions()->syncWithoutDetaching($permission);
+            $role->permissions()->syncWithoutDetaching([$permission->id => ['active' => ! is_null($active_bread) ? in_array($value, $active_bread) : true]]);
         });
 
         return $role->permissions()->get();
