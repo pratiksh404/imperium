@@ -6,7 +6,7 @@
             <!-- Search Icon -->
             <i class="pi pi-search text-gray-500"></i>
             <!-- Text -->
-            <span class="text-gray-600 text-sm font-medium">Search</span>
+            <span class="text-gray-600 text-sm font-medium">Navigate</span>
             <!-- Shortcut -->
             <span class="ml-auto text-gray-400 text-xs font-medium hidden sm:inline">
                 ⌘ + K
@@ -32,7 +32,7 @@
             <!-- Filtered Routes -->
             <ul v-if="filteredRoutes.length" class="mt-4 max-h-48 overflow-y-auto">
                 <li v-for="(route, index) in filteredRoutes" :key="index" @mouseover="selectedIndex = index"
-                    @click="navigateTo(route.path)"
+                    @click="navigateTo(route.url)"
                     :class="{ 'bg-black text-white': selectedIndex === index, 'hover:bg-black hover:text-white': selectedIndex !== index }"
                     class="py-2 px-4 rounded cursor-pointer transition">
                     {{ route.label }}
@@ -46,8 +46,14 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useShortcut } from "@/Composables/shortcut";
+import { usePage } from "@inertiajs/vue3";
+import { router } from '@inertiajs/vue3'
+
+const page = usePage();
+
+const menu = page.props.menus;
 
 const openDialog = ref(false);
 const searchQuery = ref("");
@@ -59,18 +65,20 @@ useShortcut("k", () => {
 });
 
 // Example route list
-const routes = [
-    { path: "/home", label: "Home" },
-    { path: "/about", label: "About Us" },
-    { path: "/contact", label: "Contact Us" },
-    { path: "/services", label: "Services" },
-    { path: "/blog", label: "Blog" },
-];
+const routes = computed(() => {
+    return Object.keys(menu ?? {}).length > 0 ? menu.filter((item) => item.url || item.children) // Keep items with a URL or children
+        .flatMap((item) =>
+            item.url
+                ? [{ label: item.label, icon: item.icon, url: item.url }]
+                : extractWithUrl(item.children || [])
+        ) : [];
+})
+
 
 // Filter function
 const filterRoutes = () => {
     if (searchQuery.value.trim()) {
-        filteredRoutes.value = routes.filter((route) =>
+        filteredRoutes.value = routes.value.filter((route) =>
             route.label.toLowerCase().includes(searchQuery.value.toLowerCase())
         );
         selectedIndex.value = filteredRoutes.value.length ? 0 : -1;
@@ -83,7 +91,7 @@ const filterRoutes = () => {
 // Navigation function
 const navigateTo = (path) => {
     openDialog.value = false; // Close the dialog
-    console.log(path)
+    router.visit(path);
 };
 
 // Clear search when dialog closes
@@ -110,7 +118,7 @@ const highlightNext = () => {
 // Select highlighted route
 const selectRoute = () => {
     if (selectedIndex.value >= 0 && selectedIndex.value < filteredRoutes.value.length) {
-        navigateTo(filteredRoutes.value[selectedIndex.value].path);
+        navigateTo(filteredRoutes.value[selectedIndex.value].url);
     }
 };
 
