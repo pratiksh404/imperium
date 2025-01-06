@@ -1,6 +1,6 @@
 <script setup>
 import LinksPanelMenu from '@/Components/PrimeVue/LinksPanelMenu.vue';
-
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 // Nav Items
 const currentRoute = route().current();
 const homeMenuItems = [
@@ -63,6 +63,12 @@ const exampleNestedMenuItems = [
 
 <template>
     <div class="h-full">
+        <div class="justify-start mb-4 hidden sm:flex md:flex">
+            <Link :href="route('welcome')" class="mr-3">
+            <ApplicationLogo class="block h-10 w-auto fill-current text-surface-900 dark:text-surface-0" />
+            </Link>
+            <Tag value="Primary">ADMIN</Tag>
+        </div>
         <div class="mb-5">
             <p class="text-muted-color font-bold uppercase text-sm mb-2">
                 Home
