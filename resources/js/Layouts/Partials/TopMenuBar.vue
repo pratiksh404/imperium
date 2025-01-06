@@ -28,6 +28,7 @@ const userMenuItems = [
 const toggleUserMenu = (event) => {
     userMenu.value.childRef.toggle(event);
 };
+
 </script>
 
 <template>

@@ -47,7 +47,7 @@ abstract class InputField
 
     public bool $disabled = false;
 
-    public $size = self::SMALL;
+    public $size;
 
     public string $id;
 
@@ -78,7 +78,7 @@ abstract class InputField
     /**
      * Create a new column instance.
      */
-    public function __construct(string $field, string $label = null)
+    public function __construct(string $field, ?string $label = null)
     {
         $this->field = $field;
         $this->label = ! is_null($label) ? $label : ucfirst($field);
@@ -98,7 +98,7 @@ abstract class InputField
      *
      * @return static
      */
-    public static function make(string $field, string $label = null)
+    public static function make(string $field, ?string $label = null)
     {
         return new static($field, $label);
     }
@@ -305,7 +305,7 @@ abstract class InputField
      *
      * @return $this
      */
-    public function iconField(string $prefix, string $suffix = null)
+    public function iconField(string $prefix, ?string $suffix = null)
     {
         $this->iconField = true;
         $this->prefix = $prefix;

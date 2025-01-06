@@ -4,7 +4,7 @@
     </Drawer>
     <div @click="visible = true" class="h-full">
         <slot name="trigger">
-            <Button size="small" icon="pi pi-pencil" :v-tooltip.top="label.trim()" :label="label.trim()" />
+            <Button icon="pi pi-pencil" :v-tooltip.top="label.trim()" :label="label.trim()" />
         </slot>
     </div>
 </template>

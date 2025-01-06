@@ -1,0 +1,90 @@
+<template>
+    <div class="flex justify-between w-full p-3">
+        <div class="flex justify-start gap-1">
+            <Button class="flex lg:hidden mr-4" outlined severity="secondary" icon="pi pi-bars"
+                @click="emit('open-nav')" :pt="{
+                    icon: {
+                        class: 'text-xl',
+                    },
+                }" />
+
+            <Breadcrumb :pt="{
+                root: {
+                    class: 'p-2',
+                },
+            }" :home="{
+                icon: 'pi pi-home',
+                route: route('welcome'),
+            }" :model="breadcrumbs">
+                <template #item="{ item, props }">
+                    <Link v-if="item.route" :href="item.route" class="p-breadcrumb-item-link" custom>
+                    <span v-show="item.icon" :class="item.icon" class="p-breadcrumb-item-icon" />
+                    <span class="p-breadcrumb-item-label">{{ item.label }}</span>
+                    </Link>
+                    <span v-else>
+                        <span v-show="item.icon" :class="item.icon" class="p-breadcrumb-item-icon" />
+                        <span class="p-breadcrumb-item-label">{{ item.label }}</span>
+                    </span>
+                </template>
+                <template #separator> > </template>
+            </Breadcrumb>
+        </div>
+        <div class="flex justify-end">
+            <NavigationPalette />
+
+            <ToggleDarkModeButton text severity="secondary" rounded />
+
+            <UserMenu :items="userMenuItems" />
+        </div>
+    </div>
+</template>
+<script setup>
+import ToggleDarkModeButton from '@/Components/ToggleDarkModeButton.vue';
+import NavigationPalette from '@/Components/NavigationPalette.vue';
+import UserMenu from '@/Components/UserMenu.vue';
+import { useForm, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+
+const props = defineProps({
+    title: {
+        type: String,
+        required: false,
+    },
+    nav: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
+});
+
+const breadcrumb = computed(() => usePage().props.breadcrumb);
+const resourceTitle = computed(() => breadcrumb.value?.title ?? '');
+const resourceItems = computed(() => breadcrumb.value?.items ?? []);
+const resourcePoints = computed(() => breadcrumb.value?.points ?? []);
+
+const pageTitle = computed(() => props.title ?? resourceTitle.value ?? null);
+const breadcrumbs = computed(() => props.nav.length > 0 ? props.nav : resourceItems.value);
+
+
+const emit = defineEmits(['open-nav']);
+
+// User menu
+const logoutForm = useForm({});
+
+const userMenuItems = [
+    {
+        label: 'Profile',
+        route: route('profile.edit'),
+        icon: 'pi pi-fw pi-user',
+    },
+    {
+        label: 'Log Out',
+        icon: 'pi pi-fw pi-sign-out',
+        command: () => {
+            logoutForm.post(route('logout'));
+        },
+    },
+];
+
+
+</script>
