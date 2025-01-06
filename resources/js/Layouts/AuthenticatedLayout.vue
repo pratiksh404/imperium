@@ -1,11 +1,12 @@
 <script setup>
-import { ref, useTemplateRef, onMounted } from 'vue';
+import { ref, useTemplateRef, onMounted, onUnmounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 
 import MobileSidebarNavDrawer from './Partials/MobileSidebarNavDrawer.vue';
 import Footer from './Partials/Footer.vue';
 import SideMenu from './Partials/SideMenu.vue';
-
+import { useEventBus } from "@/Composables/useEventBus";
+const { on, off } = useEventBus();
 
 const page = usePage();
 
@@ -19,6 +20,14 @@ onMounted(() => {
     if (siteHeader.value) {
         headerHeight.value = `${siteHeader.value.offsetHeight}px`;
     }
+
+    on('open-nav', () => {
+        navDrawerOpen.value = true;
+    });
+});
+
+onUnmounted(() => {
+    off('open-nav');
 });
 </script>
 
@@ -30,12 +39,12 @@ onMounted(() => {
         </MobileSidebarNavDrawer>
     </Teleport>
 
-    <div class="h-screen flex flex-col">
+    <div class="h-screen flex flex-col bg-gray-100">
 
         <main class="flex-1">
             <!-- Desktop Sidebar -->
             <aside :class="[
-                'w-[18rem] inset-0 hidden lg:block fixed overflow-y-auto overflow-x-hidden dynamic-bg border-r dynamic-border',
+                'w-[18rem] inset-0 hidden lg:block fixed overflow-y-auto overflow-x-hidden dynamic-bg border-r dynamic-border ',
             ]">
                 <div class="w-full px-8 py-6">
                     <SideMenu />
@@ -48,7 +57,7 @@ onMounted(() => {
             ]">
                 <!-- Page Content -->
 
-                <slot @open-nav="navDrawerOpen = true" />
+                <slot />
 
                 <footer class="">
                     <Footer />
