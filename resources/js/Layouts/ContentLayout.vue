@@ -1,7 +1,6 @@
 <template>
     <!-- Page Header -->
-    <header
-        class="sticky top-0 z-30 flex h-14 items-center gap-4 border-b px-4 sm:static sm:h-auto sm:border-0 sm:px-6 ">
+    <header class="sticky top-0 z-30 flex h-8 items-center  px-4 sm:static sm:h-auto sm:border-0 mt-2">
         <Header :title="title" :nav="nav" />
     </header>
 

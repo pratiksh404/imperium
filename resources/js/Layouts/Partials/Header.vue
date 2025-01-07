@@ -1,7 +1,7 @@
 <template>
-    <div class="flex justify-between w-full p-3">
+    <div class="flex justify-between w-full">
         <div class="flex justify-start gap-1">
-            <Button class="flex lg:hidden mr-4" outlined severity="secondary" icon="pi pi-bars" @click="openNav" :pt="{
+            <Button class="flex lg:hidden mr-4" severity="secondary" icon="pi pi-bars" @click="openNav" :pt="{
                 icon: {
                     class: 'text-xl',
                 },
@@ -9,7 +9,7 @@
 
             <Breadcrumb :pt="{
                 root: {
-                    class: 'p-2 bg-transparent',
+                    class: 'p-0 m-0 bg-transparent',
                 },
             }" :home="{
                 icon: 'pi pi-home',
@@ -28,7 +28,7 @@
                 <template #separator> > </template>
             </Breadcrumb>
         </div>
-        <div class="flex justify-end">
+        <div class="flex justify-end mt-3">
             <NavigationPalette />
 
             <ToggleDarkModeButton text severity="secondary" rounded />

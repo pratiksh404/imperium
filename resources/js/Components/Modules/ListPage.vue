@@ -1,6 +1,6 @@
 <template>
 
-    <Card>
+    <Card :pt="{ root: { class: 'h-full' } }">
         <template #title>
             <div class="flex justify-between">
                 {{ name + ' Table' }}

@@ -44,7 +44,7 @@ onUnmounted(() => {
         <main class="flex-1">
             <!-- Desktop Sidebar -->
             <aside :class="[
-                'w-[18rem] inset-0 hidden lg:block fixed overflow-y-auto overflow-x-hidden dynamic-bg border-r dynamic-border ',
+                'w-[18rem] inset-0 hidden lg:block fixed overflow-y-auto overflow-x-hidden dynamic-bg border-r dynamic-border',
             ]">
                 <div class="w-full px-8 py-6">
                     <SideMenu />
@@ -59,9 +59,9 @@ onUnmounted(() => {
 
                 <slot />
 
-                <footer class="">
+                <!-- <footer class="">
                     <Footer />
-                </footer>
+                </footer> -->
             </div>
         </main>
     </div>
