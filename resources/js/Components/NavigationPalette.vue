@@ -5,8 +5,6 @@
             class="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 transition w-full">
             <!-- Search Icon -->
             <i class="pi pi-search text-gray-500"></i>
-            <!-- Text -->
-            <span class="text-gray-600 text-sm font-medium">Navigate</span>
             <!-- Shortcut -->
             <span class="ml-auto text-gray-400 text-xs font-medium hidden sm:inline">
                 ⌘ + K
