@@ -56,7 +56,7 @@ class HandleInertiaRequests extends Middleware
             'request' => [
                 'urlParams' => $request->query(),
             ],
-            'menus' => menus(),
+            'menuItems' => menus(),
             'resources' => $resources,
             'breadcrumb' => $breadcrumb ?? null,
             'can' => [

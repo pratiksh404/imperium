@@ -4,9 +4,9 @@
         <button @click="openDialog = true"
             class="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 transition w-full">
             <!-- Search Icon -->
-            <i class="pi pi-search text-gray-500"></i>
+            <i class="pi pi-compass light:text-gray-500"></i>
             <!-- Shortcut -->
-            <span class="ml-auto text-gray-400 text-xs font-medium hidden sm:inline">
+            <span class="ml-auto light:text-gray-400 text-xs font-medium hidden sm:inline">
                 ⌘ + K
             </span>
         </button>
@@ -16,11 +16,8 @@
             :style="{ width: '35vw' }" @hide="clearSearch">
             <!-- Search Input -->
             <div class="flex items-center gap-2 bg-gray-100 p-2 rounded">
-                <svg class="w-5 h-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M8 16l-4-4m0 0l4-4m-4 4h16" />
-                </svg>
+                <!-- Navigate icon svg -->
+                <i class="pi pi-compass text-gray-500"></i>
                 <input type="text" v-model="searchQuery" placeholder="Search for a route..." @input="filterRoutes"
                     class="bg-transparent outline-none w-full text-gray-700 placeholder-gray-400"
                     @keydown.up.prevent="highlightPrevious" @keydown.down.prevent="highlightNext"

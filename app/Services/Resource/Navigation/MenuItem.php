@@ -6,11 +6,11 @@ class MenuItem
 {
     public string $label;
 
-    public string $icon = 'bx bx-radio-circle';
+    public string $icon = 'pi pi-circle';
 
     public string $url;
 
-    public ?array $children;
+    public ?array $items = null;
 
     public $authorize = true;
 
@@ -47,7 +47,7 @@ class MenuItem
 
     public function child(MenuItem $child): self
     {
-        $this->children[] = $child;
+        $this->items[] = $child;
 
         return $this;
     }

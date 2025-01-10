@@ -3,10 +3,9 @@ import { ref, useTemplateRef, onMounted, onUnmounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 
 import MobileSidebarNavDrawer from './Partials/MobileSidebarNavDrawer.vue';
-import Footer from './Partials/Footer.vue';
 import SideMenu from './Partials/SideMenu.vue';
-import { useEventBus } from "@/Composables/useEventBus";
-const { on, off } = useEventBus();
+import Header from './Partials/Header.vue';
+
 
 const page = usePage();
 
@@ -16,19 +15,19 @@ const navDrawerOpen = ref(false);
 // Dynamic header height for arbitrary class styling
 const headerHeight = ref('');
 const siteHeader = useTemplateRef('site-header');
-onMounted(() => {
-    if (siteHeader.value) {
-        headerHeight.value = `${siteHeader.value.offsetHeight}px`;
-    }
 
-    on('open-nav', () => {
-        navDrawerOpen.value = true;
-    });
+const props = defineProps({
+    title: {
+        type: String,
+        required: false,
+    },
+    nav: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
 });
 
-onUnmounted(() => {
-    off('open-nav');
-});
 </script>
 
 <template>
@@ -39,7 +38,7 @@ onUnmounted(() => {
         </MobileSidebarNavDrawer>
     </Teleport>
 
-    <div class="h-screen flex flex-col bg-gray-100">
+    <div class="h-screen flex flex-col bg-gray-100 dark:bg-neutral-900">
 
         <main class="flex-1">
             <!-- Desktop Sidebar -->
@@ -57,7 +56,15 @@ onUnmounted(() => {
             ]">
                 <!-- Page Content -->
 
-                <slot />
+                <!-- Page Header -->
+                <header class="sticky top-0 z-30 flex h-8 items-center  px-4 sm:static sm:h-auto sm:border-0 mb-2 mt-3">
+                    <Header :title="title" :nav="nav" @open-nav="navDrawerOpen = true" />
+                </header>
+
+                <!-- Page Content -->
+                <section id="page-content" class="grow px-4">
+                    <slot />
+                </section>
 
                 <!-- <footer class="">
                     <Footer />
