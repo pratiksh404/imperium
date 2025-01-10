@@ -13,7 +13,11 @@
 
         <!-- Command Palette Dialog -->
         <Dialog v-model:visible="openDialog" header="Command Palette" :modal="true" :closable="true" position="top"
-            :style="{ width: '35vw' }" @hide="clearSearch">
+            @hide="clearSearch" :pt="{
+                root: {
+                    class: 'w-3/4 md:w-1/3',
+                }
+            }">
             <!-- Search Input -->
             <div class="flex items-center gap-2 bg-gray-100 p-2 rounded">
                 <!-- Navigate icon svg -->

@@ -1,8 +1,10 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import MenuItem from '@/Components/MenuItem.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+
+const expandedKeys = ref({});
 
 // Current Route
 const currentRoute = route().current();
@@ -10,16 +12,31 @@ const currentRoute = route().current();
 // Computed Menu Items
 const menuItems = computed(() => {
     const data = usePage().props.menuItems ?? [];
-    return data.map(menuItem => ({
-        label: menuItem.label,
-        icon: menuItem.icon,
-        route: menuItem.url, // Ensure compatibility with PrimeVue
-        active: route(currentRoute) === menuItem.url,
-        items: menuItem.items ?? null,
-    }));
+    return data.map(item => menuItem(item.label, item.icon, item.url, item.items));
 });
 
+const menuItem = (label, icon, url, items) => {
+    const nodeKey = label;
+    const nodeItems = items != null && !url ? items.map(item => menuItem(item.label, item.icon, item.url, item.items)) : null;
+    const isActive = route(currentRoute) === url;
+
+    // Add key to expandedKeys if any of its item field have active true
+    if (nodeItems && nodeItems.some(item => item.active)) {
+        expandedKeys.value[nodeKey] = true;
+    }
+
+    return {
+        key: nodeKey,
+        label: label,
+        icon: icon,
+        url: url,
+        active: isActive,
+        items: nodeItems
+    };
+}
+
 </script>
+
 
 <template>
     <div class="h-full">
@@ -37,7 +54,7 @@ const menuItems = computed(() => {
                 <p class="text-muted-color font-bold uppercase text-sm mb-2">
                     Home
                 </p>
-                <MenuItem :model="menuItems" class="w-full" />
+                <MenuItem :model="menuItems" v-model:expandedKeys="expandedKeys" class="w-full" />
             </div>
         </div>
     </div>
