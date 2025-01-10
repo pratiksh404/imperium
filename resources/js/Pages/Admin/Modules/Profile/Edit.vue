@@ -1,5 +1,5 @@
 <script setup>
-import ContentLayout from '@/Layouts/ContentLayout.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Container from '@/Components/Container.vue';
 import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
@@ -27,7 +27,7 @@ const breadcrumbs = [
 
     <Head :title="pageTitle" />
 
-    <ContentLayout :title="pageTitle" :nav="breadcrumbs">
+    <AuthenticatedLayout :title="pageTitle" :nav="breadcrumbs">
         <Container :fluid="true">
             <div class="space-y-4 md:space-y-8">
                 <Card :pt="{
@@ -87,5 +87,5 @@ const breadcrumbs = [
                 </Card>
             </div>
         </Container>
-    </ContentLayout>
+    </AuthenticatedLayout>
 </template>

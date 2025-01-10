@@ -34,13 +34,7 @@ createInertiaApp({
         resolvePageComponent(
             `./Pages/${name}.vue`,
             import.meta.glob('./Pages/**/*.vue')
-        ).then((page) => {
-            // Set the default layout if not explicitly defined
-            if (name.startsWith('Admin/')) {
-                page.default.layout = page.default.layout || AuthenticatedLayout;
-            }
-            return page;
-        }),
+        ),
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .provide('darkMode', darkMode)

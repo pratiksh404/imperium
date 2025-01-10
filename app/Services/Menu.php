@@ -8,7 +8,7 @@ class Menu
 {
     public function all(): array
     {
-        return array_merge([$this->item('Dashboard', 'bx bx-home', route('dashboard'))], $this->resourcefulMenus());
+        return array_merge([$this->item('Dashboard', 'pi pi-home', route('dashboard'))], $this->resourcefulMenus());
     }
 
     public function resourcefulMenus(): array
@@ -26,7 +26,7 @@ class Menu
             'label' => $name,
             'icon' => $icon,
             'url' => $url,
-            'children' => ! is_null($children) ? $children->map(function ($child) {
+            'items' => ! is_null($children) ? $children->map(function ($child) {
                 return $this->item($child->label, $child->icon, $child->url, $child->children);
             }) : null,
         ];

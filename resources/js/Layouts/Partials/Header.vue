@@ -1,7 +1,7 @@
 <template>
     <div class="flex justify-between w-full">
         <div class="flex justify-start gap-1">
-            <Button class="flex lg:hidden mr-4" severity="secondary" icon="pi pi-bars" @click="openNav" :pt="{
+            <Button class="flex lg:hidden mr-4" severity="secondary" icon="pi pi-bars" @click="$emit('open-nav')" :pt="{
                 icon: {
                     class: 'text-xl',
                 },
@@ -9,7 +9,7 @@
 
             <Breadcrumb :pt="{
                 root: {
-                    class: 'p-0 m-0 bg-transparent',
+                    class: 'bg-transparent',
                 },
             }" :home="{
                 icon: 'pi pi-home',
@@ -43,9 +43,6 @@ import NavigationPalette from '@/Components/NavigationPalette.vue';
 import UserMenu from '@/Components/UserMenu.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { useEventBus } from "@/Composables/useEventBus";
-
-const { emit } = useEventBus();
 
 const props = defineProps({
     title: {
@@ -85,10 +82,6 @@ const userMenuItems = [
         },
     },
 ];
-
-const openNav = () => {
-    emit('open-nav');
-};
 
 
 </script>
