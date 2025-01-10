@@ -6,11 +6,13 @@ class MenuItem
 {
     public string $label;
 
-    public string $icon = 'pi pi-circle';
+    public ?string $icon = 'pi pi-circle';
 
-    public string $url;
+    public ?string $url;
 
     public ?array $items = null;
+
+    public ?string $badge;
 
     public $authorize = true;
 
@@ -31,24 +33,64 @@ class MenuItem
         return $this;
     }
 
-    public function url(string $url): self
+    public function url(?string $url = null): self
     {
         $this->url = $url;
 
         return $this;
     }
 
-    public function icon(string $icon): self
+    /**
+     * Set the icon for this menu item.
+     *
+     * @return $this
+     */
+    public function icon(?string $icon = null): self
     {
         $this->icon = $icon;
 
         return $this;
     }
 
-    public function child(MenuItem $child): self
+    public function badge(?string $badge = null): self
     {
-        $this->items[] = $child;
+        $this->badge = $badge;
 
         return $this;
+    }
+
+    public function child(?MenuItem $child = null): self
+    {
+        if ($child !== null) {
+            $this->items[] = $child;
+        }
+
+        return $this;
+    }
+
+    public function children(?array $items = null): self
+    {
+        $this->items = ! is_null($items) ? collect($items)->map(function ($item) {
+            return MenuItem::make($item->label)
+                ->url($item->url ?? null)
+                ->icon($item->icon ?? null)
+                ->badge($item->badge ?? 'pi pi-circle')
+                ->authorize($item->authorize ?? true)
+                ->children($item->items ?? null);
+        })->toArray() : null;
+
+        return $this;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'label' => $this->label,
+            'icon' => $this->icon,
+            'url' => $this->url,
+            'items' => $this->items,
+            'badge' => $this->badge,
+            'authorize' => $this->authorize,
+        ];
     }
 }

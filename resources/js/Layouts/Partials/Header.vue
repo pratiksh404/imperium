@@ -9,7 +9,7 @@
 
             <Breadcrumb :pt="{
                 root: {
-                    class: 'bg-transparent',
+                    class: 'p-0 bg-transparent',
                 },
             }" :home="{
                 icon: 'pi pi-home',

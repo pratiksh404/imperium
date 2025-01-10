@@ -31,6 +31,9 @@ const props = defineProps({
 </script>
 
 <template>
+
+
+
     <Teleport to="body">
         <Toast position="bottom-left" />
         <MobileSidebarNavDrawer v-model="navDrawerOpen">
@@ -57,7 +60,7 @@ const props = defineProps({
                 <!-- Page Content -->
 
                 <!-- Page Header -->
-                <header class="sticky top-0 z-30 flex h-8 items-center  px-4 sm:static sm:h-auto sm:border-0 mb-2 mt-3">
+                <header class="sticky top-0 z-30 flex h-8 items-center   sm:static sm:h-auto sm:border-0  p-6 md:p-1">
                     <Header :title="title" :nav="nav" @open-nav="navDrawerOpen = true" />
                 </header>
 
