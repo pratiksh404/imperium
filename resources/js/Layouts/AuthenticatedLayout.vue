@@ -65,7 +65,7 @@ const props = defineProps({
                 </header>
 
                 <!-- Page Content -->
-                <section id="page-content" class="grow px-4">
+                <section id="page-content" class="grow px-4 pb-4 pt-0">
                     <slot />
                 </section>
 

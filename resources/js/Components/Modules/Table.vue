@@ -5,10 +5,10 @@
         :global-filter-fields="globalFilterFields" v-model:selection="selectedData" selectionMode="multiple"
         :metaKeySelection="metaKey" :dataKey="dataKey" @rowReorder="onRowReorder" @dragstart="showActions = false"
         @dragover="showActions = true" tableStyle="min-width: 50rem" :pt="{
-            header: {
-                class: 'p-0 m-0',
-            },
-        }">
+            root: {
+                class: 'p-datatable-sm h-full',
+            }
+        }" class="imperium-table">
         <template #header>
             <Menubar :model="menuItems" :pt="{
                 root: {
@@ -236,3 +236,11 @@ const bulkDelete = (event) => {
 };
 
 </script>
+
+<style>
+.imperium-table .p-paginator {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+</style>

@@ -53,12 +53,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['image'];
+    protected $appends = ['avatar'];
 
     // Accessors
-    public function getImageAttribute()
+    public function getAvatarAttribute()
     {
-        return 'https://avatar.iran.liara.run/username?username='.str_replace(' ', '+', $this->name);
+        return asset('imperium/assets/img/icon/profile.png');
     }
 
     // Relationship

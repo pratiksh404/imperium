@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Services\Resource\Navigation\MenuGroup;
 use App\Services\Resource\Navigation\MenuItem;
 use Illuminate\Support\Arr;
 
@@ -11,16 +10,7 @@ class Menu
     public function all(): array
     {
         return array_merge([
-            MenuGroup::make('Administration')
-                ->group([
-                    MenuItem::make('Dashboard')->icon('pi pi-home')
-                        ->children([
-                            MenuItem::make('Test')->url(route('welcome'))->icon('pi pi-home')->children([
-                                MenuItem::make('Dashboard')->url(route('dashboard'))->icon('pi pi-home'),
-                            ])->badge('2'),
-                            MenuItem::make('Dashboard')->url(route('dashboard'))->icon('pi pi-home')->badge('2'),
-                        ]),
-                ]),
+            MenuItem::make('Dashboard')->url(route('dashboard'))->icon('pi pi-home'),
         ], $this->resourcefulMenus());
     }
 
@@ -33,7 +23,7 @@ class Menu
         return $menus;
     }
 
-    private function item($name, $icon = 'bx bx-radio-circle', $url = null, $children = null): array
+    private function item($name, $icon = 'pi pi-circle', $url = null, $children = null): array
     {
         return [
             'label' => $name,

@@ -11,6 +11,8 @@ const currentRoute = route().current();
 
 const menu = computed(() => page.props.menuItems ?? []);
 
+const user = computed(() => page.props.auth.user ?? null);
+
 const memoizedMenuItem = new Map();
 
 const menuItem = (label, icon, url, badge, shortcut, items) => {
@@ -103,12 +105,21 @@ const menuItems = computed(() => {
                 <MenuItem v-for="(item, item_key) in menuItems" :key="'menuitem-' + item_key" :item="item" />
             </ul>
         </div>
-        <div class="mt-auto fixed bottom-0 bg-white dark:bg-surface-900 h-20">
-            <a v-ripple
-                class="mx-3 my-1 flex items-center cursor-pointer p-4 gap-2 rounded text-surface-700  dark:text-surface-0  duration-150 transition-colors p-ripple">
-                <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" shape="circle" />
-                <span class="font-bold">Amy Elser</span>
-            </a>
+        <div v-if="user" class="mt-auto fixed bottom-0 bg-white dark:bg-surface-900 h-20 flex justify-between">
+            <Link :href="route('profile.edit')" v-ripple
+                class="mx-3 my-1 flex items-center cursor-pointer p-4 gap-2 rounded text-surface-700  dark:text-surface-0  duration-150 transition-colors p-ripple no-underline">
+            <Avatar class="mr-2" :image="user.avatar" shape="circle" />
+            <div>
+                <span class="font-bold">{{ user.name }} - <span class="font-light text-sm">{{ user.role.name ??
+                    'Guest'
+                        }}</span></span>
+                <div class="text-sm text-surface-500 dark:text-surface-400">{{ user.email }}</div>
+            </div>
+            </Link>
+            <Link :href="route('logout')" method="post" as="button" v-ripple v-tooltip="'Logout'"
+                class="mx-3 my-1 flex items-center cursor-pointer p-4 gap-2 rounded duration-150 transition-colors p-ripple no-underline bg-transparent">
+            <i class="pi pi-sign-out"></i>
+            </Link>
         </div>
     </div>
 </template>
