@@ -1,5 +1,10 @@
 <template>
-    <Drawer v-model:visible="visible" :header="label" :position="isMobile ? 'full' : 'right'" class="w-1/4">
+    <Drawer v-model:visible="visible" :header="label" :position="isMobile ? 'full' : 'right'" class="w-1/4" :pt="{
+        title: {
+            class: 'text-900 text-xl'
+        }
+    }">
+        <!-- Form -->
         <slot name="form" @form-success="handleFormSuccess"></slot>
     </Drawer>
     <div @click="visible = true" class="h-full">

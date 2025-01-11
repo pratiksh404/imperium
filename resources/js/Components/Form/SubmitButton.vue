@@ -1,6 +1,5 @@
 <template>
-    <Button type="submit" fluid severity="success" :label="!processing ? buttonText : 'Loading ... '"
-        :loading="processing" />
+    <Button type="submit" fluid :label="!processing ? buttonText : 'Loading ... '" :loading="processing" />
 </template>
 <script setup>
 import { defineProps } from "vue";

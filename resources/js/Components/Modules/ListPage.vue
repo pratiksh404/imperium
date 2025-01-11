@@ -3,7 +3,7 @@
     <Card :pt="{ root: { class: 'h-full' }, body: { class: 'h-full' }, content: { class: 'h-full' } }">
         <template #title>
             <div class="flex justify-between">
-                {{ name + ' Table' }}
+                <span class="text-900 font-medium"> {{ name + ' Table' }}</span>
                 <div class="flex justify-end gap-2">
                     <div v-if="route != null && moduleForm != null && $page.props.can.create?.[name.toLowerCase()]">
                         <ModuleFormOverlay :name="'Create ' + name" :key="'module-create-' + name">
