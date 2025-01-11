@@ -10,6 +10,8 @@ class MenuGroup
 
     public ?string $badge;
 
+    public bool $expanded = true;
+
     public ?array $group = null;
 
     public $authorize = true;
@@ -34,6 +36,13 @@ class MenuGroup
     public function badge(?string $badge = null): self
     {
         $this->badge = $badge;
+
+        return $this;
+    }
+
+    public function expanded(bool $expanded = true): self
+    {
+        $this->expanded = $expanded;
 
         return $this;
     }

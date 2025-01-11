@@ -66,6 +66,7 @@ const menuItems = computed(() => {
     return data.filter(grp => (grp.group ?? []).length === 0).map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items));
 });
 
+console.log(menuGroups.value);
 
 </script>
 
@@ -95,7 +96,8 @@ const menuItems = computed(() => {
                         <span class="font-medium">{{ group.label }}</span>
                         <i class="pi pi-chevron-down"></i>
                     </div>
-                    <ul class="list-none ml-4 m-0 overflow-hidden" v-if="group.group.length > 0">
+                    <ul :class="(group.expanded ?? true) ? '' : 'hidden'" class="list-none ml-4 m-0 overflow-hidden"
+                        v-if="group.group.length > 0">
                         <MenuItem v-for="(item, group_item_key) in group.group"
                             :key="'group-' + index + '-item-' + group_item_key" :item="item" />
                     </ul>
