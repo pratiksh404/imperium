@@ -1,6 +1,6 @@
 <template>
 
-    <Card :pt="{ root: { class: 'h-full' } }">
+    <Card :pt="{ root: { class: 'h-full' }, body: { class: 'h-full' }, content: { class: 'h-full' } }">
         <template #title>
             <div class="flex justify-between">
                 {{ name + ' Table' }}

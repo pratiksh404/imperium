@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="hidden md:block">
         <!-- Button to trigger the command palette -->
         <button @click="openDialog = true"
-            class="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 transition w-full">
+            class="flex items-center gap-2 px-6 py-2  md:mt-0 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 transition w-full">
             <!-- Search Icon -->
             <i class="pi pi-compass light:text-gray-500"></i>
             <!-- Shortcut -->

@@ -5,7 +5,6 @@ namespace App\Imperium\Resource;
 use App\Models\Admin\Role;
 use App\Services\Resource\DataTable\Columns\TextColumn;
 use App\Services\Resource\DataTable\DataTable;
-use App\Services\Resource\Form\Fields\RatingField;
 use App\Services\Resource\Form\Fields\TextField;
 use App\Services\Resource\Form\Form;
 use App\Services\Resource\Navigation\Breadcrumb;
@@ -38,7 +37,6 @@ class RoleResource extends Resource
         return (new Form)
             ->fields([
                 TextField::make('name'),
-                RatingField::make('rating'),
             ]);
     }
 

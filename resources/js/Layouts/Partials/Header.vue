@@ -1,17 +1,17 @@
 <template>
     <div class="flex justify-between w-full">
-        <div class="flex justify-start gap-1">
+        <div class="flex justify-start gap-1 w-4/5">
 
             <Button class="flex lg:hidden mr-4" severity="secondary" icon="pi pi-bars" @click="$emit('open-nav')" :pt="{
                 icon: {
                     class: 'text-xl',
-                },
+                }
             }" />
 
             <Breadcrumb :pt="{
                 root: {
-                    class: 'p-0 bg-transparent',
-                },
+                    class: 'bg-transparent',
+                }
             }" :home="{
                 icon: 'pi pi-home',
                 route: route('welcome'),
@@ -19,17 +19,17 @@
                 <template #item="{ item, props }">
                     <Link v-if="item.route" :href="item.route" class="p-breadcrumb-item-link" custom>
                     <span v-show="item.icon" :class="item.icon" class="p-breadcrumb-item-icon" />
-                    <span class="p-breadcrumb-item-label">{{ item.label }}</span>
+                    <span class="p-breadcrumb-item-label text-sm whitespace-nowrap">{{ item.label }}</span>
                     </Link>
                     <span v-else>
                         <span v-show="item.icon" :class="item.icon" class="p-breadcrumb-item-icon" />
-                        <span class="p-breadcrumb-item-label">{{ item.label }}</span>
+                        <span class="p-breadcrumb-item-label text-sm whitespace-nowrap">{{ item.label }}</span>
                     </span>
                 </template>
-                <template #separator> > </template>
+                <template #separator>></template>
             </Breadcrumb>
         </div>
-        <div class="flex justify-end mt-3">
+        <div class="flex justify-end mt-3 w-1/5">
             <NavigationPalette />
 
             <ToggleDarkModeButton text severity="secondary" rounded />
