@@ -1,15 +1,33 @@
-import { ref, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue';
 
-// Various keyboard shortcut handlers
+// Keyboard shortcut handler enforcing Meta/Ctrl automatically based on platform
 export function useShortcut(shortcut, callback) {
     const handleKeydown = (event) => {
         const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
 
-        const isCmdOrCtrl = isMac
-            ? event.metaKey // Command key for Mac
-            : event.ctrlKey; // Ctrl key for Windows/Linux
+        // Normalize the key for comparison
+        const normalizeKey = (key) => key.toLowerCase().trim();
 
-        if (isCmdOrCtrl && event.key.toLowerCase() === shortcut.toLowerCase()) {
+        // Ensure the platform-specific modifier is pressed
+        const isCmdOrCtrlPressed = isMac ? event.metaKey : event.ctrlKey;
+        if (!isCmdOrCtrlPressed) return;
+
+        // Split and normalize the keys in the shortcut (e.g., "shift+s")
+        const keys = shortcut.split("+").map(normalizeKey);
+
+        // Check if all keys in the shortcut are matched
+        const keySet = new Set(keys);
+
+        console.log(event.key);
+        // Check if all keys in the shortcut are pressed
+        const allKeysPressed = keys.every((key) => {
+            if (key === "meta" || key === "ctrl") return isCmdOrCtrlPressed;
+            if (key === "shift") return event.shiftKey;
+            if (key === "alt") return event.altKey;
+            return normalizeKey(event.key) === key;
+        });
+
+        if (allKeysPressed) {
             event.preventDefault();
             callback();
         }
