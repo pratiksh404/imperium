@@ -1,6 +1,6 @@
 <template>
 
-    <form class="h-full" @submit.prevent="submit">
+    <form @submit.prevent="submit">
         <template v-if="resourceForm" v-for="field in resourceForm.fields" :key="`input-${field.field}`">
             <ResourceInput v-model="form[field.field]" :field="field" :error="form.errors[field.field]" />
         </template>

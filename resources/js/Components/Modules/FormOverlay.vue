@@ -1,5 +1,5 @@
 <template>
-    <Drawer v-model:visible="visible" :header="label" :position="isMobile ? 'full' : 'right'" class="w-1/4" :pt="{
+    <Drawer v-model:visible="localVisible" :header="label" :position="isMobile ? 'full' : 'right'" class="w-1/4" :pt="{
         title: {
             class: 'text-900 text-xl'
         }
@@ -7,24 +7,39 @@
         <!-- Form -->
         <slot name="form" @form-success="handleFormSuccess"></slot>
     </Drawer>
-    <div @click="visible = true" class="h-full">
+    <div @click="localVisible = true" class="h-full">
         <slot name="trigger">
-            <Button icon="pi pi-pencil" :v-tooltip.top="label.trim()" :label="label.trim()" />
+            <Button :v-tooltip.top="label.trim()" :label="label.trim()" />
         </slot>
     </div>
 </template>
 <script setup>
-import { computed, defineProps, ref, watch, onMounted, onUnmounted } from 'vue';
+import { computed, defineProps, ref, watch, onMounted, onUnmounted, toRefs } from 'vue';
 import { useEventsStore } from '@/Store/events';
 const eventsStore = useEventsStore();
-const visible = ref(false);
 const props = defineProps({
     name: {
         required: true,
         type: String
-    }
-})
+    },
+    visible: {
+        type: Boolean,
+        default: false
+    },
 
+});
+const emit = defineEmits(['update:visible']);
+
+const { visible } = toRefs(props);
+const localVisible = ref(visible.value);
+
+watch(visible, (newVal) => {
+    localVisible.value = newVal;
+});
+
+watch(localVisible, (newVal) => {
+    emit('update:visible', newVal);
+});
 
 const label = computed(() => props.name.replace('', ' '));
 
@@ -33,7 +48,7 @@ watch(
     (fs) => {
         try {
             if (fs) {
-                visible.value = false; // Close overlay
+                localVisible.value = false; // Close overlay
                 // Wait for the overlay to close before emitting the form reset
                 setTimeout(() => {
                     eventsStore.resetFormStatus();
@@ -44,7 +59,6 @@ watch(
         }
     }
 );
-
 
 const isMobile = ref(false);
 
