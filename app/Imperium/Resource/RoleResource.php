@@ -48,7 +48,8 @@ class RoleResource extends Resource
             ->menus([
                 MenuItem::make('Roles')
                     ->icon(self::$icon)
-                    ->url(route('roles.index')),
+                    ->url(route('roles.index'))
+                    ->shortcut(1),
             ])
             ->breadcrumbs([
                 Breadcrumb::make('Roles', 'roles.index')

@@ -1,61 +1,90 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue';
+import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
-import MenuItem from '@/Components/MenuItem.vue';
+import MenuItem from '@/Components/Navigation/MenuItem.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 
-const expandedKeys = ref({});
+const page = usePage();
 
 // Current Route
 const currentRoute = route().current();
 
-// Computed Menu Items
-const menuItems = computed(() => {
-    const data = usePage().props.menuItems ?? [];
-    return data.map(item => menuItem(item.label, item.icon, item.url, item.items));
-});
-
-const menuItem = (label, icon, url, items) => {
+const menuItem = (label, icon, url, badge, shortcut, items) => {
     const nodeKey = label;
-    const nodeItems = items != null && !url ? items.map(item => menuItem(item.label, item.icon, item.url, item.items)) : null;
+    const nodeItems = items != null ? items.map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items)) : null;
     const isActive = route(currentRoute) === url;
 
-    // Add key to expandedKeys if any of its item field have active true
-    if (nodeItems && nodeItems.some(item => item.active)) {
-        expandedKeys.value[nodeKey] = true;
-    }
 
     return {
         key: nodeKey,
         label: label,
         icon: icon,
         url: url,
+        badge: badge,
+        shortcut: shortcut,
         active: isActive,
         items: nodeItems
     };
 }
 
+// Computed Menu Items
+const menuGroups = computed(() => {
+    const data = usePage().props.menuItems ?? [];
+    return data.filter(grp => (grp.group ?? []).length > 0).map(grp => {
+        grp.group = grp.group.map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items));
+        return grp;
+    });
+})
+const menuItems = computed(() => {
+    const data = usePage().props.menuItems ?? [];
+    return data.filter(grp => (grp.group ?? []).length === 0).map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items));
+});
+
+
 </script>
 
 
 <template>
-    <div class="h-full">
-        <!-- Application Logo -->
-        <div class="justify-start mb-4 hidden sm:flex md:flex">
-            <Link :href="route('welcome')" class="mr-3">
-            <ApplicationLogo class="block h-10 w-auto fill-current text-surface-900 dark:text-surface-0" />
-            </Link>
-            <Tag value="Primary">ADMIN</Tag>
-        </div>
-
-        <!-- Menu Items -->
-        <div class="mt-10">
-            <div class="mb-5" v-if="menuItems.length > 0">
-                <p class="text-muted-color font-bold uppercase text-sm mb-2">
-                    Home
-                </p>
-                <MenuItem :model="menuItems" v-model:expandedKeys="expandedKeys" class="w-full" />
+    <div class="flex flex-col">
+        <div class="overflow-y-auto">
+            <div class="hidden lg:block">
+                <div class="flex justify-start px-6 py-4 shrink-0 ">
+                    <Link :href="route('welcome')" class="mr-3">
+                    <ApplicationLogo class="h-10 w-auto fill-current text-surface-900 dark:text-surface-0" />
+                    </Link>
+                    <Tag value="Primary">{{ page.props.app.name }}</Tag>
+                </div>
             </div>
+            <ul class="list-none p-0 mt-2" v-if="menuGroups.length > 0" v-for="(group, index) in menuGroups"
+                :key="'group-' + index">
+                <li>
+                    <div v-ripple v-styleClass="{
+                        selector: '@next',
+                        enterFromClass: 'hidden',
+                        enterActiveClass: 'animate-slideDown',
+                        leaveToClass: 'hidden',
+                        leaveActiveClass: 'animate-slideUp'
+                    }"
+                        class="px-4 mb-2 flex items-center justify-between text-surface-500 dark:text-surface-400 cursor-pointer p-ripple">
+                        <span class="font-medium">{{ group.label }}</span>
+                        <i class="pi pi-chevron-down"></i>
+                    </div>
+                    <ul class="list-none px-2 m-0 overflow-hidden" v-if="group.group.length > 0">
+                        <MenuItem v-for="(item, group_item_key) in group.group"
+                            :key="'group-' + index + '-item-' + group_item_key" :item="item" />
+                    </ul>
+                </li>
+            </ul>
+            <ul class="list-none px-2 m-0 overflow-hidden" v-if="menuItems.length > 0">
+                <MenuItem v-for="(item, item_key) in menuItems" :key="'menuitem-' + item_key" :item="item" />
+            </ul>
+        </div>
+        <div class="mt-auto fixed bottom-0 bg-white dark:bg-surface-900 h-20">
+            <a v-ripple
+                class="mx-3 my-1 flex items-center cursor-pointer p-4 gap-2 rounded text-surface-700  dark:text-surface-0  duration-150 transition-colors p-ripple">
+                <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" shape="circle" />
+                <span class="font-bold">Amy Elser</span>
+            </a>
         </div>
     </div>
 </template>

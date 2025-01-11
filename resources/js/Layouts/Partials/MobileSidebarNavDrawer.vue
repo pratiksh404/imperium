@@ -7,7 +7,11 @@ const page = usePage();
 </script>
 
 <template>
-    <Drawer v-model:visible="model" position="left">
+    <Drawer v-model:visible="model" position="left" :pt="{
+        content: {
+            class: 'p-0',
+        }
+    }">
         <template #header>
             <div class="flex justify-start">
                 <Link :href="route('welcome')" class="mr-3">

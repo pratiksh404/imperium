@@ -184,7 +184,7 @@ const undo = () => editor.value.chain().focus().undo().run();
 const redo = () => editor.value.chain().focus().redo().run();
 const insertYoutubeLink = () => youtubeLink.value !== null ? editor.value.commands.setYoutubeVideo({ src: youtubeLink.value, width: youtubeLinkWidth.value, height: youtubeLinkHeight.value }) : toast.error('Youtube link is required');
 </script>
-<style>
+<style scoped>
 .tiptap-editor {
     min-height: 200px;
     padding: 10px;

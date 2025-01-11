@@ -14,6 +14,8 @@ class MenuItem
 
     public ?string $badge;
 
+    public ?string $shortcut;
+
     public $authorize = true;
 
     public function __construct(string $label)
@@ -59,6 +61,13 @@ class MenuItem
         return $this;
     }
 
+    public function shortcut(?string $shortcut = null): self
+    {
+        $this->shortcut = $shortcut;
+
+        return $this;
+    }
+
     public function child(?MenuItem $child = null): self
     {
         if ($child !== null) {
@@ -73,8 +82,8 @@ class MenuItem
         $this->items = ! is_null($items) ? collect($items)->map(function ($item) {
             return MenuItem::make($item->label)
                 ->url($item->url ?? null)
-                ->icon($item->icon ?? null)
-                ->badge($item->badge ?? 'pi pi-circle')
+                ->icon($item->icon ?? 'pi pi-circle')
+                ->badge($item->badge ?? null)
                 ->authorize($item->authorize ?? true)
                 ->children($item->items ?? null);
         })->toArray() : null;

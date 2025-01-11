@@ -1,6 +1,7 @@
 <template>
     <div class="flex justify-between w-full">
         <div class="flex justify-start gap-1">
+
             <Button class="flex lg:hidden mr-4" severity="secondary" icon="pi pi-bars" @click="$emit('open-nav')" :pt="{
                 icon: {
                     class: 'text-xl',
@@ -82,6 +83,5 @@ const userMenuItems = [
         },
     },
 ];
-
 
 </script>
