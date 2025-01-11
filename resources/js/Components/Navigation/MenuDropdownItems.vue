@@ -23,7 +23,7 @@
     <ul :class="active ? '' : 'hidden'"
         class="list-none py-0 pl-4 pr-0 m-0 overflow-y-hidden transition-all duration-[400ms] ease-in-out">
 
-        <MenuItem v-for="subitem in item.items" :item="subitem" />
+        <MenuItem v-for="subitem in item.items" :item="subitem" :key="subitem.label" />
 
     </ul>
 
@@ -40,7 +40,5 @@ const props = defineProps({
         default: false
     }
 })
-
-
 
 </script>
