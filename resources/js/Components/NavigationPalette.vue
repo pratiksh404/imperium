@@ -38,6 +38,15 @@
                 </li>
             </ul>
 
+            <ul v-else-if="recentRoutes.length" class="mt-4 max-h-48 overflow-y-auto">
+                <li v-for="(route, index) in recentRoutes" :key="index" @mouseover="selectedIndex = index"
+                    @click="navigateTo(route.url)"
+                    :class="{ 'bg-black text-white': selectedIndex === index, 'hover:bg-black hover:text-white': selectedIndex !== index }"
+                    class="py-2 px-4 rounded cursor-pointer transition">
+                    <i class="pi pi-history mr-2"></i> {{ route.label }}
+                </li>
+            </ul>
+
             <!-- No Results Found -->
             <div v-else class="mt-4 text-gray-500 text-center">No routes found.</div>
         </Dialog>
@@ -52,12 +61,13 @@ import { router } from '@inertiajs/vue3'
 
 const page = usePage();
 
-const menu = page.props.menus;
+const menu = page.props.menuItems ?? [];
 
 const openDialog = ref(false);
 const searchQuery = ref("");
 const filteredRoutes = ref([]);
 const selectedIndex = ref(-1);
+const recentRoutes = ref(JSON.parse(localStorage.getItem('recentRoutes')) || []);
 
 useShortcut("k", () => {
     openDialog.value = true;
@@ -65,14 +75,23 @@ useShortcut("k", () => {
 
 // Example route list
 const routes = computed(() => {
-    return Object.keys(menu ?? {}).length > 0 ? menu.filter((item) => item.url || item.children) // Keep items with a URL or children
-        .flatMap((item) =>
-            item.url
-                ? [{ label: item.label, icon: item.icon, url: item.url }]
-                : extractWithUrl(item.children || [])
-        ) : [];
+    return extractLabelsAndUrls(menu);
 })
 
+const extractLabelsAndUrls = (items, result = []) => {
+    items.forEach(item => {
+        if (item.label && item.url) {
+            result.push({ label: item.label, url: item.url });
+        }
+        if (item.group) {
+            extractLabelsAndUrls(item.group, result);
+        }
+        if (item.items) {
+            extractLabelsAndUrls(item.items, result);
+        }
+    });
+    return result;
+};
 
 // Filter function
 const filterRoutes = () => {
@@ -91,7 +110,18 @@ const filterRoutes = () => {
 const navigateTo = (path) => {
     openDialog.value = false; // Close the dialog
     router.visit(path);
+    saveRecentRoute(path);
 };
+
+// Save recent route to local storage
+const saveRecentRoute = (path) => {
+    const route = routes.value.find(route => route.url === path);
+    if (route) {
+        recentRoutes.value = [route, ...recentRoutes.value.filter(r => r.url !== path)].slice(0, 8);
+        localStorage.setItem('recentRoutes', JSON.stringify(recentRoutes.value));
+    }
+};
+
 
 // Clear search when dialog closes
 const clearSearch = () => {

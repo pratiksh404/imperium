@@ -81,7 +81,7 @@ const menuItems = computed(() => {
                     <Tag value="Primary">{{ page.props.app.name }}</Tag>
                 </div>
             </div>
-            <ul class="list-none p-0 mt-2" v-if="menuGroups.length > 0" v-for="(group, index) in menuGroups"
+            <ul class="list-none  mt-2" v-if="menuGroups.length > 0" v-for="(group, index) in menuGroups"
                 :key="'group-' + index">
                 <li>
                     <div v-ripple v-styleClass="{
@@ -95,13 +95,13 @@ const menuItems = computed(() => {
                         <span class="font-medium">{{ group.label }}</span>
                         <i class="pi pi-chevron-down"></i>
                     </div>
-                    <ul class="list-none px-2 m-0 overflow-hidden" v-if="group.group.length > 0">
+                    <ul class="list-none ml-4 m-0 overflow-hidden" v-if="group.group.length > 0">
                         <MenuItem v-for="(item, group_item_key) in group.group"
                             :key="'group-' + index + '-item-' + group_item_key" :item="item" />
                     </ul>
                 </li>
             </ul>
-            <ul class="list-none px-2 m-0 overflow-hidden" v-if="menuItems.length > 0">
+            <ul class="list-none ml-2 m-0 overflow-hidden" v-if="menuItems.length > 0">
                 <MenuItem v-for="(item, item_key) in menuItems" :key="'menuitem-' + item_key" :item="item" />
             </ul>
         </div>
