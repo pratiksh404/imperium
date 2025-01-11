@@ -9,13 +9,20 @@ const page = usePage();
 // Current Route
 const currentRoute = route().current();
 
+const menu = computed(() => page.props.menuItems ?? []);
+
+const memoizedMenuItem = new Map();
+
 const menuItem = (label, icon, url, badge, shortcut, items) => {
     const nodeKey = label;
-    const nodeItems = items != null ? items.map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items)) : null;
+    if (memoizedMenuItem.has(nodeKey)) {
+        return memoizedMenuItem.get(nodeKey);
+    }
+
+    const nodeItems = items != null && items.length ? items.map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items)) : null;
     const isActive = route(currentRoute) === url;
 
-
-    return {
+    const menuItemObj = {
         key: nodeKey,
         label: label,
         icon: icon,
@@ -25,18 +32,35 @@ const menuItem = (label, icon, url, badge, shortcut, items) => {
         active: isActive,
         items: nodeItems
     };
-}
 
-// Computed Menu Items
+    memoizedMenuItem.set(nodeKey, menuItemObj);
+    return menuItemObj;
+};
+
+const filterGroups = (data) => {
+    return data.filter(grp => (grp.group ?? []).length > 0);
+};
+
+const memoizedGroupItems = new Map();
+
+const mapGroupItems = (group) => {
+    const groupKey = group.label;
+    if (memoizedGroupItems.has(groupKey)) {
+        return memoizedGroupItems.get(groupKey);
+    }
+
+    const newGroup = { ...group, group: group.group.map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items)) };
+    memoizedGroupItems.set(groupKey, newGroup);
+    return newGroup;
+};
+
 const menuGroups = computed(() => {
-    const data = usePage().props.menuItems ?? [];
-    return data.filter(grp => (grp.group ?? []).length > 0).map(grp => {
-        grp.group = grp.group.map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items));
-        return grp;
-    });
-})
+    const data = menu.value;
+    return filterGroups(data).map(mapGroupItems);
+});
+
 const menuItems = computed(() => {
-    const data = usePage().props.menuItems ?? [];
+    const data = menu.value;
     return data.filter(grp => (grp.group ?? []).length === 0).map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items));
 });
 
