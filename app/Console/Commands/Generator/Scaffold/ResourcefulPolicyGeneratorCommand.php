@@ -3,18 +3,21 @@
 namespace App\Console\Commands\Generator\Scaffold;
 
 use App\Services\Generator\Scaffold\ResourcefulPolicyGenerator;
+use App\Traits\Console\NeedsModel;
 use Illuminate\Console\Command;
 
 use function Laravel\Prompts\info;
 
 class ResourcefulPolicyGeneratorCommand extends Command
 {
+    use NeedsModel;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'generate:policy {name : Model Class (Singular), e.g User, Place, Car, Post}';
+    protected $signature = 'generate:policy';
 
     /**
      * The console command description.
@@ -28,7 +31,12 @@ class ResourcefulPolicyGeneratorCommand extends Command
      */
     public function handle()
     {
-        $generator = new ResourcefulPolicyGenerator($this->argument('name'));
+        $selected_model = $this->getModelFromConsole();
+
+        $model = $selected_model->model;
+        $namespace = $selected_model->namespace;
+
+        $generator = new ResourcefulPolicyGenerator($model, $namespace);
 
         $policy = $generator->generateResourcefulPolicy();
         info('Policy created successfully at ['.$policy.']');
