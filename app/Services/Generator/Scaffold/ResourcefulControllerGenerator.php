@@ -8,9 +8,9 @@ use Illuminate\Support\Str;
 
 class ResourcefulControllerGenerator extends Generator implements GeneratorInterface
 {
-    public function __construct(string $name)
+    public function __construct(string $name, ?string $model_namespace = null)
     {
-        parent::__construct($name);
+        parent::__construct($name, $model_namespace);
     }
 
     public function generate()

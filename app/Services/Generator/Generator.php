@@ -8,14 +8,14 @@ class Generator
 {
     public $stubs = [];
 
-    public String $name;
+    public string $name;
 
-    public String $model_namespace;
+    public string $model_namespace;
 
-    public function __construct(string $name)
+    public function __construct(string $name, ?string $model_namespace = null)
     {
         $this->name = Str::studly($name);
-        $this->model_namespace = $this->getModelNamespace($this->name);
+        $this->model_namespace = $model_namespace ?? $this->getModelNamespace($this->name);
         $this->stubs = getFilesWithPaths(app_path('Stubs'), 'stub');
     }
 
