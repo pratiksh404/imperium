@@ -3,18 +3,21 @@
 namespace App\Console\Commands\Generator\Scaffold;
 
 use App\Services\Generator\Scaffold\ResourcefulRepositoryGenerator;
+use App\Traits\Console\NeedsModel;
 use Illuminate\Console\Command;
 
 use function Laravel\Prompts\info;
 
 class ResourcefulRepositoryGeneratorCommand extends Command
 {
+    use NeedsModel;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'generate:repository {name : Model Class (Singular), e.g User, Place, Car, Post}';
+    protected $signature = 'generate:repository';
 
     /**
      * The console command description.
@@ -28,7 +31,12 @@ class ResourcefulRepositoryGeneratorCommand extends Command
      */
     public function handle()
     {
-        $generator = new ResourcefulRepositoryGenerator($this->argument('name'));
+        $selected_model = $this->getModelFromConsole();
+
+        $model = $selected_model->model;
+        $namespace = $selected_model->namespace;
+
+        $generator = new ResourcefulRepositoryGenerator($model, $namespace);
 
         $repository = $generator->generateRepository();
         info('Repository created successfully at ['.$repository.']');
