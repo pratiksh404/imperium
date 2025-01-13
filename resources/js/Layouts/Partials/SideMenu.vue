@@ -4,6 +4,7 @@ import { usePage } from '@inertiajs/vue3';
 import MenuItem from '@/Components/Navigation/MenuItem.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 
+
 const page = usePage();
 
 // Current Route
@@ -66,11 +67,8 @@ const menuItems = computed(() => {
     return data.filter(grp => (grp.group ?? []).length === 0).map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items));
 });
 
-console.log(menuGroups.value);
 
 </script>
-
-
 <template>
     <div class="flex flex-col">
         <div class="overflow-y-auto">
@@ -82,28 +80,20 @@ console.log(menuGroups.value);
                     <Tag value="Primary">{{ page.props.app.name }}</Tag>
                 </div>
             </div>
-            <ul class="list-none  mt-2" v-if="menuGroups.length > 0" v-for="(group, index) in menuGroups"
+            <ul class="list-none p-2  mt-2" v-if="menuGroups.length > 0" v-for="(group, index) in menuGroups"
                 :key="'group-' + index">
                 <li>
-                    <div v-ripple v-styleClass="{
-                        selector: '@next',
-                        enterFromClass: 'hidden',
-                        enterActiveClass: 'animate-slideDown',
-                        leaveToClass: 'hidden',
-                        leaveActiveClass: 'animate-slideUp'
-                    }"
+                    <div
                         class="px-4 mb-2 flex items-center justify-between text-surface-500 dark:text-surface-400 cursor-pointer p-ripple">
                         <span class="font-medium">{{ group.label }}</span>
-                        <i class="pi pi-chevron-down"></i>
                     </div>
-                    <ul :class="(group.expanded ?? true) ? '' : 'hidden'" class="list-none ml-4 m-0 overflow-hidden"
-                        v-if="group.group.length > 0">
+                    <ul class="list-none ml-4 m-0 overflow-hidden" v-if="group.group.length > 0">
                         <MenuItem v-for="(item, group_item_key) in group.group"
                             :key="'group-' + index + '-item-' + group_item_key" :item="item" />
                     </ul>
                 </li>
             </ul>
-            <ul class="list-none ml-2 m-0 overflow-hidden" v-if="menuItems.length > 0">
+            <ul class="list-none ml-2 p-2 m-0 overflow-hidden" v-if="menuItems.length > 0">
                 <MenuItem v-for="(item, item_key) in menuItems" :key="'menuitem-' + item_key" :item="item" />
             </ul>
         </div>

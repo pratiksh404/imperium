@@ -2,7 +2,7 @@
 
 namespace App\Imperium\Resource;
 
-use {{modelNamespace}};
+use App\Models\User;
 use App\Services\Resource\DataTable\Columns\TextColumn;
 use App\Services\Resource\DataTable\DataTable;
 use App\Services\Resource\Form\Fields\TextField;
@@ -13,15 +13,15 @@ use App\Services\Resource\Navigation\MenuItem;
 use App\Services\Resource\Navigation\Navigation;
 use App\Services\Resource\Resource;
 
-class {{modelName}}Resource extends Resource
+class UserResource extends Resource
 {
-    public static $model = {{modelName}}::class;
+    public static $model = User::class;
 
-    public static $name = '{{modelName}}';
+    public static $name = 'User';
 
     public static $icon = 'pi pi-shield';
 
-    public static $route = '{{modelNamePluralLowercase}}';
+    public static $route = 'users';
 
     public function dataTable(): DataTable
     {
@@ -43,15 +43,15 @@ class {{modelName}}Resource extends Resource
     {
         return (new Navigation)
             ->menus([
-                MenuItem::make('{{modelNamePluralUppercase}}')
+                MenuItem::make('Users')
                     ->icon(self::$icon)
-                    ->url(route('{{modelNamePluralLowercase}}.index'))
+                    ->url(route('users.index'))
                     ->shortcut(1),
             ])
             ->breadcrumbs([
-                Breadcrumb::make('{{modelNamePluralUppercase}}', '{{modelNamePluralLowercase}}.index')
+                Breadcrumb::make('Users', 'users.index')
                     ->items([
-                        BreadcrumbItem::make('{{modelName}} List', route('{{modelNamePluralLowercase}}.index')),
+                        BreadcrumbItem::make('User List', route('users.index')),
                     ]),
             ]);
     }

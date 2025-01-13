@@ -3,16 +3,19 @@
 namespace App\Console\Commands\Generator\Scaffold;
 
 use App\Services\Generator\Scaffold\ResourcefulScaffoldGenerator;
+use App\Traits\Console\NeedsModel;
 use Illuminate\Console\Command;
 
 class ScaffoldGeneratorCommand extends Command
 {
+    use NeedsModel;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'generate:scaffold {name : Model Class (Singular), e.g User, Place, Car, Post}';
+    protected $signature = 'generate:scaffold';
 
     /**
      * The console command description.
@@ -26,7 +29,12 @@ class ScaffoldGeneratorCommand extends Command
      */
     public function handle()
     {
-        $generator = new ResourcefulScaffoldGenerator($this->argument('name'));
+        $selected_model = $this->getModelFromConsole();
+
+        $model = $selected_model->model;
+        $namespace = $selected_model->namespace;
+
+        $generator = new ResourcefulScaffoldGenerator($model, $namespace);
 
         $generator->generate();
     }

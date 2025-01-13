@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands\Generator\Scaffold;
 
-use App\Services\Generator\Scaffold\ResourcefulControllerGenerator;
+use App\Services\Generator\Scaffold\ImperiumResourceGenerator;
 use App\Traits\Console\NeedsModel;
 use Illuminate\Console\Command;
 
 use function Laravel\Prompts\info;
 
-class ResourcefulControllerGeneratorCommand extends Command
+class ImperiumResourceGeneratorCommand extends Command
 {
     use NeedsModel;
 
@@ -17,14 +17,14 @@ class ResourcefulControllerGeneratorCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:controller';
+    protected $signature = 'generate:resource';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command to generate resourceful controller';
+    protected $description = 'Command to generate imperium resource file';
 
     /**
      * Execute the console command.
@@ -36,9 +36,9 @@ class ResourcefulControllerGeneratorCommand extends Command
         $model = $selected_model->model;
         $namespace = $selected_model->namespace;
 
-        $generator = new ResourcefulControllerGenerator($model, $namespace);
+        $generator = new ImperiumResourceGenerator($model, $namespace);
 
-        $controller = $generator->generateResourcefulController();
-        info('Controller created successfully at ['.$controller.']');
+        $resource = $generator->generate();
+        info('Resource created successfully at ['.$resource.']');
     }
 }
