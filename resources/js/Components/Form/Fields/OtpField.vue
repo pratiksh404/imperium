@@ -6,14 +6,14 @@
             </b>
         </div>
         <InputOtp :invalid="hasError" :length="length" :mask="masked" :integerOnly="integerOnly" :value="modelValue"
-            @input="updateValue($event.target.value)" :class="class" :id="id" :required="required" :readonly="readOnly"
-            :disabled="disabled" :size="size" :variant="required ? 'filled' : 'outlined'" />
+            v-model="model" :class="class" :id="id" :required="required" :readonly="readOnly" :disabled="disabled"
+            :size="size" :variant="required ? 'filled' : 'outlined'" />
     </div>
 </template>
 
 <script setup>
 import { defineProps, computed, defineEmits } from 'vue';
-
+const model = defineModel();
 const props = defineProps({
     modelValue: {
         type: String,

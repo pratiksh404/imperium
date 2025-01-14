@@ -1,8 +1,7 @@
 <template>
     <SelectButton :options="options" optionLabel="label" :multiple="multiple" :invalid="hasError"
-        :placeholder="placeholder" :value="modelValue" @input="updateValue($event.target.value)" :class="class" :id="id"
-        :required="required" :readonly="readOnly" :disabled="disabled" :size="size" fluid
-        :variant="required ? 'filled' : 'outlined'">
+        :placeholder="placeholder" :value="modelValue" v-model="model" :class="class" :id="id" :required="required"
+        :readonly="readOnly" :disabled="disabled" :size="size" fluid :variant="required ? 'filled' : 'outlined'">
         <template #option="slotProps">
             <img v-if="slotProps.option.image" :alt="slotProps.option.label" :src="slotProps.option.image"
                 style="width: 18px" />
@@ -14,7 +13,7 @@
 
 <script setup>
 import { defineProps, computed, defineEmits } from 'vue';
-
+const model = defineModel();
 const props = defineProps({
     modelValue: {
         type: String,

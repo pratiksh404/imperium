@@ -2,9 +2,11 @@
 
 namespace App\Imperium\Resource;
 
+use App\Models\Admin\Role;
 use App\Models\User;
 use App\Services\Resource\DataTable\Columns\TextColumn;
 use App\Services\Resource\DataTable\DataTable;
+use App\Services\Resource\Form\Fields\SelectField;
 use App\Services\Resource\Form\Fields\TextField;
 use App\Services\Resource\Form\Form;
 use App\Services\Resource\Navigation\Breadcrumb;
@@ -28,6 +30,8 @@ class UserResource extends Resource
         return (new DataTable)
             ->columns([
                 TextColumn::make('name'),
+                TextColumn::make('email'),
+                TextColumn::make('role.name', 'Role'),
             ]);
     }
 
@@ -35,7 +39,9 @@ class UserResource extends Resource
     {
         return (new Form)
             ->fields([
-                TextField::make('id'),
+                TextField::make('name'),
+                TextField::make('email'),
+                SelectField::make('role_id', 'User Role')->optionCollection(Role::all(), 'name', 'id'),
             ]);
     }
 
