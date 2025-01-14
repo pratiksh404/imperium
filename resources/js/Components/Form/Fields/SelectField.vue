@@ -3,8 +3,8 @@
         :value="modelValue" :options="options" optionLabel="label" optionValue="value"
         v-bind="{ ...(hasItemsField ? { optionGroupLabel: 'label', optionGroupChildren: 'items', optionGroupValue: 'value' } : {}), ...(multiple ? { display: 'chip' } : {}) }"
         :checkmark="checkmark" :highlightOnSelect="highlightOnSelect" :showClear="showClear" :filter="searchable"
-        @input="updateValue($event.target.value)" :class="class" :id="id" :required="required" :readonly="readOnly"
-        :disabled="disabled" :size="size" fluid :variant="required ? 'filled' : 'outlined'">
+        v-model="model" :class="class" :id="id" :required="required" :readonly="readOnly" :disabled="disabled"
+        :size="size" fluid :variant="required ? 'filled' : 'outlined'">
         <template v-if="dropdownIcon" #dropdownicon>
             <i :class="dropdownIcon" />
         </template>
@@ -34,6 +34,8 @@
 <script setup>
 import { defineProps, computed, defineEmits } from 'vue';
 import { resolveFieldComponent } from '@/Utils/Resource/FormComponentMapper'
+
+const model = defineModel();
 
 const props = defineProps({
     modelValue: {
@@ -93,16 +95,7 @@ const selectComponent = computed(() => {
 
 const hasItemsField = computed(() => options.value.some(item => Array.isArray(item.items) && item.items.length > 0));
 
-const itemHasIcon = computed(() => options.value.length > 0 ? options.value.some(item => item.icon) : false);
-
-const itemHasImage = computed(() => options.value.length > 0 ? options.value.some(item => item.image) : false);
-
-
 const emit = defineEmits(['update:modelValue']);
 
 const hasError = computed(() => !!props.error);
-
-const updateValue = (value) => {
-    emit('update:modelValue', value);
-};
 </script>

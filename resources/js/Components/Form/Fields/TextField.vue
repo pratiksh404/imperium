@@ -1,12 +1,12 @@
 <template>
-    <InputText type="text" :invalid="hasError" :placeholder="placeholder" :value="modelValue"
-        @input="updateValue($event.target.value)" :class="class" :id="id" :required="required" :readonly="readOnly"
-        :disabled="disabled" :size="size" fluid :variant="required ? 'filled' : 'outlined'" />
+    <InputText type="text" :invalid="hasError" :placeholder="placeholder" :value="modelValue" v-model="model"
+        :class="class" :id="id" :required="required" :readonly="readOnly" :disabled="disabled" :size="size" fluid
+        :variant="required ? 'filled' : 'outlined'" />
 </template>
 
 <script setup>
 import { defineProps, computed, defineEmits } from 'vue';
-
+const model = defineModel();
 const props = defineProps({
     modelValue: {
         type: String,

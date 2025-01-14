@@ -1,5 +1,5 @@
 <template>
-    <ul v-if="list.length > 0" class="list-group list-group-flush">
+    <ul v-if="Object.keys(list).length > 0" class="list-group list-group-flush">
         <li v-for="item in list" class="list-group-item">{{ item.label }}</li>
     </ul>
 </template>
@@ -24,4 +24,5 @@ const list = computed(() => {
         ...options.filter(option => option.value === values)
     };
 });
+
 </script>

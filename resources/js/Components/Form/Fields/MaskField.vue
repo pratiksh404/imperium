@@ -1,13 +1,13 @@
 <template>
-    <InputMask type="text" :invalid="hasError" :placeholder="placeholder" :value="modelValue"
-        @input="updateValue($event.target.value)" :class="class" :id="id" :required="required" :readonly="readOnly"
-        :disabled="disabled" :size="size" fluid :variant="required ? 'filled' : 'outlined'"
+    <InputMask type="text" :invalid="hasError" :placeholder="placeholder" :value="modelValue" v-model="model"
+        :class="class" :id="id" :required="required" :readonly="readOnly" :disabled="disabled" :size="size" fluid
+        :variant="required ? 'filled' : 'outlined'"
         v-bind="{ ...(mask != null ? { mask: mask, } : {}), ...(slotChar != null ? { slotChar: slotChar, } : {}) }" />
 </template>
 
 <script setup>
 import { defineProps, computed, defineEmits } from 'vue';
-
+const model = defineModel();
 const props = defineProps({
     modelValue: {
         type: String,

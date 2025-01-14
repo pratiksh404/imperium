@@ -70,6 +70,7 @@ const menuItems = computed(() => {
 
 </script>
 <template>
+
     <div class="flex flex-col">
         <div class="overflow-y-auto">
             <div class="hidden lg:block">
@@ -80,7 +81,7 @@ const menuItems = computed(() => {
                     <Tag value="Primary">{{ page.props.app.name }}</Tag>
                 </div>
             </div>
-            <ul class="list-none p-2  mt-2" v-if="menuGroups.length > 0" v-for="(group, index) in menuGroups"
+            <ul class="list-none px-2  mt-2" v-if="menuGroups.length > 0" v-for="(group, index) in menuGroups"
                 :key="'group-' + index">
                 <li>
                     <div
@@ -93,7 +94,7 @@ const menuItems = computed(() => {
                     </ul>
                 </li>
             </ul>
-            <ul class="list-none ml-2 p-2 m-0 overflow-hidden" v-if="menuItems.length > 0">
+            <ul class="list-none ml-2 px-2 m-0 overflow-hidden" v-if="menuItems.length > 0">
                 <MenuItem v-for="(item, item_key) in menuItems" :key="'menuitem-' + item_key" :item="item" />
             </ul>
         </div>

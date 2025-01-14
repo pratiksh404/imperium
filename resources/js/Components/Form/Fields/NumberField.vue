@@ -1,15 +1,15 @@
 <template>
-    <InputNumber :invalid="hasError" :placeholder="placeholder" :value="modelValue"
-        @input="updateValue($event.target.value)" :class="class" :id="id" :required="required" :readonly="readOnly"
-        :disabled="disabled" :size="size" fluid :variant="required ? 'filled' : 'outlined'" :useGrouping="withGrouping"
-        :min="min" :max="max" :minFractionDigits="minFractionDigits" :maxFractionDigits="maxFractionDigits"
-        :prefix="prefixForNumber" :suffix="suffixForNumber"
+    <InputNumber :invalid="hasError" :placeholder="placeholder" :value="modelValue" v-model="model" :class="class"
+        :id="id" :required="required" :readonly="readOnly" :disabled="disabled" :size="size" fluid
+        :variant="required ? 'filled' : 'outlined'" :useGrouping="withGrouping" :min="min" :max="max"
+        :minFractionDigits="minFractionDigits" :maxFractionDigits="maxFractionDigits" :prefix="prefixForNumber"
+        :suffix="suffixForNumber"
         v-bind="{ ...(currency !== null ? { currency: currency, mode: 'currency' } : {}), ...(stepperLayout ? { buttonLayout: stepperLayout } : {}) }"
         :showButtons="stepper" :step="step" />
 </template>
 <script setup>
 import { defineProps, computed, defineEmits } from 'vue';
-
+const model = defineModel();
 const props = defineProps({
     modelValue: {
         type: String,
