@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Contracts\ResourcefulInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ResourcefulRepository implements ResourcefulInterface
@@ -21,7 +22,17 @@ class ResourcefulRepository implements ResourcefulInterface
 
     public function index()
     {
-        $model = $this->model::all();
+        $user = Auth::user();
+        $model = $this->model::all()->map(function ($item) use ($user) {
+            $item->can = [
+                'update' => $user->can('update', $item),
+                'delete' => $user->can('delete', $item),
+                'restore' => $user->can('restore', $item),
+                'forceDelete' => $user->can('forceDelete', $item),
+            ];
+
+            return $item;
+        });
         $trashed_model = $this->model::onlyTrashed()->get();
 
         return [

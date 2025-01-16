@@ -11,7 +11,6 @@ class UserPolicy
     public function before(User $user, string $ability)
     {
         $this->bread = $user->breadPermissionForModule('User');
-
     }
 
     /**

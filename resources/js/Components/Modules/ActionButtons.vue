@@ -4,7 +4,7 @@
         <!-- Edit -->
         <ModuleFormOverlay name="Edit Role" :key="name + 'module-edit' + data.id" v-if="data.can.update">
             <template #trigger>
-                <Button class="h-full" size="small" icon="pi pi-pencil" severity="warning" variant="text" raised
+                <Button class="h-full" size="small" icon="pi pi-pencil" severity="secondary" variant="text" raised
                     v-tooltip.top="'Edit'" />
             </template>
             <template #form>
@@ -14,8 +14,8 @@
             </template>
         </ModuleFormOverlay>
         <!-- Show -->
-        <Button icon="pi pi-eye" class="mx-2" variant="text" raised size="small" @click="visibleRight = true"
-            v-tooltip.top="'Show'" v-if="data.can.view" />
+        <Button icon="pi pi-eye" class="mx-2" variant="text" severity="info" raised size="small"
+            @click="visibleRight = true" v-tooltip.top="'Show'" v-if="data.can.view" />
         <Drawer v-model:visible="visibleRight" :header="name" position="right" :key="name + 'module-show' + data.id"
             v-if="data.can.view" class="w-1/4">
             <FieldPresentationPanel :data="data" :name="name" />

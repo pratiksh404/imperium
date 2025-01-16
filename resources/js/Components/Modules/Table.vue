@@ -86,7 +86,7 @@ const confirm = useConfirm();
 const loading = ref(false);
 const selectedData = ref();
 const showActions = ref(true);
-const metaKey = ref(true);
+const metaKey = ref(false);
 const dt = ref();
 const showTrash = ref(false);
 
