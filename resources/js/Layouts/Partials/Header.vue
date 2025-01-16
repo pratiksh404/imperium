@@ -29,7 +29,7 @@
                 <template #separator>></template>
             </Breadcrumb>
         </div>
-        <div class="flex justify-end mt-3 w-1/5">
+        <div class="flex justify-end mt-3 w-1/5 gap-1">
             <NavigationPalette />
 
             <RefreshButton />

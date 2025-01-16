@@ -1,16 +1,7 @@
 <template>
     <div class="hidden md:block">
         <!-- Button to trigger the command palette -->
-        <button @click="openDialog = true"
-            class="flex items-center gap-2 px-6 py-2  md:mt-0 border border-gray-300 rounded-lg shadow-sm  focus:ring-2 focus:ring-blue-500 transition w-full cursor-pointer">
-            <!-- Search Icon -->
-            <i class="pi pi-compass text-gray-500 dark:text-lime-50"></i>
-            <!-- Shortcut -->
-            <span class="ml-auto text-gray-400 dark:text-lime-50 text-xs font-medium hidden sm:inline">
-                ⌘ + K
-            </span>
-        </button>
-
+        <Button @click="openDialog = true" icon="pi pi-compass" iconPos="left" label="⌘ + K" size="small" />
         <!-- Command Palette Dialog -->
         <Dialog v-model:visible="openDialog" header="Command Palette" :modal="true" :closable="true" position="top"
             @hide="clearSearch" :pt="{

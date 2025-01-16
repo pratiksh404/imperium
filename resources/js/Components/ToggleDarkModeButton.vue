@@ -8,6 +8,6 @@ const toggleDark = useToggle(isDarkMode);
 
 <template>
     <div>
-        <Button :icon="isDarkMode ? 'pi pi-moon' : 'pi pi-sun'" @click="toggleDark()" size="small" class="mx-1" />
+        <Button :icon="isDarkMode ? 'pi pi-moon' : 'pi pi-sun'" @click="toggleDark()" size="small" />
     </div>
 </template>

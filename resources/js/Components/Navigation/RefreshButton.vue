@@ -1,7 +1,7 @@
 <template>
     <div>
         <Button @click="refreshPage" :loading="loading" icon="pi pi-refresh" v-tooltip.left="'Refresh Page'"
-            size="small" class="mx-1" />
+            size="small" />
     </div>
 </template>
 <script setup>
