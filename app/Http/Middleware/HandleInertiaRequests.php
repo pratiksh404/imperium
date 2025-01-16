@@ -31,38 +31,47 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        if (Auth::guard('web')->check()) {
-            $authenticatedUser = $request->user('web');
-        } else {
-            $authenticatedUser = null;
-        }
-
-        $resources = resources();
-        $breadcrumbs = Arr::collapse(array_column($resources, 'breadcrumbs'));
-        $route_name = $request->route()->getName();
-        $breadcrumb = collect($breadcrumbs)->where('for', $route_name)->first();
-
-        return [
+        $shared_data = [
             ...parent::share($request),
             'app' => [
                 'name' => config('app.name'),
                 'env' => config('app.env'),
-            ],
-            'imperium' => config('imperium'),
-            'auth' => [
-                'user' => $authenticatedUser,
-                'csrf_token' => csrf_token(),
-            ],
-            'request' => [
-                'urlParams' => $request->query(),
-            ],
-            'menuItems' => menus(),
-            'resources' => $resources,
-            'breadcrumb' => $breadcrumb ?? null,
-            'can' => [
-                'viewAny' => ! is_null($authenticatedUser) ? ifUserCanForAllModules($authenticatedUser, 'viewAny') : null,
-                'create' => ! is_null($authenticatedUser) ? ifUserCanForAllModules($authenticatedUser, 'create') : null,
+                'auth' => [
+                    'background' => asset(config('imperium.media.image.auth.background')),
+                ],
             ],
         ];
+        if (Auth::guard('web')->check()) {
+            $authenticatedUser = $request->user('web');
+
+            $resources = resources();
+            $breadcrumbs = Arr::collapse(array_column($resources, 'breadcrumbs'));
+            $route_name = $request->route()->getName();
+            $breadcrumb = collect($breadcrumbs)->where('for', $route_name)->first();
+
+            $authenticated_data = [
+                'imperium' => config('imperium'),
+                'auth' => [
+                    'user' => $authenticatedUser,
+                    'csrf_token' => csrf_token(),
+                ],
+                'request' => [
+                    'urlParams' => $request->query(),
+                ],
+                'menuItems' => menus(),
+                'resources' => $resources,
+                'breadcrumb' => $breadcrumb ?? null,
+                'can' => [
+                    'viewAny' => ! is_null($authenticatedUser) ? ifUserCanForAllModules($authenticatedUser, 'viewAny') : null,
+                    'create' => ! is_null($authenticatedUser) ? ifUserCanForAllModules($authenticatedUser, 'create') : null,
+                ],
+            ];
+
+            $shared_data = array_merge($shared_data, $authenticated_data);
+        } else {
+            $authenticatedUser = null;
+        }
+
+        return $shared_data;
     }
 }
