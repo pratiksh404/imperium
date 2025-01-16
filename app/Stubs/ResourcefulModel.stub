@@ -5,37 +5,10 @@ namespace App\Models\Admin;
 use App\Traits\HasPosition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\HasAuthorization;
 
 class {{modelName}} extends Model
 {
-    use HasPosition,SoftDeletes,HasAuthorization;
+    use HasPosition,SoftDeletes;
 
     protected $guarded = [];
-
-    protected $appends = ['table'];
-
-    // Accessors
-    public function getTableAttribute()
-    {
-        return [
-            'dataKey' => 'id',
-            'scrollable' => true,
-            'scrollHeight' => '70vh',
-            'paginator' => true,
-            'rowsPerPageOptions' => [5, 10, 25, 50],
-            'canReorder' => true,
-            'searchable' => true,
-            'exportable' => true,
-            'bulkDeletable' => true,
-            'columns' => [
-                [
-                    'field' => 'id',
-                    'type' => 'text',
-                    'label' => 'ID',
-                    'searchable' => true,
-                ],
-            ],
-        ];
-    }
 }

@@ -55,6 +55,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $appends = ['avatar'];
 
+    protected $with = ['role'];
+
     // Accessors
     public function getAvatarAttribute()
     {
