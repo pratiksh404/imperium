@@ -30,6 +30,8 @@
             </Breadcrumb>
         </div>
         <div class="flex justify-end mt-3 w-1/5">
+            <RefreshButton />
+
             <NavigationPalette />
 
             <ToggleDarkModeButton text severity="secondary" rounded />
@@ -41,6 +43,7 @@
 <script setup>
 import ToggleDarkModeButton from '@/Components/ToggleDarkModeButton.vue';
 import NavigationPalette from '@/Components/NavigationPalette.vue';
+import RefreshButton from '@/Components/Navigation/RefreshButton.vue';
 import UserMenu from '@/Components/UserMenu.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
