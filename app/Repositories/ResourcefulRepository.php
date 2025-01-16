@@ -25,6 +25,7 @@ class ResourcefulRepository implements ResourcefulInterface
         $user = Auth::user();
         $model = $this->model::all()->map(function ($item) use ($user) {
             $item->can = [
+                'view' => $user->can('view', $item),
                 'update' => $user->can('update', $item),
                 'delete' => $user->can('delete', $item),
                 'restore' => $user->can('restore', $item),

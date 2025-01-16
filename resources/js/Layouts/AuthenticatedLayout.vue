@@ -60,7 +60,8 @@ const props = defineProps({
                 <!-- Page Content -->
 
                 <!-- Page Header -->
-                <header class="sticky top-0 z-30 flex h-8 items-center   sm:static sm:h-auto sm:border-0  p-6 md:p-1">
+                <header
+                    class="sticky top-0 z-30 flex h-8 items-center sm:static sm:h-auto sm:border-0 px-4  pb-6 md:pb-1 md:px-4">
                     <Header :title="title" :nav="nav" @open-nav="navDrawerOpen = true" />
                 </header>
 

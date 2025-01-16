@@ -17,8 +17,6 @@ export function useShortcut(shortcut, callback) {
 
         // Check if all keys in the shortcut are matched
         const keySet = new Set(keys);
-
-        console.log(event.key);
         // Check if all keys in the shortcut are pressed
         const allKeysPressed = keys.every((key) => {
             if (key === "meta" || key === "ctrl") return isCmdOrCtrlPressed;

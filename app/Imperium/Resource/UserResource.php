@@ -43,7 +43,7 @@ class UserResource extends Resource
                 TextField::make('name'),
                 TextField::make('email'),
                 SelectField::make('role_id', 'User Role')->optionCollection(Role::all(), 'name', 'id'),
-                PasswordField::make('password'),
+                PasswordField::make('password')->required(false),
             ]);
     }
 

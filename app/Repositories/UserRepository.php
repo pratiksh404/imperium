@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Contracts\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRepository extends ResourcefulRepository implements UserRepositoryInterface
@@ -16,8 +17,29 @@ class UserRepository extends ResourcefulRepository implements UserRepositoryInte
 
     public function store(FormRequest $request)
     {
-        $user = parent::store($request);
+        $request->validated();
+
+        $user = $this->model->create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role_id' => $request->role_id,
+        ]);
 
         event(new Registered($user));
+    }
+
+    public function update(FormRequest $request, Model $user)
+    {
+        $request->validated();
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => ! isset($request->password) ? $user->password : bcrypt($request->password),
+            'role_id' => $request->role_id,
+        ]);
+
+        return $user;
     }
 }
