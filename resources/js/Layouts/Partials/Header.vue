@@ -30,9 +30,9 @@
             </Breadcrumb>
         </div>
         <div class="flex justify-end mt-3 w-1/5">
-            <RefreshButton />
-
             <NavigationPalette />
+
+            <RefreshButton />
 
             <ToggleDarkModeButton text severity="secondary" rounded />
 
