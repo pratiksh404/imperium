@@ -17,6 +17,7 @@ import ToggleButtonField from '@/Components/Form/Fields/ToggleButtonField.vue';
 import SwitchField from '@/Components/Form/Fields/SwitchField.vue';
 import FilepondField from '@/Components/Form/Fields/FilepondField.vue';
 import TextEditorField from '@/Components/Form/Fields/TextEditorField.vue';
+import PasswordField from '@/Components/Form/Fields/PasswordField.vue';
 
 import { IconField, FloatLabel, IftaLabel, InputGroup, Select, MultiSelect } from 'primevue';
 
@@ -45,7 +46,8 @@ export function resolveFieldComponent(fieldType) {
         iconField: IconField,
         defaultInputWrapper: DefaultInputWrapper,
         primeSelect: Select,
-        primeMultiSelect: MultiSelect
+        primeMultiSelect: MultiSelect,
+        password: PasswordField
     };
 
     return componentMap[fieldType] || null; // Return null if no matching component

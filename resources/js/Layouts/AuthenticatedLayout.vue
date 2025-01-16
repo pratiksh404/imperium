@@ -1,5 +1,5 @@
 <script setup>
-import { ref, useTemplateRef, onMounted, onUnmounted } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 
 import MobileSidebarNavDrawer from './Partials/MobileSidebarNavDrawer.vue';

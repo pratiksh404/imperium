@@ -3,7 +3,6 @@
 namespace App\Models\Admin;
 
 use App\Models\User;
-use App\Traits\HasAuthorization;
 use App\Traits\HasPosition;
 use App\Traits\Role\ImplementsBreadAuthorization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Role extends Model
 {
-    use HasAuthorization,HasFactory,HasPosition,ImplementsBreadAuthorization,SoftDeletes;
+    use HasFactory,HasPosition,ImplementsBreadAuthorization,SoftDeletes;
 
     protected $guarded = [];
 

@@ -103,7 +103,7 @@ const menuItems = computed(() => {
                 class="mx-3 my-1 flex items-center cursor-pointer p-4 gap-2 rounded text-surface-700  dark:text-surface-0  duration-150 transition-colors p-ripple no-underline">
             <Avatar class="mr-2" :image="user.avatar" shape="circle" />
             <div>
-                <span class="font-bold">{{ user.name }} - <span class="font-light text-sm">{{ user.role.name ??
+                <span class="font-bold">{{ user.name }} - <span class="font-light text-sm">{{ user.role?.name ??
                     'Guest'
                         }}</span></span>
                 <div class="text-sm text-surface-500 dark:text-surface-400">{{ user.email }}</div>
