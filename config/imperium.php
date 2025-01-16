@@ -5,10 +5,18 @@ return [
     'debug' => env('APP_DEBUG', true),
 
     'name' => env('APP_NAME', 'Imperium'),
-    'logo' => [
-        'dark' => '@assets/images/logo-dark.png',
-        'light' => '@assets/images/logo-light.png',
-        'small' => '@assets/images/logo-sm.png',
+
+    'media' => [
+        'image' => [
+            'logo' => [
+                'dark' => 'imperium/assets/img/app/logo-dark.png',
+                'light' => 'imperium/assets/img/app/logo-light.png',
+                'small' => 'imperium/assets/img/app/logo-sm.png',
+            ],
+            'favicon' => 'imperium/assets/img/app/favicon.ico',
+            'auth' => [
+                'background' => 'imperium/assets/img/app/bg.jpg',
+            ],
+        ],
     ],
-    'favicon' => '@assets/images/favicon.ico',
 ];
