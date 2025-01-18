@@ -16,7 +16,7 @@
             </div>
         </template>
     </PageHeader>
-    <Card :pt="{ root: { class: 'h-full' }, body: { class: 'h-full' }, content: { class: 'h-full' } }">
+    <Card :pt="{ root: { class: 'h-5/6' }, body: { class: 'h-full' }, content: { class: 'h-full' } }">
         <template #content>
             <slot name="table"></slot>
         </template>
