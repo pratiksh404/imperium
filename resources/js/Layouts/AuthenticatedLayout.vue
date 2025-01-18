@@ -7,6 +7,8 @@ import SideMenu from './Partials/SideMenu.vue';
 import Header from './Partials/Header.vue';
 import Container from '@/Components/Container.vue';
 
+const collapsed = ref(false);
+
 
 const page = usePage();
 
@@ -46,18 +48,15 @@ const props = defineProps({
 
         <main class="flex-1">
             <!-- Desktop Sidebar -->
-            <aside :class="[
-                'w-[20rem] inset-0 hidden lg:block fixed overflow-y-auto overflow-x-hidden dynamic-bg border-r dynamic-border',
-            ]">
-                <div class="w-full px-1 py-2">
-                    <SideMenu />
+            <aside :class="{ 'w-80': !collapsed, 'w-20': collapsed }"
+                class="inset-0 hidden lg:block fixed overflow-y-auto overflow-x-hidden dynamic-bg border-r dynamic-border">
+                <div class="px-1 py-2">
+                    <SideMenu @isCollapsed="collapsed = $event" />
                 </div>
             </aside>
 
             <!-- Scrollable Content -->
-            <div :class="[
-                'flex flex-col h-full lg:pl-[20rem]',
-            ]">
+            <div :class="{ 'lg:ml-80': !collapsed, 'lg:ml-20': collapsed }" class="flex flex-col h-full">
                 <!-- Page Content -->
 
                 <!-- Page Header -->

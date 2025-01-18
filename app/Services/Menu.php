@@ -10,7 +10,9 @@ class Menu
     public function all(): array
     {
         return array_merge([
-            MenuItem::make('Dashboard')->url(route('dashboard')),
+            MenuItem::make('Dashboard')->children([
+                MenuItem::make('Dashboard')->url(route('dashboard'))->icon('pi pi-home'),
+            ]),
         ], $this->resourcefulMenus());
     }
 

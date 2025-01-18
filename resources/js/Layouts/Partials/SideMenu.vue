@@ -1,9 +1,14 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, defineEmits } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import MenuItem from '@/Components/Navigation/MenuItem.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 
+const collapsed = ref(false);
+
+const initialCollapsed = ref(false);
+
+const emit = defineEmits(['isCollapsed']);
 
 const page = usePage();
 
@@ -67,19 +72,49 @@ const menuItems = computed(() => {
     return data.filter(grp => (grp.group ?? []).length === 0).map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items));
 });
 
+const initialCollapseToggle = () => {
+    collapseToggle(!initialCollapsed.value);
+    initialCollapsed.value = collapsed.value;
+}
+const collapseToggle = (collapse) => {
+    collapsed.value = collapse ?? !collapsed.value;
+    emit('isCollapsed', collapsed.value);
+}
+
+const collapseMouseOver = () => {
+    if (initialCollapsed.value && collapsed.value) {
+        collapseToggle(false);
+        console.log('mouse over');
+    }
+}
+
+const collapseMouseLeave = () => {
+    if (initialCollapsed.value && !collapsed.value) {
+        collapseToggle(true);
+        console.log('mouse leave');
+    }
+}
+
+
 
 </script>
 <template>
 
-    <div class="flex flex-col">
+    <div class="flex flex-col h-screen" :class="{ 'w-16': collapsed }" @mouseover="collapseMouseOver"
+        @mouseleave="collapseMouseLeave">
         <div class="overflow-y-auto">
             <div class="hidden lg:block">
-                <div class="flex justify-start px-6 py-4 shrink-0 ">
-                    <Link :href="route('welcome')" class="mr-3">
+                <div class="flex w-full py-4 shrink-0 "
+                    :class="collapsed ? 'px-4 justify-center' : 'justify-between px-6'">
+                    <Link :href="route('welcome')">
                     <ApplicationLogo class="h-10 w-auto fill-current text-surface-900 dark:text-surface-0" />
                     </Link>
-                    <Tag value="Primary">{{ page.props.app.name }}</Tag>
+                    <Button :icon="'pi pi-arrow-' + (initialCollapsed ? 'right' : 'left')" text
+                        @click="initialCollapseToggle" v-if="!collapsed" />
                 </div>
+            </div>
+            <div class="w-full flex justify-center" v-if="collapsed">
+                <Button icon="pi pi-arrow-right" text class="px-4" @click="collapseToggle" />
             </div>
             <ul class="list-none px-2  mt-2" v-if="menuGroups.length > 0" v-for="(group, index) in menuGroups"
                 :key="'group-' + index">
@@ -89,27 +124,29 @@ const menuItems = computed(() => {
                         <span class="font-medium">{{ group.label }}</span>
                     </div>
                     <ul class="list-none ml-4 m-0 overflow-hidden" v-if="group.group.length > 0">
-                        <MenuItem v-for="(item, group_item_key) in group.group"
+                        <MenuItem :collapsed="collapsed" v-for="(item, group_item_key) in group.group"
                             :key="'group-' + index + '-item-' + group_item_key" :item="item" />
                     </ul>
                 </li>
             </ul>
             <ul class="list-none ml-2 px-2 m-0 overflow-hidden" v-if="menuItems.length > 0">
-                <MenuItem v-for="(item, item_key) in menuItems" :key="'menuitem-' + item_key" :item="item" />
+                <MenuItem :collapsed="collapsed" v-for="(item, item_key) in menuItems" :key="'menuitem-' + item_key"
+                    :item="item" />
             </ul>
         </div>
-        <div v-if="user" class="mt-auto fixed bottom-0 bg-white dark:bg-surface-900 h-20 flex justify-between">
+        <div v-if="user" class="mt-auto fixed bottom-0 bg-white dark:bg-surface-900 h-20 flex justify-between"
+            :class="{ 'w-16': collapsed }">
             <Link :href="route('profile.edit')" v-ripple
                 class="mx-3 my-1 flex items-center cursor-pointer p-4 gap-2 rounded text-surface-700  dark:text-surface-0  duration-150 transition-colors p-ripple no-underline">
-            <Avatar class="mr-2" :image="user.avatar" shape="circle" />
-            <div>
+            <Avatar class="mr-2" :image="user.avatar" shape="circle" size="small" />
+            <div v-if="!collapsed">
                 <span class="font-bold">{{ user.name }} - <span class="font-light text-sm">{{ user.role?.name ??
                     'Guest'
                         }}</span></span>
                 <div class="text-sm text-surface-500 dark:text-surface-400">{{ user.email }}</div>
             </div>
             </Link>
-            <Link :href="route('logout')" method="post" as="button" v-ripple v-tooltip="'Logout'"
+            <Link v-if="!collapsed" :href="route('logout')" method="post" as="button" v-ripple v-tooltip="'Logout'"
                 class="mx-3 my-1 flex items-center cursor-pointer p-4 gap-2 rounded duration-150 transition-colors p-ripple no-underline bg-transparent">
             <i class="pi pi-sign-out"></i>
             </Link>

@@ -1,8 +1,8 @@
 <template>
-    <div class=" px-4 pb-4 md:px-6 lg:px-8">
+    <div class="px-4 pb-4 w-full">
         <div class="flex items-start flex-col lg:justify-between lg:flex-row">
             <div>
-                <div class="font-medium text-3xl text-surface-900 dark:text-surface-0" v-show="pageTitle">
+                <div class="font-medium text-3xl text-surface-900 dark:text-surface-0" v-if="pageTitle">
                     {{ pageTitle }}
                 </div>
                 <div class="flex items-center text-surface-700 dark:text-surface-100 flex-wrap"
