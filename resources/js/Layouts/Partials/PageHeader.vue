@@ -1,52 +1,27 @@
 <template>
-    <!-- Breadcrumbs Nav -->
-    <nav v-if="breadcrumbs.length" class="dynamic-bg border-b dynamic-border">
-
-        <div class="flex items-center justify-between flex-wrap">
+    <div class=" px-4 pb-4 md:px-6 lg:px-8">
+        <div class="flex items-start flex-col lg:justify-between lg:flex-row">
             <div>
-                <Breadcrumb :pt="{
-                    root: {
-                        class: 'p-0 bg-transparent',
-                    },
-                }" :home="{
-                    icon: 'pi pi-home',
-                    route: route('welcome'),
-                }" :model="breadcrumbs">
-                    <template #item="{ item, props }">
-                        <Link v-if="item.route" :href="item.route" class="p-breadcrumb-item-link" custom>
-                        <span v-show="item.icon" :class="item.icon" class="p-breadcrumb-item-icon" />
-                        <span class="p-breadcrumb-item-label">{{ item.label }}</span>
-                        </Link>
-                        <a v-else :href="item.url" :target="item.target" v-bind="props.action">
-                            <span v-show="item.icon" :class="item.icon" class="p-breadcrumb-item-icon" />
-                            <span class="p-breadcrumb-item-label">{{ item.label }}</span>
-                        </a>
-                    </template>
-                    <template #separator> / </template>
-                </Breadcrumb>
-            </div>
-            <div>
-                <div class="flex items-center text-surface-700 dark:text-surface-100 flex-wrap px-3"
+                <div class="font-medium text-3xl text-surface-900 dark:text-surface-0" v-show="pageTitle">{{ pageTitle
+                    }}</div>
+                <div class="flex items-center text-surface-700 dark:text-surface-100 flex-wrap"
                     v-if="resourcePoints.length > 0">
-                    <div class="mr-4 flex items-center mt-2" v-for="point in resourcePoints">
+                    <div class="mr-8 flex items-center mt-4" v-for="(point, index) in resourcePoints"
+                        :key="'page-header-point-' + index">
                         <i :class="point.icon" class="mr-2" />
                         <span>{{ point.information }}</span>
                     </div>
                 </div>
             </div>
-        </div>
-    </nav>
-
-    <div class="px-8 py-4 md:px-4 lg:px-8" v-if="pageTitle">
-        <div class="flex items-start flex-col lg:justify-between lg:flex-row">
-
-            <div class="font-medium text-2xl text-surface-900 dark:text-surface-0">{{ pageTitle }}</div>
+            <div class="mt-8 lg:mt-0" :class="{ 'pt-4': resourcePoints.length > 0 }">
+                <slot name="actions"></slot>
+            </div>
         </div>
     </div>
 </template>
 <script setup>
-import { ref, computed } from 'vue';
-import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 const props = defineProps({
     title: {
         type: String,

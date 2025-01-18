@@ -1,5 +1,5 @@
 <template v-if="field.visibility ?? true">
-    <div v-if="fieldComponent" class="mt-1">
+    <div v-if="fieldComponent" class="mt-1 my-4">
         <component :is="inputWrapper.component" v-bind="inputWrapper.props">
             <InputGroupAddon v-if="(field.prefix ?? false) && !field.iconField">
                 <i v-if="field.prefixIsIcon ?? false" :class="field.prefix"></i>
@@ -31,7 +31,7 @@
             variant="simple" class="p-1">
             <span style="font-size: 12px;">{{ field.hintText }}</span>
         </Message>
-        <InputError class="mt-2" :error="form.errors.name" />
+        <InputError v-if="error" class="mt-2" :error="error" />
     </div>
     <div v-else>
         <Message severity="error" size="small" class="mt-2 mb-2">Component not found

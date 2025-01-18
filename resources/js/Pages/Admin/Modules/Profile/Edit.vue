@@ -4,6 +4,7 @@ import Container from '@/Components/Container.vue';
 import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
+import PageHeader from '@/Layouts/Partials/PageHeader.vue';
 
 const props = defineProps({
     auth: Object,
@@ -28,6 +29,7 @@ const breadcrumbs = [
     <Head :title="pageTitle" />
 
     <AuthenticatedLayout :title="pageTitle" :nav="breadcrumbs">
+        <PageHeader title="My Profile" />
         <Container :fluid="true">
             <div class="space-y-4 md:space-y-8">
                 <Card :pt="{

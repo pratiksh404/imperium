@@ -40,7 +40,7 @@ const submit = () => {
                         :invalid="Boolean(form.errors.email)" size="large" fluid />
                     <label for="email">Email</label>
                 </FloatLabel>
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError v-if="form.errors.email" class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4 flex items-center justify-end">
