@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Button icon="pi pi-user" aria-label="User" @click="toggleUserMenu($event)" size="small" />
+        <Button :rounded="rounded" icon="pi pi-user" aria-label="User" @click="toggleUserMenu($event)" size="small" />
         <Popover ref="userMenu" :pt="{ root: { class: 'p-0 m-0' }, content: { class: 'p-0 m-0' } }">
             <Menu :pt="{ root: { class: 'border-none' } }" :model="items">
                 <template #item="{ item, props }">
@@ -24,6 +24,11 @@ const props = defineProps({
     items: {
         type: Object,
         required: true
+    },
+    rounded: {
+        required: false,
+        default: false,
+        type: Boolean
     }
 })
 
