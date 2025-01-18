@@ -22,7 +22,7 @@ class UserResource extends Resource
 
     public static $name = 'User';
 
-    public static $icon = 'pi pi-shield';
+    public static $icon = 'pi pi-users';
 
     public static $route = 'users';
 

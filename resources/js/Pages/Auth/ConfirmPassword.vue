@@ -35,7 +35,7 @@ const submit = () => {
                     <label for="password">Password</label>
                 </FloatLabel>
 
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError v-if="form.errors.password" class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="mt-4 flex justify-end">

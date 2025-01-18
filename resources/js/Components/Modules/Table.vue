@@ -1,10 +1,11 @@
 <template>
     <DataTable :value="showTrash ? (trashedData.length > 0 ? trashedData : data) : data" ref="dt"
-        :scrollable="scrollable" :scrollHeight="scrollHeight" :paginator="paginator" :rows="rows"
-        :rowsPerPageOptions="rowsPerPageOptions" :loading="loading" filterDisplay="row" :filters="filters"
-        :global-filter-fields="globalFilterFields" v-model:selection="selectedData" selectionMode="multiple"
-        :metaKeySelection="metaKey" :dataKey="dataKey" @rowReorder="onRowReorder" @dragstart="showActions = false"
-        @dragover="showActions = true" tableStyle="min-width: 50rem" :pt="{
+        :showGridlines="showGridlines" :stripedRows="stripedRows" :scrollable="scrollable" :scrollHeight="scrollHeight"
+        :paginator="paginator" :rows="rows" :rowsPerPageOptions="rowsPerPageOptions" :loading="loading"
+        filterDisplay="row" :filters="filters" :global-filter-fields="globalFilterFields"
+        v-model:selection="selectedData" selectionMode="multiple" :metaKeySelection="metaKey" :dataKey="dataKey"
+        @rowReorder="onRowReorder" @dragstart="showActions = false" @dragover="showActions = true"
+        tableStyle="min-width: 50rem" :pt="{
             root: {
                 class: 'p-datatable-sm h-full',
             }
@@ -142,7 +143,8 @@ const bulkDeletable = configurations_length.value > 0 ? configurations.bulkDelet
 const searchable = configurations_length.value > 0 ? configurations.searchable : true;
 const exportable = configurations_length.value > 0 ? configurations.exportable : true;
 const canReorder = configurations_length.value > 0 ? configurations.canReorder : true;
-const pooling = computed(() => configurations_length.value > 0 ? configurations.pooling : false);
+const showGridlines = computed(() => configurations_length.value > 0 ? configurations.showGridlines : false);
+const stripedRows = computed(() => configurations_length.value > 0 ? configurations.stripedRows : false);
 const exportCSV = () => {
     dt.value.exportCSV();
 };

@@ -21,6 +21,10 @@ class DataTable
 
     public bool $exportable = true;
 
+    public bool $showGridlines = false;
+
+    public bool $stripedRows = true;
+
     public bool $bulkDeletable = true;
 
     public bool $pooling = true;
@@ -102,6 +106,20 @@ class DataTable
     public function pooling(bool $pooling = true): self
     {
         $this->pooling = $pooling;
+
+        return $this;
+    }
+
+    public function showGridlines(bool $showGridlines = true): self
+    {
+        $this->showGridlines = $showGridlines;
+
+        return $this;
+    }
+
+    public function stripedRows(bool $stripedRows = true): self
+    {
+        $this->stripedRows = $stripedRows;
 
         return $this;
     }

@@ -29,7 +29,7 @@ const submit = () => {
                         :invalid="Boolean(form.errors.name)" size="large" fluid />
                     <label for="name">Name</label>
                 </FloatLabel>
-                <InputError class="mt-2" :error="form.errors.name" />
+                <InputError v-if="form.errors.name" class="mt-2" :error="form.errors.name" />
             </div>
 
             <div class="mt-4">
@@ -38,7 +38,7 @@ const submit = () => {
                         :invalid="Boolean(form.errors.email)" size="large" fluid />
                     <label for="email">Email</label>
                 </FloatLabel>
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError v-if="form.errors.email" class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
@@ -48,7 +48,7 @@ const submit = () => {
                     <label for="password">Password</label>
                 </FloatLabel>
 
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError v-if="form.errors.password" class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="mt-4">
@@ -59,7 +59,8 @@ const submit = () => {
                     <label for="password_confirmation">Confirm Password</label>
                 </FloatLabel>
 
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
+                <InputError v-if="form.errors.password_confirmation" class="mt-2"
+                    :message="form.errors.password_confirmation" />
             </div>
 
             <div class="mt-4 flex items-center justify-between">

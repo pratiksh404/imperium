@@ -5,6 +5,7 @@ import { usePage } from '@inertiajs/vue3';
 import MobileSidebarNavDrawer from './Partials/MobileSidebarNavDrawer.vue';
 import SideMenu from './Partials/SideMenu.vue';
 import Header from './Partials/Header.vue';
+import Container from '@/Components/Container.vue';
 
 
 const page = usePage();
@@ -62,9 +63,11 @@ const props = defineProps({
                 <!-- Page Header -->
                 <Header :title="title" :nav="nav" @open-nav="navDrawerOpen = true" />
                 <!-- Page Content -->
-                <section id="page-content" class="grow px-4 pb-4 pt-0">
+
+
+                <Container :fluid="true">
                     <slot />
-                </section>
+                </Container>
 
                 <!-- <footer class="">
                 <Footer />
