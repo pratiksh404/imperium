@@ -6,8 +6,6 @@ import { usePage } from '@inertiajs/vue3';
 const page = usePage();
 
 const backgroundImage = computed(() => page.props.app.auth.background ?? null);
-
-console.log(backgroundImage.value)
 </script>
 
 <template>

@@ -31,9 +31,7 @@
             variant="simple" class="p-1">
             <span style="font-size: 12px;">{{ field.hintText }}</span>
         </Message>
-        <Message v-if="error" v-for="err in error.split(',')" severity="error" variant="simple" class="p-1">
-            <span style="font-size: 12px;"><i class="pi pi-exclamation-triangle mr-2 mt-1"></i> {{ err }}</span>
-        </Message>
+        <InputError class="mt-2" :error="form.errors.name" />
     </div>
     <div v-else>
         <Message severity="error" size="small" class="mt-2 mb-2">Component not found
@@ -44,6 +42,7 @@
 <script setup>
 import { defineProps, computed, defineModel } from 'vue';
 import { resolveFieldComponent } from '@/Utils/Resource/FormComponentMapper'
+import InputError from '@/Components/InputError.vue';
 
 const resourceModel = defineModel();
 
