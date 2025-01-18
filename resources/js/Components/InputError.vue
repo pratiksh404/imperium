@@ -1,15 +1,13 @@
 <script setup>
 defineProps({
-    message: {
+    error: {
         type: String,
     },
 });
 </script>
 
 <template>
-    <div v-show="message">
-        <p class="text-sm text-red-600">
-            {{ message }}
-        </p>
-    </div>
+    <Message v-if="error" v-for="err in error.split(',')" severity="error" variant="simple" class="p-1">
+        <span style="font-size: 12px;"><i class="pi pi-exclamation-triangle mr-2 mt-1"></i> {{ err }}</span>
+    </Message>
 </template>
