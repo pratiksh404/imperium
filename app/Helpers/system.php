@@ -1,7 +1,5 @@
 <?php
 
-use App\Services\Menu;
-
 if (! function_exists('setting')) {
     function setting($name)
     {
@@ -12,7 +10,7 @@ if (! function_exists('setting')) {
 if (! function_exists('menus')) {
     function menus()
     {
-        return (new Menu)->all();
+        return app('menu');
     }
 }
 

@@ -14,6 +14,7 @@ use App\Services\Resource\Navigation\Breadcrumb;
 use App\Services\Resource\Navigation\BreadcrumbItem;
 use App\Services\Resource\Navigation\MenuItem;
 use App\Services\Resource\Navigation\Navigation;
+use App\Services\Resource\Navigation\PageHeader;
 use App\Services\Resource\Resource;
 
 class UserResource extends Resource
@@ -56,11 +57,14 @@ class UserResource extends Resource
                     ->url(route('users.index'))
                     ->shortcut(1),
             ])
-            ->breadcrumbs([
-                Breadcrumb::make('Users', 'users.index')
-                    ->items([
-                        BreadcrumbItem::make('User List', route('users.index')),
-                    ]),
+            ->headers([
+                PageHeader::make('Users', 'users.index')
+                    ->breadcrumb(
+                        Breadcrumb::make('Users', 'users.index')
+                            ->items([
+                                BreadcrumbItem::make('User List', route('users.index')),
+                            ])
+                    ),
             ]);
     }
 }

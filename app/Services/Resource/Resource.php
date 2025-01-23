@@ -45,7 +45,7 @@ abstract class Resource
             'route' => static::$route,
             'dataTable' => $this->dataTable(),
             'form' => $this->form(),
-            'breadcrumbs' => $this->navigation()->breadcrumbs,
+            'headers' => $this->navigation()->headers,
             'menus' => $this->navigation()->menus,
         ];
     }

@@ -16,18 +16,14 @@
             </div>
         </template>
     </PageHeader>
-    <Card :pt="{ root: { class: 'h-5/6' }, body: { class: 'h-full' }, content: { class: 'h-full' } }">
-        <template #content>
-            <slot name="table"></slot>
-        </template>
-    </Card>
+    <slot name="table"></slot>
 
 </template>
 <script setup>
 import { defineProps, ref, computed } from 'vue';
 import ModuleFormOverlay from "@/Components/Modules/FormOverlay.vue";
 import ResourceForm from '@/Components/Form/ResourceForm.vue';
-import PageHeader from '@/Layouts/Partials/PageHeader.vue';
+import PageHeader from '@/Components/PageHeader.vue';
 import { useShortcut } from "@/Composables/shortcut";
 defineProps({
     name: {

@@ -6,7 +6,7 @@ class Navigation
 {
     public array $menus = [];
 
-    public array $breadcrumbs = [];
+    public array $headers = [];
 
     public function menus(array $menus): self
     {
@@ -15,9 +15,9 @@ class Navigation
         return $this;
     }
 
-    public function breadcrumbs(array $breadcrumbs): self
+    public function headers(array $headers): self
     {
-        $this->breadcrumbs = $breadcrumbs;
+        $this->headers = $headers;
 
         return $this;
     }

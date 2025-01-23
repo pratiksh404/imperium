@@ -1,11 +1,14 @@
 html {
-    /* font size will determine the component/utility scaling */
     font-size: 14px;
 }
 
 body {
     margin: 0 !important;
     padding: 0 !important;
+}
+
+a {
+    text-decoration: none !important;
 }
 
 #nprogress .bar {

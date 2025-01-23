@@ -14,11 +14,12 @@ const props = defineProps({
 </script>
 
 <template>
-    <div :class="[
-        { 'max-w-screen-xl mx-auto': !fluid },
-        spacedMobile ? 'px-4' : 'px-0',
-        'md:px-8 h-4/5',
-    ]">
-        <slot />
-    </div>
+    <main class="-mt-32 h-full">
+        <div class="mx-auto  px-4 pb-2 sm:px-6 lg:px-8 h-full">
+            <div class="rounded-lg bg-white dark:bg-surface-900 px-2 py-6 shadow sm:px-6 h-full">
+                <slot />
+            </div>
+        </div>
+    </main>
+
 </template>

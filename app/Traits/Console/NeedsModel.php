@@ -5,7 +5,6 @@ namespace App\Traits\Console;
 use Illuminate\Support\Str;
 
 use function Laravel\Prompts\search;
-use function Laravel\Prompts\select;
 
 trait NeedsModel
 {
@@ -13,9 +12,8 @@ trait NeedsModel
     {
 
         $models = getAllModels();
-        // $model = select('Select model', $models);
         $namespace = search(
-            label: 'Search for the user that should receive the mail',
+            label: 'Search for the model',
             options: fn (string $value) => collect($models)
                 ->filter(fn ($namespace, $modelName) => Str::contains($namespace, $value, ignoreCase: true))
                 ->values()
