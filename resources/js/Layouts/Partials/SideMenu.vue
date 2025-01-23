@@ -100,7 +100,7 @@ const collapseMouseLeave = () => {
 </script>
 <template>
 
-    <div class="flex flex-col h-screen" :class="{ 'w-16': collapsed }" @mouseover="collapseMouseOver"
+    <div class="flex flex-col" :class="{ 'w-16': collapsed }" @mouseover="collapseMouseOver"
         @mouseleave="collapseMouseLeave">
         <div class="overflow-y-auto">
             <div class="hidden lg:block">
@@ -134,7 +134,7 @@ const collapseMouseLeave = () => {
                     :item="item" />
             </ul>
         </div>
-        <div v-if="user" class="mt-auto fixed bottom-0 bg-white dark:bg-surface-900 h-20 flex justify-between"
+        <div v-if="user" class="mt-auto fixed bottom-0 bg-white dark:bg-surface-900 flex justify-between"
             :class="{ 'w-16': collapsed }">
             <Link :href="route('profile.edit')" v-ripple
                 class="mx-3 my-1 flex items-center cursor-pointer p-4 gap-2 rounded text-surface-700  dark:text-surface-0  duration-150 transition-colors p-ripple no-underline">

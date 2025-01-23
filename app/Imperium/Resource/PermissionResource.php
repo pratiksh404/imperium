@@ -2,28 +2,26 @@
 
 namespace App\Imperium\Resource;
 
-use App\Models\Admin\Role;
+use App\Models\Admin\Permission;
 use App\Services\Resource\DataTable\Columns\TextColumn;
 use App\Services\Resource\DataTable\DataTable;
 use App\Services\Resource\Form\Fields\TextField;
 use App\Services\Resource\Form\Form;
 use App\Services\Resource\Navigation\Breadcrumb;
 use App\Services\Resource\Navigation\BreadcrumbItem;
-use App\Services\Resource\Navigation\HeaderPoint;
 use App\Services\Resource\Navigation\MenuItem;
 use App\Services\Resource\Navigation\Navigation;
-use App\Services\Resource\Navigation\PageHeader;
 use App\Services\Resource\Resource;
 
-class RoleResource extends Resource
+class PermissionResource extends Resource
 {
-    public static $model = Role::class;
+    public static $model = Permission::class;
 
-    public static $name = 'Role';
+    public static $name = 'Permission';
 
     public static $icon = 'pi pi-shield';
 
-    public static $route = 'roles';
+    public static $route = 'permissions';
 
     public function dataTable(): DataTable
     {
@@ -37,7 +35,7 @@ class RoleResource extends Resource
     {
         return (new Form)
             ->fields([
-                TextField::make('name'),
+                TextField::make('id'),
             ]);
     }
 
@@ -45,22 +43,15 @@ class RoleResource extends Resource
     {
         return (new Navigation)
             ->menus([
-                MenuItem::make('Roles')
+                MenuItem::make('Permissions')
                     ->icon(self::$icon)
-                    ->url(route('roles.index'))
+                    ->url(route('permissions.index'))
                     ->shortcut(1),
             ])
-            ->headers([
-                PageHeader::make('Roles', 'roles.index')
-                    ->breadcrumb(
-                        Breadcrumb::make('Roles', 'roles.index')
-                            ->items([
-                                BreadcrumbItem::make('Role List', route('roles.index')),
-                            ])
-                    )
-                    ->points([
-                        HeaderPoint::make('Total Roles : '.Role::count(), 'pi pi-shield'),
-                        HeaderPoint::make('Trash Roles : '.Role::onlyTrashed()->count(), 'pi pi-trash'),
+            ->breadcrumbs([
+                Breadcrumb::make('Permissions', 'permissions.index')
+                    ->items([
+                        BreadcrumbItem::make('Permission List', route('permissions.index')),
                     ]),
             ]);
     }

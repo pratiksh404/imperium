@@ -45,9 +45,9 @@ class HandleInertiaRequests extends Middleware
             $authenticatedUser = $request->user('web');
 
             $resources = resources();
-            $breadcrumbs = Arr::collapse(array_column($resources, 'breadcrumbs'));
+            $headers = Arr::collapse(array_column($resources, 'headers'));
             $route_name = $request->route()->getName();
-            $breadcrumb = collect($breadcrumbs)->where('for', $route_name)->first();
+            $header = collect($headers)->where('for', $route_name)->first();
 
             $authenticated_data = [
                 'imperium' => config('imperium'),
@@ -60,7 +60,7 @@ class HandleInertiaRequests extends Middleware
                 ],
                 'menuItems' => menus(),
                 'resources' => $resources,
-                'breadcrumb' => $breadcrumb ?? null,
+                'header' => $header ?? null,
                 'can' => [
                     'viewAny' => ! is_null($authenticatedUser) ? ifUserCanForAllModules($authenticatedUser, 'viewAny') : null,
                     'create' => ! is_null($authenticatedUser) ? ifUserCanForAllModules($authenticatedUser, 'create') : null,

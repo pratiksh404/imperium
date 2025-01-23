@@ -23,8 +23,7 @@ import Container from './Components/Container.vue';
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 const darkMode = useDark(); // set Light/Dark Mode
 
-// App Layout
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
 
 const pinia = createPinia()
 

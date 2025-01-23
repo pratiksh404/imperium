@@ -22,7 +22,10 @@ class ImperiumServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->app->singleton('menu', function () {
+            return include app_path('Imperium/menu.php');
+        });
+
     }
 
     protected function bindRepositoryToInterface(): void

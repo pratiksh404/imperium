@@ -32,6 +32,46 @@ class ImperiumResourceGenerator extends Generator implements GeneratorInterface
             $this->getStub('ImperiumResource'),
         );
 
+        // Adding Resource to menu
+        $this->addToMenu();
+
         return $this->makeFile(app_path('Imperium/Resource/'.$this->name.'Resource.php'), $template);
+    }
+
+    private function addToMenu()
+    {
+
+        $menuPath = app_path('Imperium/menu.php');
+        $resourcePath = "App\Imperium\Resource\\".$this->name.'Resource::class';
+        $newLine = "App\Services\Resource\Navigation\MenuResourceItem::make(".$resourcePath."),\n";
+
+        if (file_exists($menuPath)) {
+            // Read the existing file content
+            $content = file_get_contents($menuPath);
+
+            // Check if the line already exists
+            if (strpos($content, trim($newLine)) === false) {
+                // Find the end of the array (before the closing `];`)
+                $pattern = '/return \[\s*(.*)\s*\];/s'; // Match the entire `return [ ... ];` block
+                $replacement = preg_replace_callback($pattern, function ($matches) use ($newLine) {
+                    // Insert the new line before the closing `]`
+                    $arrayContent = rtrim($matches[1]); // Existing array content
+
+                    return "return [\n".$arrayContent."\n".$newLine.'];';
+                }, $content);
+
+                // Write back the modified content to the file
+                if ($replacement !== $content) {
+                    file_put_contents($menuPath, $replacement);
+                    echo 'Line added successfully.';
+                } else {
+                    echo 'No changes were made. Pattern not found.';
+                }
+            } else {
+                echo 'The line already exists. No changes were made.';
+            }
+        } else {
+            echo 'Configuration file not found.';
+        }
     }
 }

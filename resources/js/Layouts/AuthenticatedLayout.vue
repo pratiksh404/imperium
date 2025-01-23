@@ -44,7 +44,7 @@ const props = defineProps({
         </MobileSidebarNavDrawer>
     </Teleport>
 
-    <div class="h-screen flex flex-col bg-gray-100 dark:bg-neutral-900">
+    <div class="min-h-screen flex flex-col bg-gray-100 dark:bg-neutral-900">
 
         <main class="flex-1">
             <!-- Desktop Sidebar -->
@@ -56,7 +56,7 @@ const props = defineProps({
             </aside>
 
             <!-- Scrollable Content -->
-            <div :class="{ 'lg:ml-80': !collapsed, 'lg:ml-20': collapsed }" class="flex flex-col h-full">
+            <div :class="{ 'lg:ml-80': !collapsed, 'lg:ml-20': collapsed }" class="flex flex-col h-screen">
                 <!-- Page Content -->
 
                 <!-- Page Header -->

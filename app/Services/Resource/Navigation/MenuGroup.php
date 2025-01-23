@@ -2,6 +2,8 @@
 
 namespace App\Services\Resource\Navigation;
 
+use Illuminate\Support\Arr;
+
 class MenuGroup
 {
     public string $label;
@@ -59,7 +61,7 @@ class MenuGroup
     public function group(?array $group = null): self
     {
         if (! is_null($group)) {
-            $this->group = $group;
+            $this->group = Arr::flatten($group);
         }
 
         return $this;
