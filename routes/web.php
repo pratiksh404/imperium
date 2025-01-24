@@ -23,8 +23,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('/dashboard', 'Admin/Dashboard')->name('dashboard');
 
     $namespace = 'App\\Http\\Controllers\\Admin\\Resourceful';
-    $resourcefulControllers = getFilesWithPaths(base_path(str_replace('\\', '/', $namespace)));
-
+    // $resourcefulControllers = getFilesWithPaths(base_path(str_replace('\\', '/', $namespace)));
+    $path = base_path('app/Http/Controllers/Admin/Resourceful');
+    $resourcefulControllers = getFilesWithPaths($path);
     foreach ($resourcefulControllers as $name => $file_name) {
         $route = Str::plural(strtolower(str_replace('Controller', '', $name)));
         $controller = $namespace.'\\'.$name;

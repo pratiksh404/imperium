@@ -25,7 +25,7 @@ class MenuItem
 
     public ?string $shortcut;
 
-    public $authorize = true;
+    public bool $authorize = true;
 
     public function __construct(string $label)
     {

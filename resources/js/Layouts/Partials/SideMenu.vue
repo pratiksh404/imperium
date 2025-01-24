@@ -21,13 +21,13 @@ const user = computed(() => page.props.auth.user ?? null);
 
 const memoizedMenuItem = new Map();
 
-const menuItem = (label, icon, url, type, badge, shortcut, items) => {
+const menuItem = (label, icon, url, type, badge, shortcut, items,authorize) => {
     const nodeKey = label;
     if (memoizedMenuItem.has(nodeKey)) {
         return memoizedMenuItem.get(nodeKey);
     }
 
-    const nodeItems = items != null && items.length ? items.map(item => menuItem(item.label, item.icon, item.url, item.type, item.badge, item.shortcut, item.items)) : null;
+    const nodeItems = items != null && items.length ? items.map(item => menuItem(item.label, item.icon, item.url, item.type, item.badge, item.shortcut, item.items, item.authorize)) : null;
     const isActive = route(currentRoute) === url;
 
     const menuItemObj = {
@@ -39,7 +39,8 @@ const menuItem = (label, icon, url, type, badge, shortcut, items) => {
         badge: badge,
         shortcut: shortcut,
         active: isActive,
-        items: nodeItems
+        items: nodeItems,
+        authorize: authorize
     };
 
     memoizedMenuItem.set(nodeKey, menuItemObj);
@@ -58,20 +59,35 @@ const mapGroupItems = (group) => {
         return memoizedGroupItems.get(groupKey);
     }
 
-    const newGroup = { ...group, group: group.group.map(item => menuItem(item.label, item.icon, item.url, item.type, item.badge, item.shortcut, item.items)) };
+    const newGroup = { ...group, group: group.group.map(item => menuItem(item.label, item.icon, item.url, item.type, item.badge, item.shortcut, item.items, item.authorize)) };
     memoizedGroupItems.set(groupKey, newGroup);
     return newGroup;
 };
 
 const menuGroups = computed(() => {
     const data = menu.value;
-    return filterGroups(data).map(mapGroupItems);
+    return authorizationFilter(filterGroups(data).map(mapGroupItems));
 });
 
 const menuItems = computed(() => {
     const data = menu.value;
-    return data.filter(grp => (grp.group ?? []).length === 0).map(item => menuItem(item.label, item.icon, item.url, item.type, item.badge, item.shortcut, item.items));
+    return authorizationFilter(data.filter(item => (item.group ?? []).length === 0).map(item => menuItem(item.label, item.icon, item.url, item.type, item.badge, item.shortcut, item.items, item.authorize)));
 });
+
+const authorizationFilter = (data) => {
+    const authorizedData = data.filter(item => (item.authorize));
+    authorizedData.forEach(item => {
+        if (item.items) {
+            item.items = authorizationFilter(item.items);
+        }
+        if (item.group) {
+            item.group = authorizationFilter(item.group);
+        }
+    });
+    return authorizedData;
+};
+
+console.log(menuGroups.value);
 
 const initialCollapseToggle = () => {
     collapseToggle(!initialCollapsed.value);
@@ -93,8 +109,6 @@ const collapseMouseLeave = () => {
         collapseToggle(true);
     }
 }
-
-
 
 </script>
 <template>
