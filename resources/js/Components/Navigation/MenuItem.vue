@@ -1,10 +1,10 @@
 <template>
     <!-- Menu Item -->
     <li v-if="item.items">
-        <MenuDropdownItems :item="item" :active="active" :collapsed="collapsed" />
+        <MenuDropdownItems :item="item" :active="active" />
     </li>
     <li v-else>
-        <MenuLinkItem :item="item" :active="active" :collapsed="collapsed" />
+        <MenuLinkItem :item="item" :active="active" />
     </li>
 
 </template>
@@ -18,11 +18,6 @@ const props = defineProps({
     item: {
         type: Object,
         required: true
-    },
-    collapsed: {
-        type: Boolean,
-        required: false,
-        default: false
     }
 })
 

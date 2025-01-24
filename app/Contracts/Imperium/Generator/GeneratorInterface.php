@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts\Generator;
+namespace App\Contracts\Imperium\Generator;
 
 interface GeneratorInterface
 {

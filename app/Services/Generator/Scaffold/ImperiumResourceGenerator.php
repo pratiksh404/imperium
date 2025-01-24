@@ -2,7 +2,7 @@
 
 namespace App\Services\Generator\Scaffold;
 
-use App\Contracts\Generator\GeneratorInterface;
+use App\Contracts\Imperium\Generator\GeneratorInterface;
 use App\Services\Generator\Generator;
 use Illuminate\Support\Str;
 
@@ -41,37 +41,80 @@ class ImperiumResourceGenerator extends Generator implements GeneratorInterface
     private function addToMenu()
     {
 
-        $menuPath = app_path('Imperium/menu.php');
-        $resourcePath = "App\Imperium\Resource\\".$this->name.'Resource::class';
-        $newLine = "App\Services\Resource\Navigation\MenuResourceItem::make(".$resourcePath."),\n";
+        // $menuPath = app_path('Imperium/menu.php');
+        // $resourcePath = "App\Imperium\Resource\\".$this->name.'Resource::class';
+        // $newLine = "App\Services\Resource\Navigation\MenuResourceItem::make(".$resourcePath."),\n";
+
+        // if (file_exists($menuPath)) {
+        //     // Read the existing file content
+        //     $content = file_get_contents($menuPath);
+
+        //     // Check if the line already exists
+        //     if (strpos($content, trim($newLine)) === false) {
+        //         // Find the end of the array (before the closing `];`)
+        //         $pattern = '/return \[\s*(.*)\s*\];/s'; // Match the entire `return [ ... ];` block
+        //         $replacement = preg_replace_callback($pattern, function ($matches) use ($newLine) {
+        //             // Insert the new line before the closing `]`
+        //             $arrayContent = rtrim($matches[1]); // Existing array content
+
+        //             return "return [\n".$arrayContent."\n".$newLine.'];';
+        //         }, $content);
+
+        //         // Write back the modified content to the file
+        //         if ($replacement !== $content) {
+        //             file_put_contents($menuPath, $replacement);
+        //             echo 'Line added successfully.';
+        //         } else {
+        //             echo 'No changes were made. Pattern not found.';
+        //         }
+        //     } else {
+        //         echo 'The line already exists. No changes were made.';
+        //     }
+        // } else {
+        //     echo 'Configuration file not found.';
+        // }
+
+        $menuPath = app_path('Imperium/Navigation.php');
+        $resourcePath = "\App\Imperium\Resource\\".$this->name.'Resource::class';
+        $newLine = 'MenuResourceItem::make('.$resourcePath.'),';
 
         if (file_exists($menuPath)) {
             // Read the existing file content
             $content = file_get_contents($menuPath);
 
-            // Check if the line already exists
-            if (strpos($content, trim($newLine)) === false) {
-                // Find the end of the array (before the closing `];`)
-                $pattern = '/return \[\s*(.*)\s*\];/s'; // Match the entire `return [ ... ];` block
-                $replacement = preg_replace_callback($pattern, function ($matches) use ($newLine) {
+            // Match the `return []` inside the `menu()` method
+            $pattern = '/public\s+static\s+function\s+menu\(\)\s*\{\s*return\s*\[\s*(.*)\s*\];\s*\}/s';
+
+            if (preg_match($pattern, $content, $matches)) {
+                // Check if the line already exists
+                if (strpos($matches[1], trim($newLine)) === false) {
                     // Insert the new line before the closing `]`
-                    $arrayContent = rtrim($matches[1]); // Existing array content
+                    $arrayContent = rtrim($matches[1]);
+                    $modifiedArrayContent = $arrayContent."\n                ".$newLine;
 
-                    return "return [\n".$arrayContent."\n".$newLine.'];';
-                }, $content);
+                    // Replace the matched return block with the updated block
+                    $replacement = preg_replace(
+                        $pattern,
+                        "public static function menu()\n    {\n        return [\n            $modifiedArrayContent\n        ];\n    }",
+                        $content
+                    );
 
-                // Write back the modified content to the file
-                if ($replacement !== $content) {
-                    file_put_contents($menuPath, $replacement);
-                    echo 'Line added successfully.';
+                    // Write back the modified content to the file
+                    if ($replacement !== $content) {
+                        file_put_contents($menuPath, $replacement);
+                        echo 'Line added successfully.';
+                    } else {
+                        echo 'No changes were made. Pattern not found.';
+                    }
                 } else {
-                    echo 'No changes were made. Pattern not found.';
+                    echo 'The line already exists. No changes were made.';
                 }
             } else {
-                echo 'The line already exists. No changes were made.';
+                echo 'Could not find the menu() method structure in the file.';
             }
         } else {
             echo 'Configuration file not found.';
         }
+
     }
 }

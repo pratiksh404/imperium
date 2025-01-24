@@ -21,13 +21,13 @@ const user = computed(() => page.props.auth.user ?? null);
 
 const memoizedMenuItem = new Map();
 
-const menuItem = (label, icon, url, badge, shortcut, items) => {
+const menuItem = (label, icon, url, type, badge, shortcut, items) => {
     const nodeKey = label;
     if (memoizedMenuItem.has(nodeKey)) {
         return memoizedMenuItem.get(nodeKey);
     }
 
-    const nodeItems = items != null && items.length ? items.map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items)) : null;
+    const nodeItems = items != null && items.length ? items.map(item => menuItem(item.label, item.icon, item.url, item.type, item.badge, item.shortcut, item.items)) : null;
     const isActive = route(currentRoute) === url;
 
     const menuItemObj = {
@@ -35,6 +35,7 @@ const menuItem = (label, icon, url, badge, shortcut, items) => {
         label: label,
         icon: icon,
         url: url,
+        type: type,
         badge: badge,
         shortcut: shortcut,
         active: isActive,
@@ -57,7 +58,7 @@ const mapGroupItems = (group) => {
         return memoizedGroupItems.get(groupKey);
     }
 
-    const newGroup = { ...group, group: group.group.map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items)) };
+    const newGroup = { ...group, group: group.group.map(item => menuItem(item.label, item.icon, item.url, item.type, item.badge, item.shortcut, item.items)) };
     memoizedGroupItems.set(groupKey, newGroup);
     return newGroup;
 };
@@ -69,7 +70,7 @@ const menuGroups = computed(() => {
 
 const menuItems = computed(() => {
     const data = menu.value;
-    return data.filter(grp => (grp.group ?? []).length === 0).map(item => menuItem(item.label, item.icon, item.url, item.badge, item.shortcut, item.items));
+    return data.filter(grp => (grp.group ?? []).length === 0).map(item => menuItem(item.label, item.icon, item.url, item.type, item.badge, item.shortcut, item.items));
 });
 
 const initialCollapseToggle = () => {
@@ -84,14 +85,12 @@ const collapseToggle = (collapse) => {
 const collapseMouseOver = () => {
     if (initialCollapsed.value && collapsed.value) {
         collapseToggle(false);
-        console.log('mouse over');
     }
 }
 
 const collapseMouseLeave = () => {
     if (initialCollapsed.value && !collapsed.value) {
         collapseToggle(true);
-        console.log('mouse leave');
     }
 }
 

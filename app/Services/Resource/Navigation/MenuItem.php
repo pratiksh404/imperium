@@ -4,7 +4,16 @@ namespace App\Services\Resource\Navigation;
 
 class MenuItem
 {
+    //    Menu Type
+    public const ROUTE = 'route';
+
+    public const URL = 'url';
+
+    public string $type = self::ROUTE;
+
     public string $label;
+
+    public ?string $description = null;
 
     public ?string $icon = 'pi pi-circle';
 
@@ -28,6 +37,13 @@ class MenuItem
         return new static($label);
     }
 
+    public function type(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
     public function authorize(bool $authorize = true): self
     {
         $this->authorize = $authorize;
@@ -38,6 +54,13 @@ class MenuItem
     public function url(?string $url = null): self
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    public function description(?string $description = null): self
+    {
+        $this->description = $description;
 
         return $this;
     }
@@ -94,6 +117,7 @@ class MenuItem
     public function toArray(): array
     {
         return [
+            'type' => $this->type,
             'label' => $this->label,
             'icon' => $this->icon,
             'url' => $this->url,
