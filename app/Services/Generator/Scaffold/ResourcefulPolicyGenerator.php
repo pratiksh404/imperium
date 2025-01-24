@@ -2,7 +2,7 @@
 
 namespace App\Services\Generator\Scaffold;
 
-use App\Contracts\Generator\GeneratorInterface;
+use App\Contracts\Imperium\Generator\GeneratorInterface;
 use App\Services\Generator\Generator;
 
 class ResourcefulPolicyGenerator extends Generator implements GeneratorInterface

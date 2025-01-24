@@ -2,7 +2,7 @@
 
 namespace App\Services\Generator\Scaffold;
 
-use App\Contracts\Generator\GeneratorInterface;
+use App\Contracts\Imperium\Generator\GeneratorInterface;
 use App\Models\Admin\Permission;
 use App\Models\Admin\Role;
 use App\Services\Generator\Generator;

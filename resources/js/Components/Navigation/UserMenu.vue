@@ -73,7 +73,6 @@ const props = defineProps({
     }
 })
 
-const userMenu = ref();
 
 const user = computed(() => usePage().props.auth.user);
 
