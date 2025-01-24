@@ -38,6 +38,7 @@ if (! function_exists('getFilesWithPaths')) {
 
         // Normalize the base path
         $basePath = realpath($basePath);
+
         if ($basePath === false || ! is_dir($basePath)) {
             return $filesWithPaths; // Return an empty array if the base path is invalid
         }

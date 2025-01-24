@@ -4,6 +4,7 @@ namespace App\Imperium\Resource;
 
 use App\Models\Admin\Role;
 use App\Services\Resource\DataTable\Columns\TextColumn;
+use Illuminate\Support\Facades\Auth;
 use App\Services\Resource\DataTable\DataTable;
 use App\Services\Resource\Form\Fields\TextField;
 use App\Services\Resource\Form\Form;
@@ -43,12 +44,13 @@ class RoleResource extends Resource
 
     public function navigation(): Navigation
     {
+        $auth_user = Auth::user();
         return (new Navigation)
             ->menus([
                 MenuItem::make('Roles')
                     ->icon(self::$icon)
                     ->url(route('roles.index'))
-                    ->shortcut(1),
+                    ->authorize($auth_user->can('viewAny',Role::class)),
             ])
             ->headers([
                 PageHeader::make('Roles', 'roles.index')

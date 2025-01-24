@@ -21,6 +21,7 @@ const props = defineProps({
     }
 })
 
+
 const hasActiveChild = (item) => {
     if (!item.items) return false;
     return item.items.some(child => child.active || hasActiveChild(child));
