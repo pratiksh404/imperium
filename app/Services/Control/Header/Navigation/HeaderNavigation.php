@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services\Control\Header;
+namespace App\Services\Control\Header\Navigation;
+
+use App\Services\Resource\Navigation\MenuItem;
 
 class HeaderNavigation
 {
-    public array $menus = [];
-
     public $authorize = true;
 
     public array $profileMenuItems = [];
@@ -16,7 +16,10 @@ class HeaderNavigation
 
     public function profileMenus(array $profileMenuItems = []): self
     {
-        $this->profileMenuItems = $profileMenuItems;
+        $this->profileMenuItems = (count($profileMenuItems) > 0 ? $profileMenuItems : []) ? $profileMenuItems : [
+            MenuItem::make('Profile')->url(route('profile.edit'))->icon('pi pi-user'),
+            MenuItem::make('Logout')->url(route('logout'))->icon('pi pi-sign-out'),
+        ];
 
         return $this;
     }

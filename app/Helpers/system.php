@@ -16,6 +16,13 @@ if (! function_exists('menus')) {
     }
 }
 
+if (! function_exists('appHeader')) {
+    function appHeader()
+    {
+        return (new Application)->header();
+    }
+}
+
 if (! function_exists('resources')) {
     function resources()
     {

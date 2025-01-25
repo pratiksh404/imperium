@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, defineEmits } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+import { useMenu } from '@/Composables/useMenu';
 import MenuItem from '@/Components/Navigation/MenuItem.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 
@@ -12,80 +13,11 @@ const emit = defineEmits(['isCollapsed']);
 
 const page = usePage();
 
-// Current Route
-const currentRoute = route().current();
-
 const menu = computed(() => page.props.menuItems ?? []);
 
 const user = computed(() => page.props.auth.user ?? null);
 
-const memoizedMenuItem = new Map();
-
-const menuItem = (label, icon, url, type, badge, shortcut, items,authorize) => {
-    const nodeKey = label;
-    if (memoizedMenuItem.has(nodeKey)) {
-        return memoizedMenuItem.get(nodeKey);
-    }
-
-    const nodeItems = items != null && items.length ? items.map(item => menuItem(item.label, item.icon, item.url, item.type, item.badge, item.shortcut, item.items, item.authorize)) : null;
-    const isActive = route(currentRoute) === url;
-
-    const menuItemObj = {
-        key: nodeKey,
-        label: label,
-        icon: icon,
-        url: url,
-        type: type,
-        badge: badge,
-        shortcut: shortcut,
-        active: isActive,
-        items: nodeItems,
-        authorize: authorize
-    };
-
-    memoizedMenuItem.set(nodeKey, menuItemObj);
-    return menuItemObj;
-};
-
-const filterGroups = (data) => {
-    return data.filter(grp => (grp.group ?? []).length > 0);
-};
-
-const memoizedGroupItems = new Map();
-
-const mapGroupItems = (group) => {
-    const groupKey = group.label;
-    if (memoizedGroupItems.has(groupKey)) {
-        return memoizedGroupItems.get(groupKey);
-    }
-
-    const newGroup = { ...group, group: group.group.map(item => menuItem(item.label, item.icon, item.url, item.type, item.badge, item.shortcut, item.items, item.authorize)) };
-    memoizedGroupItems.set(groupKey, newGroup);
-    return newGroup;
-};
-
-const menuGroups = computed(() => {
-    const data = menu.value;
-    return authorizationFilter(filterGroups(data).map(mapGroupItems));
-});
-
-const menuItems = computed(() => {
-    const data = menu.value;
-    return authorizationFilter(data.filter(item => (item.group ?? []).length === 0).map(item => menuItem(item.label, item.icon, item.url, item.type, item.badge, item.shortcut, item.items, item.authorize)));
-});
-
-const authorizationFilter = (data) => {
-    const authorizedData = data.filter(item => (item.authorize));
-    authorizedData.forEach(item => {
-        if (item.items) {
-            item.items = authorizationFilter(item.items);
-        }
-        if (item.group) {
-            item.group = authorizationFilter(item.group);
-        }
-    });
-    return authorizedData;
-};
+const { menuItems, menuGroups } = useMenu(menu);
 
 const initialCollapseToggle = () => {
     collapseToggle(!initialCollapsed.value);
