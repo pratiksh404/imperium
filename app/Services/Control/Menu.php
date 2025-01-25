@@ -15,4 +15,9 @@ class Menu
     {
         return new static($items);
     }
+
+    public function toArray(): array
+    {
+        return $this->items;
+    }
 }

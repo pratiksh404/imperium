@@ -1,6 +1,6 @@
 <?php
 
-use App\Imperium\Navigation;
+use App\Imperium\Application;
 
 if (! function_exists('setting')) {
     function setting($name)
@@ -12,7 +12,7 @@ if (! function_exists('setting')) {
 if (! function_exists('menus')) {
     function menus()
     {
-        return (new Navigation)->menu();
+        return (new Application)->menu()->toArray();
     }
 }
 

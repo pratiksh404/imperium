@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Services\Navigation;
+namespace App\Services\Control;
 
 use App\Services\Control\Header\Header;
-use App\Services\Control\Menu;
-use App\Services\Control\Sidebar;
 
 abstract class Imperium
 {
