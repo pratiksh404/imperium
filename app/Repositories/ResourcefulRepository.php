@@ -51,9 +51,7 @@ class ResourcefulRepository implements ResourcefulInterface
     {
         $model = $this->model::create($request->validated());
 
-        return [
-            strtolower($this->name) => $model,
-        ];
+        return $model;
     }
 
     public function show(Model $model)
@@ -74,9 +72,7 @@ class ResourcefulRepository implements ResourcefulInterface
     {
         $model = $model->update($request->validated());
 
-        return [
-            strtolower($this->name) => $model,
-        ];
+        return $model;
     }
 
     public function destroy(Model $model)

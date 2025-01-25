@@ -2,12 +2,16 @@
 
 namespace App\Services\Resource;
 
+use App\Models\User;
 use App\Services\Resource\DataTable\DataTable;
 use App\Services\Resource\Form\Form;
 use App\Services\Resource\Navigation\Navigation;
+use Illuminate\Support\Facades\Auth;
 
 abstract class Resource
 {
+    protected User $authUser;
+
     /**
      * The associated model for this resource.
      *
@@ -35,6 +39,11 @@ abstract class Resource
      * @var string
      */
     public static $route;
+
+    public function __construct()
+    {
+        $this->authUser = User::find(Auth::user()->id);
+    }
 
     public function get()
     {

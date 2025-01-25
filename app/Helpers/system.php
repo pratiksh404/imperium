@@ -20,7 +20,9 @@ if (! function_exists('resources')) {
     function resources()
     {
         $namespace = 'App\\Imperium\\Resource';
-        $resources = getFilesWithPaths(base_path(str_replace('\\', '/', $namespace)));
+        $path = base_path('app/Imperium/Resource');
+        $resources = getFilesWithPaths($path);
+        // $resources = getFilesWithPaths(base_path(str_replace('\\', '/', $namespace)));
         $data = [];
         foreach ($resources as $resource => $resource_file) {
             $resource_data = (new ($namespace.'\\'.$resource))->get();
