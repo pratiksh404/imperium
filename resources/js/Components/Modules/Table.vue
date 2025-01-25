@@ -129,7 +129,6 @@ const props = defineProps({
 
 // Table Configuration
 const resource = computed(() => usePage().props.resources[props.name]);
-console.log(usePage().props);
 const configurations = computed(() => Object.keys(resource.value.dataTable).length > 0 ? resource.value.dataTable : []).value;
 const configurations_length = computed(() => Object.keys(configurations).length);
 const columns = configurations_length.value > 0 ? configurations.columns : [];

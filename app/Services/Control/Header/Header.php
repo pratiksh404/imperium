@@ -2,7 +2,7 @@
 
 namespace App\Services\Control\Header;
 
-use App\Services\Resource\Navigation\MenuItem;
+use App\Services\Control\Header\Navigation\HeaderNavigation;
 
 class Header
 {
@@ -14,21 +14,9 @@ class Header
 
     public HeaderNavigation $navigation;
 
-    public array $profileMenus = [];
-
     public function navigation(HeaderNavigation $navigation): self
     {
         $this->navigation = $navigation;
-
-        return $this;
-    }
-
-    public function profileMenus(?array $profileMenus = null): self
-    {
-        $this->profileMenus = $profileMenus ?? [
-            MenuItem::make('Profile')->url(route('profile.edit'))->icon('pi pi-user'),
-            MenuItem::make('Logout')->url(route('logout'))->icon('pi pi-sign-out'),
-        ];
 
         return $this;
     }

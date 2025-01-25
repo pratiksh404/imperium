@@ -3,6 +3,7 @@
 namespace App\Imperium;
 
 use App\Services\Control\Header\Header;
+use App\Services\Control\Header\Navigation\HeaderNavigation;
 use App\Services\Control\Imperium;
 use App\Services\Control\Menu;
 use App\Services\Control\Sidebar;
@@ -28,7 +29,16 @@ class Application extends Imperium
 
     public function header(): Header
     {
-        return new Header;
+        return (new Header)
+            ->navigation(
+                (new HeaderNavigation)
+                    ->headerLinkMenus([
+                        MenuItem::make('PrimeVue')->url('https://www.primefaces.org/primevue/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                        MenuItem::make('Vue')->url('https://vuejs.org/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                        MenuItem::make('Laravel')->url('https://laravel.com/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                        MenuItem::make('Inertia')->url('https://inertiajs.com')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                    ])
+            );
     }
 
     public function sidebar(): Sidebar

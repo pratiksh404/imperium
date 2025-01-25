@@ -38,7 +38,7 @@ const props = defineProps({
         default: () => usePage().props.header
     }
 });
-console.log(props.header)
+
 const headerTitle = computed(() => props.header?.title ?? null);
 const headerPoints = computed(() => props.header?.points ?? []);
 
