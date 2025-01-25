@@ -87,8 +87,6 @@ const authorizationFilter = (data) => {
     return authorizedData;
 };
 
-console.log(menuGroups.value);
-
 const initialCollapseToggle = () => {
     collapseToggle(!initialCollapsed.value);
     initialCollapsed.value = collapsed.value;

@@ -129,6 +129,7 @@ const props = defineProps({
 
 // Table Configuration
 const resource = computed(() => usePage().props.resources[props.name]);
+console.log(usePage().props);
 const configurations = computed(() => Object.keys(resource.value.dataTable).length > 0 ? resource.value.dataTable : []).value;
 const configurations_length = computed(() => Object.keys(configurations).length);
 const columns = configurations_length.value > 0 ? configurations.columns : [];
@@ -145,6 +146,7 @@ const exportable = configurations_length.value > 0 ? configurations.exportable :
 const canReorder = configurations_length.value > 0 ? configurations.canReorder : true;
 const showGridlines = computed(() => configurations_length.value > 0 ? configurations.showGridlines : false);
 const stripedRows = computed(() => configurations_length.value > 0 ? configurations.stripedRows : false);
+
 const exportCSV = () => {
     dt.value.exportCSV();
 };
