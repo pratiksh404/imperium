@@ -11,6 +11,8 @@ use App\Services\Resource\Navigation\Breadcrumb;
 use App\Services\Resource\Navigation\BreadcrumbItem;
 use App\Services\Resource\Navigation\MenuItem;
 use App\Services\Resource\Navigation\Navigation;
+use App\Services\Resource\Navigation\PageHeader;
+use App\Services\Resource\Navigation\HeaderPoint;
 use App\Services\Resource\Resource;
 
 class {{modelName}}Resource extends Resource
@@ -41,17 +43,26 @@ class {{modelName}}Resource extends Resource
 
     public function navigation(): Navigation
     {
+        $auth_user = $this->authUser;
+
         return (new Navigation)
             ->menus([
                 MenuItem::make('{{modelNamePluralUppercase}}')
                     ->icon(self::$icon)
                     ->url(route('{{modelNamePluralLowercase}}.index'))
-                    ->shortcut(1),
+                   ->authorize($auth_user->can('viewAny', {{modelName}}::class)),
             ])
-            ->breadcrumbs([
-                Breadcrumb::make('{{modelNamePluralUppercase}}', '{{modelNamePluralLowercase}}.index')
-                    ->items([
-                        BreadcrumbItem::make('{{modelName}} List', route('{{modelNamePluralLowercase}}.index')),
+            ->headers([
+                PageHeader::make('{{modelNamePluralUppercase}}', '{{modelNamePluralLowercase}}.index')
+                    ->breadcrumb(
+                        Breadcrumb::make('{{modelNamePluralUppercase}}', '{{modelNamePluralLowercase}}.index')
+                            ->items([
+                                BreadcrumbItem::make('{{modelName}} List', route('{{modelNamePluralLowercase}}.index')),
+                            ])
+                    )
+                    ->points([
+                        HeaderPoint::make('Total {{modelNamePluralUppercase}} : '.{{modelName}}::count(), 'pi pi-shield'),
+                        HeaderPoint::make('Trash {{modelNamePluralUppercase}} : '.{{modelName}}::onlyTrashed()->count(), 'pi pi-trash'),
                     ]),
             ]);
     }
