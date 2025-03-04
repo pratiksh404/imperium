@@ -102,14 +102,7 @@ class MenuItem
 
     public function children(?array $items = null): self
     {
-        $this->items = ! is_null($items) ? collect($items)->map(function ($item) {
-            return MenuItem::make($item->label)
-                ->url($item->url ?? null)
-                ->icon($item->icon ?? 'pi pi-circle')
-                ->badge($item->badge ?? null)
-                ->authorize($item->authorize ?? true)
-                ->children($item->items ?? null);
-        })->toArray() : null;
+        $this->items = ! is_null($items) ? $items : null;
 
         return $this;
     }
