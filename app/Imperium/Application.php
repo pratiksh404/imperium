@@ -33,10 +33,25 @@ class Application extends Imperium
             ->navigation(
                 (new HeaderNavigation)
                     ->headerLinkMenus([
+                        MenuItem::make('Dropdown')->children([
+                            MenuItem::make('PrimeVue')->url('https://www.primefaces.org/primevue/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                            MenuItem::make('Vue')->url('https://vuejs.org/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                            MenuItem::make('Laravel')->url('https://laravel.com/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                            MenuItem::make('Inertia')->children([
+                                MenuItem::make('PrimeVue')->url('https://www.primefaces.org/primevue/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                                MenuItem::make('Vue')->url('https://vuejs.org/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                                MenuItem::make('Laravel')->url('https://laravel.com/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                                MenuItem::make('Inertia')->url('https://inertiajs.com')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                            ])->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                        ]),
                         MenuItem::make('PrimeVue')->url('https://www.primefaces.org/primevue/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
                         MenuItem::make('Vue')->url('https://vuejs.org/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
                         MenuItem::make('Laravel')->url('https://laravel.com/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
                         MenuItem::make('Inertia')->url('https://inertiajs.com')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                    ])
+                    ->profileMenus([
+                        MenuItem::make('Profile')->url(route('users.my-profile'))->icon('pi pi-user'),
+                        MenuItem::make('Logout')->url(route('logout'))->icon('pi pi-sign-out'),
                     ])
             );
     }

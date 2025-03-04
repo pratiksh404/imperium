@@ -35,7 +35,7 @@
         "@tiptap/extension-youtube": "^2.11.0",
         "@tiptap/starter-kit": "^2.11.0",
         "@tiptap/vue-3": "^2.11.0",
-        "@vueuse/core": "^12.3.0",
+        "@vueuse/core": "^12.7.0",
         "filepond": "^4.32.6",
         "filepond-plugin-file-validate-size": "^2.2.8",
         "filepond-plugin-file-validate-type": "^1.2.9",
