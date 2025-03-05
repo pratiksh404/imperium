@@ -29,7 +29,7 @@ class HeaderFlyoutMenuItem
         return $this;
     }
 
-    public function items(array $items): self
+    public function children(array $items): self
     {
         $this->items = $items;
 
@@ -91,7 +91,7 @@ class HeaderFlyoutMenuItemFooter
         return $this;
     }
 
-    public function items(array $items): self
+    public function children(array $items): self
     {
         $this->items = $items;
 
