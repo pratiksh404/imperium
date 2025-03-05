@@ -1,6 +1,5 @@
 <template>
   <!-- Dropdown Item -->
-
   <span
     @click="toggleDropdown"
     v-ripple
@@ -14,7 +13,12 @@
     class="flex items-center justify-between cursor-pointer px-2 py-3 rounded text-surface-700 dark:text-surface-0 duration-150 transition-colors p-ripple"
   >
     <div>
-      <i class="pi pi-chart-line mr-2"></i>
+      <i
+        :class="item.icon"
+        class="mr-2"
+        v-tooltip="item.label"
+        v-if="includeIcon"
+      ></i>
       <span :class="active ? 'font-bold' : 'font-medium'" v-if="!collapsed">{{
         item.label
       }}</span>
@@ -36,6 +40,7 @@
   >
     <MenuItem
       v-for="subitem in item.items"
+      :includeIcon="includeIcon"
       :item="subitem"
       :key="subitem.label"
     />
@@ -57,6 +62,10 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  includeIcon: {
+    type: Boolean,
+    default: true,
   },
 });
 

@@ -170,6 +170,10 @@
 
       <DisclosurePanel class="border-b border-gray-700 md:hidden">
         <div class="space-y-1 px-2 py-3 sm:px-3">
+          <HeaderNavigationItems
+            :items="appHeaderLinkMenuItems"
+            :mobile-mode="true"
+          />
           <DisclosureButton
             v-for="item in navigation"
             :key="item.name"
@@ -207,6 +211,8 @@ import { computed, ref } from "vue";
 import { useWindowSize } from "@/Composables/useWindowSize";
 import HeaderNavigationItems from "@/Components/Header/HeaderNavigationItems.vue";
 import { useMenu } from "@/Composables/useMenu";
+import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
+import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 
 const { windowSize, currentBreakpoint } = useWindowSize();
 
@@ -264,31 +270,4 @@ const toggleMobileMenu = () => {
 const back = () => {
   window.history.back();
 };
-
-import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-import {
-  Bars3Icon,
-  BellIcon,
-  XMarkIcon,
-  HomeIcon,
-} from "@heroicons/vue/24/outline";
-
-const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
-const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
-  { name: "Reports", href: "#", current: false },
-];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
 </script>
