@@ -106,13 +106,31 @@
         </template>
       </div>
     </template>
+    <template v-if="menuGroups.length">
+      <div
+        v-for="(group, groupIndex) in menuGroups"
+        :key="'header-group-' + groupIndex"
+      >
+        <div class="flex items-center">
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-4">
+              <HeaderLinkItems
+                :key="'header-group-' + index + '-item-' + groupIndex"
+                :items="group.group"
+                :active="false"
+                :includeIcon="false"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
   </template>
 </template>
 <script setup>
 import { defineProps, ref } from "vue";
 import { useMenu } from "@/Composables/useMenu";
 import MobileMenuItem from "@/Components/Navigation/MenuItem.vue";
-import HeaderPanelMenuItem from "./HeaderPanelMenuItem.vue";
 import {
   Menu,
   MenuButton,
@@ -142,6 +160,12 @@ const dropdownActive = (index) => {
 };
 
 const { menuItems, menuGroups } = useMenu(props.items);
-console.log(menuItems.value);
+console.log(menuGroups.value);
 const linkComponentResolver = (type) => useLinkComponentResolver(type);
+</script>
+
+<script>
+export default {
+  name: "HeaderLinkItems",
+};
 </script>
