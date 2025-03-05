@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="componentResolver(item.type)"
+    :is="linkComponentResolver(item.type)"
     :href="item.url"
     v-ripple
     v-bind="{ ...(item.type === 'url' ? { target: '_blank' } : {}) }"
@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { useLinkComponentResolver } from "@/Composables/useLinkComponentResolver";
 const props = defineProps({
   item: {
     type: Object,
@@ -52,14 +52,5 @@ const props = defineProps({
   },
 });
 
-const componentResolver = (type) => {
-  switch (type) {
-    case "route":
-      return Link;
-    case "url":
-      return "a";
-    default:
-      return "a";
-  }
-};
+const linkComponentResolver = (type) => useLinkComponentResolver(type);
 </script>

@@ -131,7 +131,16 @@
               </div>
               <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-4">
-                  <HeaderLinkItems :items="appHeaderLinkMenuItems" />
+                  <template
+                    v-if="Object.values(appHeaderLinkMenuItems).length > 0"
+                  >
+                    <HeaderLinkItems :items="appHeaderLinkMenuItems" />
+                  </template>
+                  <template
+                    v-if="Object.values(appHeaderFlyoutMenuItems).length > 0"
+                  >
+                    <HeaderFlyoutItems :items="appHeaderFlyoutMenuItems" />
+                  </template>
                 </div>
               </div>
             </div>
@@ -170,10 +179,12 @@
 
       <DisclosurePanel class="border-b border-gray-700 md:hidden">
         <div class="space-y-1 px-2 py-3 sm:px-3">
-          <HeaderLinkItems
-            :items="appHeaderLinkMenuItems"
-            :mobile-mode="true"
-          />
+          <template v-if="Object.values(appHeaderLinkMenuItems).length > 0">
+            <HeaderLinkItems
+              :items="appHeaderLinkMenuItems"
+              :mobile-mode="true"
+            />
+          </template>
           <DisclosureButton
             v-for="item in navigation"
             :key="item.name"
@@ -213,6 +224,7 @@ import HeaderLinkItems from "@/Components/Header/HeaderLinkItems.vue";
 import { useMenu } from "@/Composables/useMenu";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
+import HeaderFlyoutItems from "@/Components/Header/HeaderFlyoutItems.vue";
 
 const { windowSize, currentBreakpoint } = useWindowSize();
 
@@ -245,18 +257,18 @@ const appHeader = computed(() => usePage().props.appHeader);
 const appHeaderNavigation = computed(() => appHeader.value.navigation ?? []);
 const appHeaderLinkMenuItems = computed(() =>
   Object.values(appHeaderNavigation.value).length > 0
-    ? appHeaderNavigation.value.headerLinkMenuItems ?? []
-    : []
+    ? appHeaderNavigation.value.headerLinkMenuItems ?? {}
+    : {}
 );
 const appProfileMenuItems = computed(() =>
   Object.values(appHeaderNavigation.value).length > 0
-    ? appHeaderNavigation.value.profileMenuItems ?? []
-    : []
+    ? appHeaderNavigation.value.profileMenuItems ?? {}
+    : {}
 );
 const appHeaderFlyoutMenuItems = computed(() =>
   Object.values(appHeaderNavigation.value).length > 0
-    ? appHeaderNavigation.value.headerFlyoutMenuItems ?? []
-    : []
+    ? appHeaderNavigation.value.headerFlyoutMenuItems ?? {}
+    : {}
 );
 
 const { menuItems: userMenuItems } = useMenu(appProfileMenuItems.value);
