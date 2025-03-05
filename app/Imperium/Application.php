@@ -33,6 +33,13 @@ class Application extends Imperium
             ->navigation(
                 (new HeaderNavigation)
                     ->headerLinkMenus([
+                        MenuGroup::make('ADMINISTRATION')->group([
+                            MenuItem::make('Dropdown')->children([
+                                MenuItem::make('A')->url('https://www.primefaces.org/primevue/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                                MenuItem::make('B')->url('https://vuejs.org/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                                MenuItem::make('C')->url('https://laravel.com/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                            ])->type(MenuItem::URL),
+                        ]),
                         MenuItem::make('Dropdown')->children([
                             MenuItem::make('PrimeVue')->url('https://www.primefaces.org/primevue/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
                             MenuItem::make('Vue')->url('https://vuejs.org/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),

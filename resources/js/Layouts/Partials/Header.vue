@@ -131,7 +131,7 @@
               </div>
               <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-4">
-                  <HeaderNavigationItems :items="appHeaderLinkMenuItems" />
+                  <HeaderLinkItems :items="appHeaderLinkMenuItems" />
                 </div>
               </div>
             </div>
@@ -170,7 +170,7 @@
 
       <DisclosurePanel class="border-b border-gray-700 md:hidden">
         <div class="space-y-1 px-2 py-3 sm:px-3">
-          <HeaderNavigationItems
+          <HeaderLinkItems
             :items="appHeaderLinkMenuItems"
             :mobile-mode="true"
           />
@@ -209,7 +209,7 @@ import PageHeader from "@/Components/PageHeader.vue";
 import { usePage } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import { useWindowSize } from "@/Composables/useWindowSize";
-import HeaderNavigationItems from "@/Components/Header/HeaderNavigationItems.vue";
+import HeaderLinkItems from "@/Components/Header/HeaderLinkItems.vue";
 import { useMenu } from "@/Composables/useMenu";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
