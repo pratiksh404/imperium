@@ -1,7 +1,11 @@
 <template>
   <!-- Menu Item -->
   <li v-if="item.items">
-    <MenuDropdownItems :item="item" :active="active" />
+    <MenuDropdownItems
+      :item="item"
+      :active="active"
+      :includeIcon="includeIcon"
+    />
   </li>
   <li v-else>
     <MenuLinkItem :item="item" :active="active" :includeIcon="includeIcon" />
