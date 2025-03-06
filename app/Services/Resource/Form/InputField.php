@@ -73,6 +73,8 @@ abstract class InputField
 
     public string $hintColor = self::DEFAULT;
 
+    public InputFieldAttributes $attributes;
+
     public $value;
 
     /**
@@ -86,6 +88,8 @@ abstract class InputField
         $this->id = $this->field;
         $this->placeholder = $this->label;
         $this->type = $this->getType();
+
+        $this->attributes = new InputFieldAttributes();
     }
 
     /**
@@ -313,6 +317,57 @@ abstract class InputField
 
         $this->prefixIsIcon = true;
         $this->suffixIsIcon = true;
+
+        return $this;
+    }
+
+    /**
+     * Set attributes for the input field.
+     *
+     * @return $this
+     */
+    public function attributes(InputFieldAttributes $inputFieldAttributes)
+    {
+        $this->attributes = $inputFieldAttributes;
+
+        return $this;
+    }
+}
+
+// Class to manage attributes of wrapper class, input group class, label class and input class
+class InputFieldAttributes
+{
+    public ?array $wrapper = [
+        'class' => 'flex'
+    ];
+    public ?array $inputGroup = [];
+    public ?array $label = [];
+    public ?array $input = [];
+
+    public function wrapper(?array $wrapper = []): self
+    {
+        $this->wrapper = $wrapper;
+
+        return $this;
+    }
+
+    public function inputGroup(?array $inputGroup = []): self
+    {
+        $this->inputGroup = $inputGroup;
+
+        return $this;
+    }
+
+    public function label(?array $label = []): self
+    {
+        $this->label = $label;
+
+        return $this;
+    }
+
+    public function input(?array $input = []): self
+    {
+        $this->input = $input;
 
         return $this;
     }
