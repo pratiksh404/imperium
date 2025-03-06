@@ -12,7 +12,11 @@
         <i v-if="field.prefixIsIcon ?? false" :class="field.prefix"></i>
         <span v-else>{{ field.prefix }}</span>
       </InputGroupAddon>
-      <component :is="labelWrapper.component" v-bind="labelWrapper.props">
+      <component
+        :is="labelWrapper.component"
+        v-bind="labelWrapper.props"
+        :v-bind="field.attributes.label"
+      >
         <IconField v-if="field.iconField">
           <InputIcon
             v-if="field.prefix && field.iconField"
@@ -29,6 +33,7 @@
             :readOnly="field.readOnly"
             :disabled="field.disabled"
             :class="field.class"
+            :v-bind="field.attributes.input"
             :id="field.id"
             :error="error"
             :field="field"
