@@ -7,6 +7,7 @@ use App\Services\Resource\DataTable\Columns\TextColumn;
 use App\Services\Resource\DataTable\DataTable;
 use App\Services\Resource\Form\Fields\TextField;
 use App\Services\Resource\Form\Form;
+use App\Services\Resource\Form\InputFieldAttributes;
 use App\Services\Resource\Navigation\Breadcrumb;
 use App\Services\Resource\Navigation\BreadcrumbItem;
 use App\Services\Resource\Navigation\HeaderPoint;
@@ -37,7 +38,11 @@ class RoleResource extends Resource
     {
         return (new Form)
             ->fields([
-                TextField::make('name'),
+                TextField::make('name')->attributes(
+                    (new InputFieldAttributes)->inputGroup([
+                        'class' => 'w-1/2'
+                    ])
+                ),
             ]);
     }
 
@@ -61,8 +66,8 @@ class RoleResource extends Resource
                             ])
                     )
                     ->points([
-                        HeaderPoint::make('Total Roles : '.Role::count(), 'pi pi-shield'),
-                        HeaderPoint::make('Trash Roles : '.Role::onlyTrashed()->count(), 'pi pi-trash'),
+                        HeaderPoint::make('Total Roles : ' . Role::count(), 'pi pi-shield'),
+                        HeaderPoint::make('Trash Roles : ' . Role::onlyTrashed()->count(), 'pi pi-trash'),
                     ]),
             ]);
     }

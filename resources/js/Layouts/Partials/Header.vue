@@ -205,9 +205,6 @@
         </div>
       </DisclosurePanel>
     </Disclosure>
-    <header class="py-5 px-10">
-      <PageHeader :header="header" :title="title" :nav="nav" />
-    </header>
   </div>
 </template>
 <script setup>
@@ -216,7 +213,6 @@ import ToggleDarkModeButton from "@/Components/ToggleDarkModeButton.vue";
 import NavigationPalette from "@/Components/Navigation/NavigationPalette.vue";
 import RefreshButton from "@/Components/Navigation/RefreshButton.vue";
 import UserMenu from "@/Components/Navigation/UserMenu.vue";
-import PageHeader from "@/Components/PageHeader.vue";
 import { usePage } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import { useWindowSize } from "@/Composables/useWindowSize";
