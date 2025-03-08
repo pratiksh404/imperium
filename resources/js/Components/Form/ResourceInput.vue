@@ -1,90 +1,40 @@
 <template v-if="field.visibility ?? true">
-  <div
-    v-if="fieldComponent"
-    class="mt-1 my-4"
-    v-bind="field.attributes.wrapper"
-  >
-    <component
-      :is="inputWrapper.component"
-      v-bind="{ ...inputWrapper.props, ...field.attributes.inputGroup }"
-    >
+  <div v-if="fieldComponent" class="mt-1 my-4" v-bind="field.attributes.wrapper">
+    <component :is="inputWrapper.component" v-bind="{ ...inputWrapper.props, ...field.attributes.inputGroup }">
       <InputGroupAddon v-if="(field.prefix ?? false) && !field.iconField">
         <i v-if="field.prefixIsIcon ?? false" :class="field.prefix"></i>
         <span v-else>{{ field.prefix }}</span>
       </InputGroupAddon>
-      <component
-        :is="labelWrapper.component"
-        v-bind="labelWrapper.props"
-        :v-bind="field.attributes.label"
-      >
+      <component :is="labelWrapper.component" v-bind="labelWrapper.props" :v-bind="field.attributes.label">
         <IconField v-if="field.iconField">
-          <InputIcon
-            v-if="field.prefix && field.iconField"
-            :class="field.prefix"
-          />
-          <component
-            :is="fieldComponent"
-            v-model="resourceModel"
-            :size="field.size"
-            :placeholder="
-              field.floatedLabel || field.iftaLabel ? null : field.placeholder
-            "
-            :required="field.required"
-            :readOnly="field.readOnly"
-            :disabled="field.disabled"
-            :class="field.class"
-            :v-bind="field.attributes.input"
-            :id="field.id"
-            :error="error"
-            :field="field"
-          />
-          <InputIcon
-            v-if="field.suffix && field.iconField"
-            :class="field.suffix"
-          />
+          <InputIcon v-if="field.prefix && field.iconField" :class="field.prefix" />
+          <component :is="fieldComponent" v-model="resourceModel" :size="field.size" :placeholder="field.floatedLabel || field.iftaLabel ? null : field.placeholder
+            " :required="field.required" :readOnly="field.readOnly" :disabled="field.disabled" :class="field.class"
+            :v-bind="field.attributes.input" :id="field.id" :error="error" :field="field" />
+          <InputIcon v-if="field.suffix && field.iconField" :class="field.suffix" />
         </IconField>
-        <component
-          v-else
-          :is="fieldComponent"
-          v-model="resourceModel"
-          :size="field.size"
-          :placeholder="
-            field.floatedLabel || field.iftaLabel ? null : field.placeholder
-          "
-          :required="field.required"
-          :readOnly="field.readOnly"
-          :disabled="field.disabled"
-          :class="field.class"
-          :id="field.id"
-          :error="error"
-          :field="field"
-        />
-        <label v-if="field.floatedLabel || field.iftaLabel" :for="field.id"
-          ><span :class="`text-${error ? 'danger' : 'dark'}`">{{
-            field.label
-          }}</span>
-          <span class="text-danger" v-if="field.required">*</span></label
-        >
+        <component v-else :is="fieldComponent" v-model="resourceModel" :size="field.size" :placeholder="field.floatedLabel || field.iftaLabel ? null : field.placeholder
+          " :required="field.required" :readOnly="field.readOnly" :disabled="field.disabled" :class="field.class"
+          :id="field.id" :error="error" :field="field" />
+        <label v-if="field.floatedLabel || field.iftaLabel" :for="field.id"><span
+            :class="`text-${error ? 'danger' : 'dark'}`">{{
+              field.label
+            }}</span>
+          <span class="text-danger" v-if="field.required">*</span></label>
       </component>
       <InputGroupAddon v-if="(field.suffix ?? false) && !field.iconField">
         <i v-if="field.suffixIsIcon ?? false" :class="field.suffix"></i>
         <span v-else>{{ field.suffix }}</span>
       </InputGroupAddon>
     </component>
-    <Message
-      v-if="(field.hintText ?? false) && error == null"
-      size="small"
-      :severity="field.hintColor"
-      variant="simple"
-      class="p-1"
-    >
+    <Message v-if="(field.hintText ?? false) && error == null" size="small" :severity="field.hintColor" variant="simple"
+      class="p-1">
       <span style="font-size: 12px">{{ field.hintText }}</span>
     </Message>
     <InputError v-if="error" class="mt-2" :error="error" />
   </div>
   <div v-else>
-    <Message severity="error" size="small" class="mt-2 mb-2"
-      >Component not found for field type : {{ field.type }}
+    <Message severity="error" size="small" class="mt-2 mb-2">Component not found for field type : {{ field.type }}
     </Message>
   </div>
 </template>
@@ -109,8 +59,6 @@ const props = defineProps({
     default: null, // Validation error message
   },
 });
-
-console.log(props.field.attributes);
 
 const inputWrapper = computed(() => {
   return {

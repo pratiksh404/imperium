@@ -4,82 +4,40 @@
       <div class="px-2 py-2 sm:px-3 flex justify-between md:items-center">
         <div class="flex items-center justify-between">
           <div class="flex justify-start gap-1">
-            <Button
-              class="flex lg:hidden mr-4"
-              severity="secondary"
-              icon="pi pi-bars"
-              @click="$emit('open-nav')"
-              :pt="{
-                icon: {
-                  class: 'text-xl',
-                },
-              }"
-            />
+            <Button class="flex lg:hidden mr-4" severity="secondary" icon="pi pi-bars" @click="$emit('open-nav')" :pt="{
+              icon: {
+                class: 'text-xl',
+              },
+            }" />
             <div class="mx-auto sm:px-6 lg:px-8">
               <nav class="sm:hidden" aria-label="Back">
-                <Button
-                  @click="back"
-                  label="Back"
-                  text
-                  icon="pi pi-arrow-left"
-                  icon-pos="left"
-                  :pt="{
-                    icon: { class: 'text-white' },
-                    label: { class: 'text-white' },
-                  }"
-                />
+                <Button @click="back" label="Back" text icon="pi pi-arrow-left" icon-pos="left" :pt="{
+                  icon: { class: 'text-white' },
+                  label: { class: 'text-white' },
+                }" />
               </nav>
-              <nav
-                v-if="navItems"
-                class="hidden sm:flex"
-                aria-label="Breadcrumb"
-              >
+              <nav v-if="navItems" class="hidden sm:flex" aria-label="Breadcrumb">
                 <ol role="list" class="flex items-center space-x-4">
                   <li>
                     <div class="flex items-center">
-                      <HomeIcon
-                        class="h-5 w-5 flex-shrink-0 text-gray-500"
-                        aria-hidden="true"
-                      />
-                      <Link
-                        :href="route('dashboard')"
-                        class="ml-4 text-sm font-medium text-gray-400 hover:text-gray-200"
-                      >
-                        Dashboard</Link
-                      >
+                      <HomeIcon class="h-5 w-5 flex-shrink-0 text-gray-500" aria-hidden="true" />
+                      <Link :href="route('dashboard')"
+                        class="ml-4 text-sm font-medium text-gray-400 hover:text-gray-200">
+                      Dashboard</Link>
                     </div>
                   </li>
-                  <li
-                    v-for="(navItem, index) in navItems"
-                    :key="'breadcrumb-item-' + index"
-                  >
+                  <li v-for="(navItem, index) in navItems" :key="'breadcrumb-item-' + index">
                     <div class="flex items-center">
-                      <ChevronRightIcon
-                        class="h-5 w-5 flex-shrink-0 mr-2 text-gray-500"
-                        aria-hidden="true"
-                      />
-                      <Link
-                        v-if="navItem.route"
-                        :href="navItem.route"
-                        class="text-sm font-medium text-gray-400 hover:text-gray-200 flex justify-start gap-1"
-                      >
-                        {{ navItem.label }}
-                        <i
-                          class="h-5 w-5 flex-shrink-0 text-gray-500"
-                          v-if="navItem.icon"
-                          :class="navItem.icon"
-                        />
+                      <ChevronRightIcon class="h-5 w-5 flex-shrink-0 mr-2 text-gray-500" aria-hidden="true" />
+                      <Link v-if="navItem.route" :href="navItem.route"
+                        class="text-sm font-medium text-gray-400 hover:text-gray-200 flex justify-start gap-1">
+                      {{ navItem.label }}
+                      <i class="h-5 w-5 flex-shrink-0 text-gray-500" v-if="navItem.icon" :class="navItem.icon" />
                       </Link>
                       <div v-else>
-                        <span
-                          class="text-sm font-medium text-gray-400 hover:text-gray-200 flex justify-start gap-1"
-                        >
+                        <span class="text-sm font-medium text-gray-400 hover:text-gray-200 flex justify-start gap-1">
                           {{ navItem.label }}
-                          <span
-                            class="h-5 w-5 flex-shrink-0 text-gray-500"
-                            v-if="navItem.icon"
-                            :class="navItem.icon"
-                          />
+                          <span class="h-5 w-5 flex-shrink-0 text-gray-500" v-if="navItem.icon" :class="navItem.icon" />
                         </span>
                       </div>
                     </div>
@@ -90,15 +48,8 @@
           </div>
           <!-- Mobile menu button -->
           <div class="md:hidden">
-            <div
-              class="absolute right-3 top-0 z-50 w-max flex-col items-center gap-1 pt-2 group-hover:flex"
-            >
-              <Button
-                icon="pi pi-arrow-down"
-                rounded
-                @click="toggleMobileMenu"
-                type="button"
-              />
+            <div class="absolute right-3 top-0 z-50 w-max flex-col items-center gap-1 pt-2 group-hover:flex">
+              <Button icon="pi pi-arrow-down" rounded @click="toggleMobileMenu" type="button" />
 
               <transition name="fade">
                 <div v-if="headerMobileMenu">
@@ -131,15 +82,11 @@
               </div>
               <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-4">
-                  <template
-                    v-if="Object.values(appHeaderLinkMenuItems).length > 0"
-                  >
-                    <HeaderLinkItems :items="appHeaderLinkMenuItems" />
+                  <template v-if="Object.values(appHeaderLinkMenuItems).length > 0">
+                    <HeaderLinkItems :items="appHeaderLinkMenuItems" key="header_link_items" />
                   </template>
-                  <template
-                    v-if="Object.values(appHeaderFlyoutMenuItems).length > 0"
-                  >
-                    <HeaderFlyoutItems :items="appHeaderFlyoutMenuItems" />
+                  <template v-if="Object.values(appHeaderFlyoutMenuItems).length > 0">
+                    <HeaderFlyoutItems :items="appHeaderFlyoutMenuItems" key="header_flyout_items" />
                   </template>
                 </div>
               </div>
@@ -161,15 +108,10 @@
             <div class="-mr-2 flex md:hidden">
               <!-- Mobile menu button -->
               <DisclosureButton
-                class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-              >
+                class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <span class="absolute -inset-0.5" />
                 <span class="sr-only">Open main menu</span>
-                <Bars3Icon
-                  v-if="!open"
-                  class="block h-6 w-6"
-                  aria-hidden="true"
-                />
+                <Bars3Icon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
                 <XMarkIcon v-else class="block h-6 w-6" aria-hidden="true" />
               </DisclosureButton>
             </div>
@@ -180,25 +122,14 @@
       <DisclosurePanel class="border-b border-gray-700 md:hidden">
         <div class="space-y-1 px-2 py-3 sm:px-3">
           <template v-if="Object.values(appHeaderLinkMenuItems).length > 0">
-            <HeaderLinkItems
-              :items="appHeaderLinkMenuItems"
-              :mobile-mode="true"
-            />
+            <HeaderLinkItems :items="appHeaderLinkMenuItems" :mobile-mode="true" />
           </template>
-          <DisclosureButton
-            v-for="item in navigation"
-            :key="item.name"
-            as="a"
-            :href="item.href"
-            :class="[
-              item.current
-                ? 'bg-gray-900 text-white'
-                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-              'block rounded-md px-3 py-2 text-base font-medium',
-            ]"
-            :aria-current="item.current ? 'page' : undefined"
-            >{{ item.name }}</DisclosureButton
-          >
+          <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[
+            item.current
+              ? 'bg-gray-900 text-white'
+              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+            'block rounded-md px-3 py-2 text-base font-medium',
+          ]" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</DisclosureButton>
         </div>
         <div class="border-t border-gray-700 pb-3 pt-4">
           <UserMenu :items="userMenuItems" :expanded="true" />
@@ -221,6 +152,7 @@ import { useMenu } from "@/Composables/useMenu";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 import HeaderFlyoutItems from "@/Components/Header/HeaderFlyoutItems.vue";
+import { ChevronRightIcon, HomeIcon } from "@heroicons/vue/24/outline";
 
 const { windowSize, currentBreakpoint } = useWindowSize();
 
