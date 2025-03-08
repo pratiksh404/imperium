@@ -1,74 +1,42 @@
 <template>
   <div class="hidden md:block">
     <!-- Button to trigger the command palette -->
-    <Button
-      @click="openDialog = true"
-      icon="pi pi-compass"
-      iconPos="left"
-      label="⌘ + K"
-      size="small"
-    />
+    <Button @click="openDialog = true" icon="pi pi-compass" iconPos="left" label="⌘ + K" size="small" />
     <!-- Command Palette Dialog -->
-    <Dialog
-      v-model:visible="openDialog"
-      header="Command Palette"
-      :modal="true"
-      :closable="true"
-      position="top"
-      @hide="clearSearch"
-      :pt="{
+    <Dialog v-model:visible="openDialog" header="Command Palette" :modal="true" :closable="true" position="top"
+      @hide="clearSearch" :pt="{
         root: {
           class: 'w-3/4 md:w-1/3',
         },
-      }"
-    >
+      }">
       <!-- Search Input -->
       <div class="flex items-center gap-2 bg-gray-100 p-2 rounded">
         <!-- Navigate icon svg -->
         <i class="pi pi-compass text-gray-500"></i>
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Search for a route..."
-          @input="filterRoutes"
+        <input type="text" v-model="searchQuery" placeholder="Search for a route..." @input="filterRoutes"
           class="bg-transparent outline-none w-full text-gray-700 placeholder-gray-400"
-          @keydown.up.prevent="highlightPrevious"
-          @keydown.down.prevent="highlightNext"
-          @keydown.enter.prevent="selectRoute"
-          autofocus
-        />
+          @keydown.up.prevent="highlightPrevious" @keydown.down.prevent="highlightNext"
+          @keydown.enter.prevent="selectRoute" autofocus />
       </div>
 
       <!-- Filtered Routes -->
       <ul v-if="filteredRoutes.length" class="mt-4 max-h-48 overflow-y-auto">
         <template v-for="(route, index) in filteredRoutes" :key="index">
-          <li
-            v-if="route.authorize"
-            @mouseover="selectedIndex = index"
-            @click="navigateTo(route.url)"
-            :class="{
-              'bg-black text-white': selectedIndex === index,
-              'hover:bg-black hover:text-white': selectedIndex !== index,
-            }"
-            class="py-2 px-4 rounded cursor-pointer transition"
-          >
+          <li v-if="route.authorize" @mouseover="selectedIndex = index" @click="navigateTo(route.url)" :class="{
+            'bg-black text-white': selectedIndex === index,
+            'hover:bg-black hover:text-white': selectedIndex !== index,
+          }" class="py-2 px-4 rounded cursor-pointer transition">
             {{ route.label }}
           </li>
         </template>
       </ul>
 
       <ul v-else-if="recentRoutes.length" class="mt-4 max-h-48 overflow-y-auto">
-        <li
-          v-for="(route, index) in recentRoutes"
-          :key="index"
-          @mouseover="selectedIndex = index"
-          @click="navigateTo(route.url)"
-          :class="{
+        <li v-for="(route, index) in recentRoutes" :key="index" @mouseover="selectedIndex = index"
+          @click="navigateTo(route.url)" :class="{
             'bg-black text-white': selectedIndex === index,
             'hover:bg-black hover:text-white': selectedIndex !== index,
-          }"
-          class="py-2 px-4 rounded cursor-pointer transition"
-        >
+          }" class="py-2 px-4 rounded cursor-pointer transition">
           <i class="pi pi-history mr-2"></i> {{ route.label }}
         </li>
       </ul>
@@ -166,15 +134,17 @@ const clearSearch = () => {
 
 // Highlight previous route
 const highlightPrevious = () => {
-  if (selectedIndex.value > 0) {
-    selectedIndex.value--;
+  const displayRoutes = filteredRoutes.value.length ? filteredRoutes.value : recentRoutes.value;
+  if (displayRoutes.length) {
+    selectedIndex.value = (selectedIndex.value - 1 + displayRoutes.length) % displayRoutes.length;
   }
 };
 
 // Highlight next route
 const highlightNext = () => {
-  if (selectedIndex.value < filteredRoutes.value.length - 1) {
-    selectedIndex.value++;
+  const displayRoutes = filteredRoutes.value.length ? filteredRoutes.value : recentRoutes.value;
+  if (displayRoutes.length) {
+    selectedIndex.value = (selectedIndex.value + 1) % displayRoutes.length;
   }
 };
 
