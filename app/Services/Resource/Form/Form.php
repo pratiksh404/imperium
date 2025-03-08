@@ -14,6 +14,18 @@ class Form
 
     public array $tabs = [];
 
+    /*
+    |--------------------------------------------------------------------------
+    | Mode in which form can be rendered
+    |--------------------------------------------------------------------------
+    |
+    */
+    const DRAWER_MODE = 'drawer';
+
+    const DIALOG_MODE = 'dialog';
+
+    public string $opensIn = self::DRAWER_MODE;
+
     /**
      * Form authorization
      *
@@ -58,6 +70,18 @@ class Form
     public function tabs(array $tabs): self
     {
         $this->tabs = $tabs;
+
+        return $this;
+    }
+
+    /**
+     * Sets a opensIn in which form can be rendered
+     *
+     * @return $this
+     */
+    public function opensIn(string $opensIn): self
+    {
+        $this->opensIn = $opensIn;
 
         return $this;
     }

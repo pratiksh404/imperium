@@ -2,7 +2,8 @@
     <div class="flex justify-end" v-if="data.deleted_at === null">
         <ConfirmPopup></ConfirmPopup>
         <!-- Edit -->
-        <ModuleFormOverlay name="Edit Role" :key="name + 'module-edit' + data.id" v-if="data.can.update">
+        <ModuleFormOverlay :name="name" :label="'Edit ' + name" :key="name + 'module-edit' + data.id"
+            v-if="data.can.update">
             <template #trigger>
                 <Button class="h-full" size="small" icon="pi pi-pencil" severity="secondary" variant="text" raised
                     v-tooltip.top="'Edit'" />

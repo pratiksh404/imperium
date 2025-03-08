@@ -1,18 +1,14 @@
 <template>
-  <Drawer
-    v-model:visible="localVisible"
-    :header="label"
-    :position="isMobile ? 'full' : 'right'"
-    class="w-1/4"
+  <component :is="formOpenerComponent" v-model:visible="localVisible" :header="label"
+    v-bind="{ ...(formOpensIn === 'dialog' ? { modal: true, maximizable: true, breakpoints: { '1199px': '75vw', '575px': '90vw' }, class: 'w-3/4 md:w-1/3 sm:w-full' } : {}), ... (formOpensIn === 'Drawer' ? { position: isMobile ? 'full' : 'right', class: 'w-1/4' } : {}) }"
     :pt="{
       title: {
         class: 'text-900 text-xl',
       },
-    }"
-  >
+    }">
     <!-- Form -->
     <slot name="form" @form-success="handleFormSuccess"></slot>
-  </Drawer>
+  </component>
   <div @click="localVisible = true" class="h-full">
     <slot name="trigger">
       <Button v-tooltip.top="label.trim()" :label="label.trim()" />
@@ -31,11 +27,18 @@ import {
 } from "vue";
 import { useEventsStore } from "@/Store/events";
 import { useShortcut } from "@/Composables/shortcut";
+import { usePage } from "@inertiajs/vue3";
+import { resolveFormOpenerComponent } from "@/Utils/Resource/FormOpenerMapper";
 
+// Form Resource
 const eventsStore = useEventsStore();
 const CREATE_RESOURCE_DRAWER_SHORTCUT = "\\";
 const props = defineProps({
   name: {
+    required: true,
+    type: String,
+  },
+  label: {
     required: true,
     type: String,
   },
@@ -48,9 +51,20 @@ const props = defineProps({
     default: CREATE_RESOURCE_DRAWER_SHORTCUT,
   },
 });
+
 const emit = defineEmits(["update:visible"]);
 
 const localVisible = ref(props.visible);
+
+const resourceForm = usePage().props.resources[props.name].form;
+
+const formOpensIn = computed(() => {
+  return resourceForm.opensIn;
+});
+
+const formOpenerComponent = computed(() => {
+  return resolveFormOpenerComponent(formOpensIn.value || null);
+})
 
 const createResourceDrawerShortcut = props.shortcut;
 useShortcut(createResourceDrawerShortcut, () => {
@@ -65,8 +79,7 @@ watch(localVisible, (newVal) => {
   emit("update:visible", newVal);
 });
 
-const label = computed(() => props.name.replace("", " "));
-import { debounce } from "lodash";
+import { debounce, max } from "lodash";
 
 watch(
   () => eventsStore.formSuccess,

@@ -1,28 +1,20 @@
 <template>
+
   <Head title="Roles" />
   <AuthenticatedLayout title="Roles">
     <PageHeader>
       <template #actions>
-        <ModuleFormOverlay name="Create Role" key="module-create-role">
+        <ModuleFormOverlay name="Role" label="Create Role" key="module-create-role">
           <template #form>
-            <component
-              :is="ResourceForm"
-              name="Role"
-              method="post"
-              :url="route('roles.store')"
-            >
+            <component :is="ResourceForm" name="Role" method="post" :url="route('roles.store')">
             </component>
           </template>
         </ModuleFormOverlay>
       </template>
     </PageHeader>
 
-    <ModuleTable
-      name="Role"
-      :data="$page.props.roles"
-      :trashed-data="$page.props.trashed_roles"
-      :action-components="[BreadPermissionPanel]"
-    />
+    <ModuleTable name="Role" :data="$page.props.roles" :trashed-data="$page.props.trashed_roles"
+      :action-components="[BreadPermissionPanel]" />
   </AuthenticatedLayout>
 </template>
 <script setup>
