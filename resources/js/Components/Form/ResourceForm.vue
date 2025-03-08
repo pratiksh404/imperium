@@ -79,7 +79,6 @@ const props = defineProps({
 // Form Resource
 const resourceForm = usePage().props.resources[props.name].form;
 
-
 const resourceSteppers = computed(() => {
     return getGroup(resourceForm.steppers);
 });

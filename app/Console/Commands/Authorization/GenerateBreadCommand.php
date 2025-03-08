@@ -76,7 +76,7 @@ class GenerateBreadCommand extends Command
                     return;
                 }
 
-                continue;
+                break;
             }
 
             info('Select BREAD for module '.$module_name.' and role '.$role->name);

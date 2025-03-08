@@ -40,10 +40,10 @@ class RoleResource extends Resource
             ->fields([
                 TextField::make('name')->attributes(
                     (new InputFieldAttributes)->inputGroup([
-                        'class' => 'w-1/2'
+                        'class' => 'w-1/2',
                     ])
                 ),
-            ]);
+            ])->opensIn(Form::DIALOG_MODE);
     }
 
     public function navigation(): Navigation
@@ -66,8 +66,8 @@ class RoleResource extends Resource
                             ])
                     )
                     ->points([
-                        HeaderPoint::make('Total Roles : ' . Role::count(), 'pi pi-shield'),
-                        HeaderPoint::make('Trash Roles : ' . Role::onlyTrashed()->count(), 'pi pi-trash'),
+                        HeaderPoint::make('Total Roles : '.Role::count(), 'pi pi-shield'),
+                        HeaderPoint::make('Trash Roles : '.Role::onlyTrashed()->count(), 'pi pi-trash'),
                     ]),
             ]);
     }
