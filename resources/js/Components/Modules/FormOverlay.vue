@@ -23,7 +23,6 @@ import {
   watch,
   onMounted,
   onUnmounted,
-  toRefs,
 } from "vue";
 import { useEventsStore } from "@/Store/events";
 import { useShortcut } from "@/Composables/shortcut";
@@ -71,15 +70,11 @@ useShortcut(createResourceDrawerShortcut, () => {
   localVisible.value = !localVisible.value;
 });
 
-watch(props.visible, (newVal) => {
-  localVisible.value = newVal;
-});
-
 watch(localVisible, (newVal) => {
   emit("update:visible", newVal);
 });
 
-import { debounce, max } from "lodash";
+import { debounce } from "lodash";
 
 watch(
   () => eventsStore.formSuccess,
