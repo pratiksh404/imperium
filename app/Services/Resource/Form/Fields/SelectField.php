@@ -23,7 +23,7 @@ class SelectField extends InputField
 
     public bool $multiple = false;
 
-    public function __construct(string $field, string $label = null)
+    public function __construct(string $field, ?string $label = null)
     {
         parent::__construct($field, $label);
     }
@@ -49,7 +49,7 @@ class SelectField extends InputField
     /**
      * Prepare options from collection for select.
      */
-    public function optionCollection(Collection $collection, $label, $value, string $icon = null, string $image = null)
+    public function optionCollection(Collection $collection, $label, $value, ?string $icon = null, ?string $image = null)
     {
         $this->options = $collection->map(function ($data) use ($value, $label, $icon, $image) {
             $value = $data->$value;

@@ -6,7 +6,7 @@ use App\Services\Resource\Form\InputField;
 
 class TextField extends InputField
 {
-    public function __construct(string $field, string $label = null)
+    public function __construct(string $field, ?string $label = null)
     {
         parent::__construct($field, $label);
     }

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Str;
 use App\Imperium\Application;
 
 if (! function_exists('setting')) {
@@ -32,11 +33,19 @@ if (! function_exists('resources')) {
         // $resources = getFilesWithPaths(base_path(str_replace('\\', '/', $namespace)));
         $data = [];
         foreach ($resources as $resource => $resource_file) {
-            $resource_data = (new ($namespace.'\\'.$resource))->get();
+            $resource_data = (new ($namespace . '\\' . $resource))->get();
             $data[$resource_data['name']] = $resource_data;
         }
 
         return $data;
+    }
+}
+
+if (! function_exists('getResource')) {
+    function getResource($name)
+    {
+        $namespace = 'App\\Imperium\\Resource';
+        return (new ($namespace . '\\' . (trim(Str::ucfirst($name)) . 'Resource')))->get();
     }
 }
 
@@ -57,8 +66,8 @@ if (! function_exists('getFilesWithPaths')) {
         foreach ($iterator as $file) {
             if ($file->isFile() && $file->getExtension() === $extension) {
                 // Get the relative path from the base path
-                $relativePath = str_replace($basePath.DIRECTORY_SEPARATOR, '', $file->getPathname());
-                $filesWithPaths[basename($file->getFilename(), '.'.$extension)] = $relativePath;
+                $relativePath = str_replace($basePath . DIRECTORY_SEPARATOR, '', $file->getPathname());
+                $filesWithPaths[basename($file->getFilename(), '.' . $extension)] = $relativePath;
             }
         }
 
@@ -75,17 +84,17 @@ if (! function_exists('getAllModels')) {
 
         foreach ($iterator as $file) {
             if ($file->isFile() && $file->getExtension() === 'php') {
-                $relativePath = str_replace($basePath.DIRECTORY_SEPARATOR, '', $file->getPathname());
+                $relativePath = str_replace($basePath . DIRECTORY_SEPARATOR, '', $file->getPathname());
                 $directory = dirname($relativePath);
                 $namespace = 'App\\Models';
 
                 // Add subdirectory to namespace if not in the root directory
                 if ($directory !== '.') {
-                    $namespace .= '\\'.str_replace('/', '\\', $directory);
+                    $namespace .= '\\' . str_replace('/', '\\', $directory);
                 }
 
                 $className = basename($file->getFilename(), '.php');
-                $models[$className] = $namespace.'\\'.$className;
+                $models[$className] = $namespace . '\\' . $className;
             }
         }
 

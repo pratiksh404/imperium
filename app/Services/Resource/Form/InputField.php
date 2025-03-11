@@ -2,6 +2,9 @@
 
 namespace App\Services\Resource\Form;
 
+use Closure;
+use Illuminate\Http\Request;
+
 abstract class InputField
 {
     // Type
@@ -75,7 +78,11 @@ abstract class InputField
 
     public InputFieldAttributes $attributes;
 
-    public $value;
+    public $default;
+
+    public string $dependsOn;
+
+    protected ?Closure $dependencyCallback = null;
 
     /**
      * Create a new column instance.
@@ -160,9 +167,9 @@ abstract class InputField
      *
      * @return $this
      */
-    public function value(mixed $value)
+    public function default(mixed $default)
     {
-        $this->value = $value;
+        $this->default = $default;
 
         return $this;
     }
@@ -331,6 +338,32 @@ abstract class InputField
         $this->attributes = $inputFieldAttributes;
 
         return $this;
+    }
+
+    /**
+     * Set dependency operation for the input field.
+     *
+     * @return $this
+     */
+    public function dependsOn(string $dependsOn, callable $callback)
+    {
+        $this->dependsOn = $dependsOn;
+        $this->dependencyCallback = function (Request $request) use ($callback) {
+            return $callback($request);
+        };
+
+        return $this;
+    }
+
+    /**
+     * Execute callback
+     */
+    public function getDependencies(Request $request)
+    {
+        if (!$this->dependencyCallback) {
+            throw new \Exception("No dependency callback defined for the field.");
+        }
+        return call_user_func($this->dependencyCallback, $request);
     }
 }
 
