@@ -110,3 +110,12 @@ if (! function_exists('getModelHavingName')) {
         return $models[$model] ?? null;
     }
 }
+
+if (! function_exists('getDatabaseDriverName')) {
+    function getDatabaseDriverName()
+    {
+        $connection = config('database.default');
+        $driver = config("database.connections.{$connection}.driver");
+        return $driver;
+    }
+}

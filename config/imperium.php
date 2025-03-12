@@ -19,4 +19,60 @@ return [
             ],
         ],
     ],
+
+    'schema' => [
+        'rules' => [
+            'tinyint' => [
+                'configurations' => [
+                    'boolean' => true
+                ],
+                'default' => ['boolean']
+            ],
+            'char' => [
+                'default' => ['min:0']
+            ],
+            'text' => [
+                'default' => ['min:0']
+            ],
+            'int' => [
+                'default' => []
+            ],
+            'unsigned' => [
+                'default' => []
+            ],
+            'double' => [
+                'default' => ['numeric']
+            ],
+            'decimal' => [
+                'default' => ['numeric']
+            ],
+            'dec' => [
+                'default' => ['numeric']
+            ],
+            'float' => [
+                'default' => ['numeric']
+            ],
+            'enum' => [
+                'default' => ['numeric']
+            ],
+            'set' => [
+                'default' => ['numeric']
+            ],
+            'year' => [
+                'default' => ['integer', 'min:1901', 'max:2155']
+            ],
+            'date' => [
+                'default' => ['numeric']
+            ],
+            'time' => [
+                'default' => ['numeric']
+            ],
+            'timestamp' => [
+                'default' => ['date', 'after_or_equal:1970-01-01 00:00:01', 'before_or_equal:2038-01-19 03:14:07']
+            ],
+            'json' => [
+                'default' => 'json'
+            ]
+        ]
+    ]
 ];
