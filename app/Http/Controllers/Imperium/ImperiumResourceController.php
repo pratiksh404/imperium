@@ -11,14 +11,16 @@ class ImperiumResourceController extends Controller
     {
         try {
             $resource = getResource($module_name);
-
-            $form = $resource->form();
-
+            $form = $resource['form'];
             if (count($form->fields ?? []) > 0) {
                 $form_field_names = collect($form->fields)->map(function ($field) {
                     return $field->field;
                 })->toArray();
                 if (in_array($dependable_field_name, $form_field_names)) {
+                    $dependable_field = collect($form->fields)->first(function ($field) use ($dependable_field_name) {
+                        return $field->field == $dependable_field_name;
+                    });
+                    return $dependable_field->getDependencies($request);
                 } else {
                     return response()->json(['error' => $module_name . ' resource class does not have any dependable fields ' . $dependable_field], 400);
                 }
@@ -26,7 +28,7 @@ class ImperiumResourceController extends Controller
                 return response()->json(['error' => $module_name . ' resource class does not have any form fields'], 400);
             }
         } catch (\Throwable $th) {
-            return response()->json(['error' => 'No resource class found for ' . $module_name], 404);
+            throw $th;
         }
     }
 }

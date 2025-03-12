@@ -98,7 +98,8 @@ import { useEventsStore } from "@/Store/events";
 import ResourceInput from "@/Components/Form/ResourceInput.vue";
 import SubmitButton from "@/Components/Form/SubmitButton.vue";
 import { useToast } from "primevue/usetoast";
-const toast = useToast();
+import axios from "axios";
+import { watchDebounced } from "@vueuse/core";
 
 // Form Success State Management
 const eventsStore = useEventsStore();
@@ -176,7 +177,7 @@ const submit = () => {
 };
 
 // Watching Dependent Fields
-watch(
+watchDebounced(
   () => form, // Watch the entire form object
   (newForm) => {
     resourceForm.fields.forEach(async (field) => {
@@ -184,9 +185,22 @@ watch(
         const parentValue = newForm[field.dependsOn];
 
         console.log(parentValue, field);
+        axios
+          .post(
+            route("getDependencies", {
+              module_name: props.name,
+              dependable_field_name: field.field,
+            }),
+            { dependent_value: parentValue }
+          )
+          .then((response) => {
+            let data = response.data;
+            // Assigning the value
+            form[field.field] = data;
+          });
       }
     });
   },
-  { deep: true } // Deep watch to track nested changes
+  { deep: true, debounce: 1000, maxWait: 2000 } // Deep watch to track nested changes
 );
 </script>

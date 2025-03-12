@@ -18,7 +18,6 @@
 </head>
 
 <body class="font-sans antialiased">
-    {{ dd(getResource('role')) }}
     @inertia
 </body>
 

@@ -3,20 +3,22 @@
 namespace App\Imperium\Resource;
 
 use App\Models\Admin\Role;
-use App\Services\Resource\DataTable\Columns\TextColumn;
-use App\Services\Resource\DataTable\DataTable;
-use App\Services\Resource\Form\Fields\SelectField;
-use App\Services\Resource\Form\Fields\SelectOption;
-use App\Services\Resource\Form\Fields\TextField;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Services\Resource\Resource;
 use App\Services\Resource\Form\Form;
-use App\Services\Resource\Form\InputFieldAttributes;
-use App\Services\Resource\Navigation\Breadcrumb;
-use App\Services\Resource\Navigation\BreadcrumbItem;
-use App\Services\Resource\Navigation\HeaderPoint;
+use App\Services\Resource\DataTable\DataTable;
 use App\Services\Resource\Navigation\MenuItem;
+use App\Services\Resource\Form\Fields\TextField;
+use App\Services\Resource\Navigation\Breadcrumb;
 use App\Services\Resource\Navigation\Navigation;
 use App\Services\Resource\Navigation\PageHeader;
-use App\Services\Resource\Resource;
+use App\Services\Resource\Navigation\HeaderPoint;
+use App\Services\Resource\Form\Fields\SelectField;
+use App\Services\Resource\Form\Fields\SelectOption;
+use App\Services\Resource\Form\InputFieldAttributes;
+use App\Services\Resource\Navigation\BreadcrumbItem;
+use App\Services\Resource\DataTable\Columns\TextColumn;
 
 class RoleResource extends Resource
 {
@@ -45,8 +47,8 @@ class RoleResource extends Resource
                         'class' => 'w-1/2',
                     ])
                 ),
-                TextField::make('slug')->dependsOn('name', function ($name) {
-                    return strtolower(str_replace(' ', '-', $name));
+                TextField::make('slug')->dependsOn('name', function (Request $request) {
+                    return Str::slug($request->dependent_value);
                 })
             ])->opensIn(Form::DIALOG_MODE);
     }
