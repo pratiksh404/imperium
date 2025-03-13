@@ -8,13 +8,15 @@
       <component :is="labelWrapper.component" v-bind="labelWrapper.props" :v-bind="field.attributes.label">
         <IconField v-if="field.iconField">
           <InputIcon v-if="field.prefix && field.iconField" :class="field.prefix" />
-          <component :is="fieldComponent" v-model="resourceModel" :size="field.size" :placeholder="field.floatedLabel || field.iftaLabel ? null : field.placeholder
-            " :required="field.required" :readOnly="field.readOnly" :disabled="field.disabled" :class="field.class"
+          <component :is="fieldComponent" :autofocus="field.autoFocused" v-model="resourceModel" :size="field.size"
+            :placeholder="field.floatedLabel || field.iftaLabel ? null : field.placeholder
+              " :required="field.required" :readOnly="field.readOnly" :disabled="field.disabled" :class="field.class"
             :v-bind="field.attributes.input" :id="field.id" :error="error" :field="field" />
           <InputIcon v-if="field.suffix && field.iconField" :class="field.suffix" />
         </IconField>
-        <component v-else :is="fieldComponent" v-model="resourceModel" :size="field.size" :placeholder="field.floatedLabel || field.iftaLabel ? null : field.placeholder
-          " :required="field.required" :readOnly="field.readOnly" :disabled="field.disabled" :class="field.class"
+        <component v-else :is="fieldComponent" :autofocus="field.autoFocused" v-model="resourceModel" :size="field.size"
+          :placeholder="field.floatedLabel || field.iftaLabel ? null : field.placeholder
+            " :required="field.required" :readOnly="field.readOnly" :disabled="field.disabled" :class="field.class"
           :id="field.id" :error="error" :field="field" />
         <label v-if="field.floatedLabel || field.iftaLabel" :for="field.id"><span
             :class="`text-${error ? 'danger' : 'dark'}`">{{
