@@ -2,6 +2,7 @@
 
 namespace App\Services\Generator\SchemaResource\SchemaForm;
 
+use App\Services\Generator\SchemaResource\DatabaseSchema;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,8 +28,58 @@ class SchemaFormMaker
         return new self($module_name);
     }
 
-    public function form()
+    public function generateFormCode()
     {
-        return $this->request;
+        $requestRules = $this->request->rules();
+        $databaseColumns = DatabaseSchema::for(strtolower(Str::plural($this->module_name)))->columns();
+
+        $information_data = [];
+
+        foreach ($requestRules as $filed_name => $request_rule) {
+            $information_data[$filed_name] = [
+                'request_rules' => $request_rule,
+                'database_column' => $databaseColumns[$filed_name]
+            ];
+        }
+
+        $fieldCode = '';
+        foreach ($information_data as $fieldName => $info) {
+            $field = $this->generateInputField($fieldName, $info['request_rules']);
+            $fieldCode .= $field . "\n";
+        }
+
+
+
+        return $fieldCode;
+    }
+
+    public function generateInputField(string $fieldName, array $rules): string
+    {
+        // Create the field code for each input
+        $fieldCode = "TextField::make('$fieldName')";
+
+        foreach ($rules as $rule) {
+            if (strpos($rule, 'min:') === 0) {
+                $minValue = (int)substr($rule, 4);
+                $fieldCode .= "->min($minValue)";
+            } elseif (strpos($rule, 'max:') === 0) {
+                $maxValue = (int)substr($rule, 4);
+                $fieldCode .= "->max($maxValue)";
+            } elseif ($rule === 'required') {
+                $fieldCode .= "->required()";
+            } elseif (strpos($rule, 'unique:') === 0) {
+                $fieldCode .= "->unique('" . substr($rule, 7) . "')";
+            } elseif (strpos($rule, 'exists:') === 0) {
+                $fieldCode .= "->exists('" . substr($rule, 7) . "')";
+            }
+        }
+
+        // Assuming 'user_id' needs to be a SelectField
+        if ($fieldName === 'user_id') {
+            $fieldCode = "SelectField::make('$fieldName', 'User')"
+                . "->optionCollection(User::all(), 'name', 'id')";
+        }
+
+        return $fieldCode;
     }
 }
