@@ -84,6 +84,8 @@ abstract class InputField
 
     protected ?Closure $dependencyCallback = null;
 
+    public bool $autoFocused = false;
+
     /**
      * Create a new column instance.
      */
@@ -96,7 +98,7 @@ abstract class InputField
         $this->placeholder = $this->label;
         $this->type = $this->getType();
 
-        $this->attributes = new InputFieldAttributes();
+        $this->attributes = new InputFieldAttributes;
     }
 
     /**
@@ -341,6 +343,18 @@ abstract class InputField
     }
 
     /**
+     * Set attributes for the input field.
+     *
+     * @return $this
+     */
+    public function autoFocused(bool $autoFocused = true)
+    {
+        $this->autoFocused = $autoFocused;
+
+        return $this;
+    }
+
+    /**
      * Set dependency operation for the input field.
      *
      * @return $this
@@ -360,9 +374,10 @@ abstract class InputField
      */
     public function getDependencies(Request $request)
     {
-        if (!$this->dependencyCallback) {
-            throw new \Exception("No dependency callback defined for the field.");
+        if (! $this->dependencyCallback) {
+            throw new \Exception('No dependency callback defined for the field.');
         }
+
         return call_user_func($this->dependencyCallback, $request);
     }
 }
@@ -371,10 +386,13 @@ abstract class InputField
 class InputFieldAttributes
 {
     public ?array $wrapper = [
-        'class' => 'flex'
+        'class' => 'flex',
     ];
+
     public ?array $inputGroup = [];
+
     public ?array $label = [];
+
     public ?array $input = [];
 
     public function wrapper(?array $wrapper = []): self

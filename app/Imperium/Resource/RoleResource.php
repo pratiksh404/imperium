@@ -3,22 +3,20 @@
 namespace App\Imperium\Resource;
 
 use App\Models\Admin\Role;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Services\Resource\Resource;
-use App\Services\Resource\Form\Form;
+use App\Services\Resource\DataTable\Columns\TextColumn;
 use App\Services\Resource\DataTable\DataTable;
-use App\Services\Resource\Navigation\MenuItem;
 use App\Services\Resource\Form\Fields\TextField;
+use App\Services\Resource\Form\Form;
+use App\Services\Resource\Form\InputFieldAttributes;
 use App\Services\Resource\Navigation\Breadcrumb;
+use App\Services\Resource\Navigation\BreadcrumbItem;
+use App\Services\Resource\Navigation\HeaderPoint;
+use App\Services\Resource\Navigation\MenuItem;
 use App\Services\Resource\Navigation\Navigation;
 use App\Services\Resource\Navigation\PageHeader;
-use App\Services\Resource\Navigation\HeaderPoint;
-use App\Services\Resource\Form\Fields\SelectField;
-use App\Services\Resource\Form\Fields\SelectOption;
-use App\Services\Resource\Form\InputFieldAttributes;
-use App\Services\Resource\Navigation\BreadcrumbItem;
-use App\Services\Resource\DataTable\Columns\TextColumn;
+use App\Services\Resource\Resource;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class RoleResource extends Resource
 {
@@ -46,10 +44,10 @@ class RoleResource extends Resource
                     (new InputFieldAttributes)->inputGroup([
                         'class' => 'w-1/2',
                     ])
-                ),
+                )->autoFocused(),
                 TextField::make('slug')->dependsOn('name', function (Request $request) {
                     return Str::slug($request->dependent_value);
-                })
+                }),
             ])->opensIn(Form::DIALOG_MODE);
     }
 
@@ -73,8 +71,8 @@ class RoleResource extends Resource
                             ])
                     )
                     ->points([
-                        HeaderPoint::make('Total Roles : ' . Role::count(), 'pi pi-shield'),
-                        HeaderPoint::make('Trash Roles : ' . Role::onlyTrashed()->count(), 'pi pi-trash'),
+                        HeaderPoint::make('Total Roles : '.Role::count(), 'pi pi-shield'),
+                        HeaderPoint::make('Trash Roles : '.Role::onlyTrashed()->count(), 'pi pi-trash'),
                     ]),
             ]);
     }
