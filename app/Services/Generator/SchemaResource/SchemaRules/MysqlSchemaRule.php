@@ -7,9 +7,9 @@ use App\Services\Generator\SchemaResource\SchemaSuppliers\MysqlSchemaSupplier;
 use stdClass;
 use Illuminate\Support\Str;
 
-class MysqlSchemaRule extends MysqlSchemaSupplier implements SchemaRuleInterface
+class MysqlSchemaRule implements SchemaRuleInterface
 {
-    public static array $integerTypes = [
+    public static array $minMaxDefault = [
         'tinyint' => [
             'unsigned' => ['0', '255'],
             'signed' => ['-128', '127'],
@@ -39,12 +39,11 @@ class MysqlSchemaRule extends MysqlSchemaSupplier implements SchemaRuleInterface
     public function __construct(string $table_name)
     {
         $this->table_name = $table_name;
-        parent::__construct($table_name);
     }
 
     public function rules(): array
     {
-        $columns = $this->columns();
+        $columns = (new MysqlSchemaSupplier($this->table_name))->columns();
 
         $rules = [];
 
@@ -75,7 +74,7 @@ class MysqlSchemaRule extends MysqlSchemaSupplier implements SchemaRuleInterface
 
         $type = Str::of($column->Type);
         switch (true) {
-            case $type == 'tinyint(1)' && config('schema-rules.tinyint1_to_bool'):
+            case $type == 'tinyint(1)' && config('imperium.schema.rules.tinyint.configurations.boolean', true):
                 $columnRules[] = 'boolean';
 
                 break;
@@ -149,5 +148,55 @@ class MysqlSchemaRule extends MysqlSchemaSupplier implements SchemaRuleInterface
         }
 
         return $columnRules;
+    }
+
+    public function defaultRules(string $column_type, bool $is_unsigned, array $rules = []): array
+    {
+        $default_rules = config('schema.rules.' . trim($column_type) . 'default', []);
+
+        // Merge the default rules and provided rules
+        $merged_rules = array_merge($default_rules, $rules);
+
+        // Get the min and max values for the column type from $minMaxDefault
+        $minMaxValues = self::$minMaxDefault[$column_type][$is_unsigned ? 'unsigned' : 'signed'];
+
+        // Initialize min and max variables
+        $minValue = null;
+        $maxValue = null;
+
+        // Parse the rules to extract min and max values
+        foreach ($merged_rules as $rule) {
+            if (strpos($rule, 'min:') === 0) {
+                $minValue = explode(':', $rule)[1]; // Extract value after 'min:'
+            } elseif (strpos($rule, 'max:') === 0) {
+                $maxValue = explode(':', $rule)[1]; // Extract value after 'max:'
+            }
+        }
+
+        // Validate and replace 'min' rule
+        if ($minValue !== null) {
+            if ($minValue < $minMaxValues['min']) {
+                // Replace invalid min value with default
+                $merged_rules = array_filter($merged_rules, fn($rule) => strpos($rule, 'min:') !== 0);
+                $merged_rules[] = 'min:' . $minMaxValues['min'];
+            }
+        } else {
+            // Add default min if missing
+            $merged_rules[] = 'min:' . $minMaxValues['min'];
+        }
+
+        // Validate and replace 'max' rule
+        if ($maxValue !== null) {
+            if ($maxValue > $minMaxValues['max']) {
+                // Replace invalid max value with default
+                $merged_rules = array_filter($merged_rules, fn($rule) => strpos($rule, 'max:') !== 0);
+                $merged_rules[] = 'max:' . $minMaxValues['max'];
+            }
+        } else {
+            // Add default max if missing
+            $merged_rules[] = 'max:' . $minMaxValues['max'];
+        }
+
+        return array_unique($merged_rules);
     }
 }
