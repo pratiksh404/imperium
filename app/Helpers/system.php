@@ -57,7 +57,7 @@ if (! function_exists('getFilesWithPaths')) {
         // Normalize the base path
         $basePath = realpath($basePath);
 
-        if ($basePath === false || ! is_dir($basePath)) {
+        if ($basePath === false || !is_dir($basePath)) {
             return $filesWithPaths; // Return an empty array if the base path is invalid
         }
 
@@ -67,7 +67,15 @@ if (! function_exists('getFilesWithPaths')) {
             if ($file->isFile() && $file->getExtension() === $extension) {
                 // Get the relative path from the base path
                 $relativePath = str_replace($basePath . DIRECTORY_SEPARATOR, '', $file->getPathname());
-                $filesWithPaths[basename($file->getFilename(), '.' . $extension)] = $relativePath;
+
+                // Ensure we are correctly mapping to "App\Http\Requests"
+                $namespacePath = 'App\\Http\\Requests\\' . str_replace(
+                    [DIRECTORY_SEPARATOR, '.' . $extension],
+                    ['\\', ''],
+                    $relativePath
+                );
+
+                $filesWithPaths[basename($file->getFilename(), '.' . $extension)] = $namespacePath;
             }
         }
 

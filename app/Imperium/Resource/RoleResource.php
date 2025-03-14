@@ -40,14 +40,7 @@ class RoleResource extends Resource
     {
         return (new Form)
             ->fields([
-                TextField::make('name')->default(rand(1000, 999999))->attributes(
-                    (new InputFieldAttributes)->inputGroup([
-                        'class' => 'w-1/2',
-                    ])
-                )->autoFocused(),
-                TextField::make('slug')->dependsOn('name', function (Request $request) {
-                    return Str::slug($request->dependent_value);
-                }),
+                TextField::make('name'),
             ])->opensIn(Form::DIALOG_MODE);
     }
 
@@ -71,8 +64,8 @@ class RoleResource extends Resource
                             ])
                     )
                     ->points([
-                        HeaderPoint::make('Total Roles : '.Role::count(), 'pi pi-shield'),
-                        HeaderPoint::make('Trash Roles : '.Role::onlyTrashed()->count(), 'pi pi-trash'),
+                        HeaderPoint::make('Total Roles : ' . Role::count(), 'pi pi-shield'),
+                        HeaderPoint::make('Trash Roles : ' . Role::onlyTrashed()->count(), 'pi pi-trash'),
                     ]),
             ]);
     }
