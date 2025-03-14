@@ -22,12 +22,18 @@ return [
 
     'schema' => [
         'rules' => [
+            'default' => [
+                'default' => ['nullable']
+            ],
             'tinyint' => [
                 'configurations' => [
                     'boolean' => true
                 ],
                 'default' => ['boolean']
             ],
+            'smallint' => ['default' => ['numeric']],
+            'mediumint' => ['default' => ['numeric']],
+            'bigint' => ['default' => ['numeric']],
             'char' => [
                 'default' => ['min:0']
             ],
@@ -35,7 +41,7 @@ return [
                 'default' => ['min:0']
             ],
             'int' => [
-                'default' => []
+                'default' => ['integer']
             ],
             'unsigned' => [
                 'default' => []
@@ -53,25 +59,25 @@ return [
                 'default' => ['numeric']
             ],
             'enum' => [
-                'default' => ['numeric']
+                'default' => ['string']
             ],
             'set' => [
-                'default' => ['numeric']
+                'default' => ['string']
             ],
             'year' => [
                 'default' => ['integer', 'min:1901', 'max:2155']
             ],
             'date' => [
-                'default' => ['numeric']
+                'default' => ['date']
             ],
             'time' => [
-                'default' => ['numeric']
+                'default' => ['date']
             ],
             'timestamp' => [
                 'default' => ['date', 'after_or_equal:1970-01-01 00:00:01', 'before_or_equal:2038-01-19 03:14:07']
             ],
             'json' => [
-                'default' => 'json'
+                'default' => ['json']
             ]
         ]
     ]

@@ -11,24 +11,24 @@ class MysqlSchemaRule implements SchemaRuleInterface
 {
     public static array $minMaxDefault = [
         'tinyint' => [
-            'unsigned' => ['0', '255'],
-            'signed' => ['-128', '127'],
+            'unsigned' => ['min' => '0', 'max' => '255'],
+            'signed' => ['min' => '-128', 'max' => '127'],
         ],
         'smallint' => [
-            'unsigned' => ['0', '65535'],
-            'signed' => ['-32768', '32767'],
+            'unsigned' => ['min' => '0', 'max' => '65535'],
+            'signed' => ['min' => '-32768', 'max' => '32767'],
         ],
         'mediumint' => [
-            'unsigned' => ['0', '16777215'],
-            'signed' => ['-8388608', '8388607'],
+            'unsigned' => ['min' => '0', 'max' => '16777215'],
+            'signed' => ['min' => '-8388608', 'max' => '8388607'],
         ],
         'int' => [
-            'unsigned' => ['0', '4294967295'],
-            'signed' => ['-2147483648', '2147483647'],
+            'unsigned' => ['min' => '0', 'max' => '4294967295'],
+            'signed' => ['min' => '-2147483648', 'max' => '2147483647'],
         ],
         'bigint' => [
-            'unsigned' => ['0', '18446744073709551615'],
-            'signed' => ['-9223372036854775808', '9223372036854775807'],
+            'unsigned' => ['min' => '0', 'max' => '18446744073709551615'],
+            'signed' => ['min' => '-9223372036854775808', 'max' => '9223372036854775807'],
         ],
     ];
 
@@ -48,7 +48,9 @@ class MysqlSchemaRule implements SchemaRuleInterface
         $rules = [];
 
         foreach ($columns as $column_name => $column) {
-            $rules[$column_name] = $this->generateColumnRules($column);
+            if ($column->Key !== 'PRI' && $column_name !== 'deleted_at' && $column_name !== 'created_at' && $column_name !== 'updated_at') {
+                $rules[$column_name] = $this->generateColumnRules($column);
+            }
         }
 
         $this->rules = $rules;
@@ -63,138 +65,124 @@ class MysqlSchemaRule implements SchemaRuleInterface
 
     protected function generateColumnRules(stdClass $column): array
     {
-        $columnRules = [];
-        $columnRules[] = $column->Null === 'YES' ? 'nullable' : 'required';
+        $relationRules = [];
+        $relationRules[] = $column->Null === 'YES' ? 'nullable' : 'required';
 
         if (! empty($column->Foreign)) {
-            $columnRules[] = 'exists:' . implode(',', $column->Foreign);
-
-            return $columnRules;
+            $relationRules[] = 'exists:' . implode(',', $column->Foreign);
         }
 
         $type = Str::of($column->Type);
-        switch (true) {
-            case $type == 'tinyint(1)' && config('imperium.schema.rules.tinyint.configurations.boolean', true):
-                $columnRules[] = 'boolean';
+        $is_unsigned = false;
+        $defined_rules = [];
+        if ($type->contains('char')) {
+            $defined_rules[] = 'max:' . filter_var($type, FILTER_SANITIZE_NUMBER_INT);
+        } elseif ($type->contains('int')) {
+            $is_unsigned = $type->contains('unsigned');
+            $type = $type->before(' unsigned');
+            $rule_type = $type->value;
+            // prevent int(xx) for mysql
+            $rule_type = preg_replace("/\([^)]+\)/", '', $type);
 
-                break;
-            case $type->contains('char'):
-                $columnRules[] = 'string';
-                $columnRules[] = 'min:' . config('schema-rules.string_min_length');
-                $columnRules[] = 'max:' . filter_var($type, FILTER_SANITIZE_NUMBER_INT);
-
-                break;
-            case $type == 'text':
-                $columnRules[] = 'string';
-                $columnRules[] = 'min:' . config('schema-rules.string_min_length');
-
-                break;
-            case $type->contains('int'):
-                $columnRules[] = 'integer';
-                $sign = ($type->contains('unsigned')) ? 'unsigned' : 'signed';
-                $intType = $type->before(' unsigned')->__toString();
-
-                // prevent int(xx) for mysql
-                $intType = preg_replace("/\([^)]+\)/", '', $intType);
-
-                if (! array_key_exists($intType, self::$integerTypes)) {
-                    $intType = 'int';
-                }
-
-                $columnRules[] = 'min:' . self::$integerTypes[$intType][$sign][0];
-                $columnRules[] = 'max:' . self::$integerTypes[$intType][$sign][1];
-
-                break;
-            case $type->contains('double') ||
-                $type->contains('decimal') ||
-                $type->contains('dec') ||
-                $type->contains('float'):
-                // should we do more specific here?
-                // some kind of regex validation for double, double unsigned, double(8, 2), decimal etc...?
-                $columnRules[] = 'numeric';
-
-                break;
-            case $type->contains('enum') || $type->contains('set'):
-                preg_match_all("/'([^']*)'/", $type, $matches);
-                $columnRules[] = 'string';
-                $columnRules[] = 'in:' . implode(',', $matches[1]);
-
-                break;
-            case $type->contains('year'):
-                $columnRules[] = 'integer';
-                $columnRules[] = 'min:1901';
-                $columnRules[] = 'max:2155';
-
-                break;
-            case $type == 'date' || $type == 'time':
-                $columnRules[] = 'date';
-
-                break;
-            case $type == 'timestamp':
-                // handle mysql "year 2038 problem"
-                $columnRules[] = 'date';
-                $columnRules[] = 'after_or_equal:1970-01-01 00:00:01';
-                $columnRules[] = 'before_or_equal:2038-01-19 03:14:07';
-
-                break;
-            case $type == 'json':
-                $columnRules[] = 'json';
-
-                break;
-
-            default:
-                // I think we skip BINARY and BLOB for now
-                break;
+            if (! array_key_exists($rule_type, self::$minMaxDefault)) {
+                $type = 'int';
+            }
+        } elseif ($type->contains('enum') || $type->contains('set')) {
+            preg_match_all("/'([^']*)'/", $type, $matches);
+            $columnRules[] = 'in:' . implode(',', $matches[1]);
         }
+        if ($type->contains('char')) {
+            $rule_type = 'char';
+        } elseif ($type->contains('text')) {
+            $rule_type = 'text';
+        } elseif ($type->contains('enum')) {
+            $rule_type = 'enum';
+        } elseif ($type->contains('set')) {
+            $rule_type = 'set';
+        } elseif ($type->contains('double')) {
+            $rule_type = 'double';
+        } elseif ($type->contains('float')) {
+            $rule_type = 'float';
+        } elseif ($type->contains('decimal')) {
+            $rule_type = 'decimal';
+        } elseif ($type->contains('dec')) {
+            $rule_type = 'dec';
+        } elseif ($type->contains('year')) {
+            $rule_type = 'year';
+        } elseif ($type->contains('time')) {
+            $rule_type = 'time';
+        } elseif ($type->contains('timestamp')) {
+            $rule_type = 'timestamp';
+        } elseif ($type->contains('json')) {
+            $rule_type = 'json';
+        } else {
+            $rule_type = 'default';
+        }
+        $rule_type = strtolower($rule_type);
 
-        return $columnRules;
+        return $this->getRulesForColumn($rule_type, array_merge($relationRules, $defined_rules), $is_unsigned);
     }
 
-    public function defaultRules(string $column_type, bool $is_unsigned, array $rules = []): array
+    /*************  ✨ Codeium Command ⭐  *************/
+    /**
+     * Gets the rules for the given column type and merges them with the provided rules.
+     *
+     * If the column type is present in the $minMaxDefault array, it will also validate
+     * and replace any 'min' or 'max' rules with the default values if they are invalid.
+     *
+     * @param string $column_type The column type to get the rules for.
+     * @param array $rules The rules to merge with the default rules.
+     * @param bool $is_unsigned Whether the column is unsigned.
+     * @return array The merged rules.
+     */
+    /******  ca21a485-1a82-4b86-9bfd-a5a11be4e1ee  *******/
+    public function getRulesForColumn(string $column_type, array $rules = [], bool $is_unsigned = false): array
     {
-        $default_rules = config('schema.rules.' . trim($column_type) . 'default', []);
-
+        $default_rules = config('imperium.schema.rules.' . trim($column_type) . '.default', []);
         // Merge the default rules and provided rules
         $merged_rules = array_merge($default_rules, $rules);
 
-        // Get the min and max values for the column type from $minMaxDefault
-        $minMaxValues = self::$minMaxDefault[$column_type][$is_unsigned ? 'unsigned' : 'signed'];
 
-        // Initialize min and max variables
-        $minValue = null;
-        $maxValue = null;
 
-        // Parse the rules to extract min and max values
-        foreach ($merged_rules as $rule) {
-            if (strpos($rule, 'min:') === 0) {
-                $minValue = explode(':', $rule)[1]; // Extract value after 'min:'
-            } elseif (strpos($rule, 'max:') === 0) {
-                $maxValue = explode(':', $rule)[1]; // Extract value after 'max:'
+        if (isset(self::$minMaxDefault[$column_type][$is_unsigned ? 'unsigned' : 'signed'])) {
+            // Get the min and max values for the column type from $minMaxDefault
+            $minMaxValues = self::$minMaxDefault[$column_type][$is_unsigned ? 'unsigned' : 'signed'];
+            // Initialize min and max variables
+            $minValue = null;
+            $maxValue = null;
+
+            // Parse the rules to extract min and max values
+            foreach ($merged_rules as $rule) {
+                if (strpos($rule, 'min:') === 0) {
+                    $minValue = explode(':', $rule)[1]; // Extract value after 'min:'
+                } elseif (strpos($rule, 'max:') === 0) {
+                    $maxValue = explode(':', $rule)[1]; // Extract value after 'max:'
+                }
             }
-        }
 
-        // Validate and replace 'min' rule
-        if ($minValue !== null) {
-            if ($minValue < $minMaxValues['min']) {
-                // Replace invalid min value with default
-                $merged_rules = array_filter($merged_rules, fn($rule) => strpos($rule, 'min:') !== 0);
+            // Validate and replace 'min' rule
+            if ($minValue !== null) {
+                if ($minValue < $minMaxValues['min']) {
+                    // Replace invalid min value with default
+                    $merged_rules = array_filter($merged_rules, fn($rule) => strpos($rule, 'min:') !== 0);
+                    $merged_rules[] = 'min:' . $minMaxValues['min'];
+                }
+            } else {
+                // Add default min if missing
                 $merged_rules[] = 'min:' . $minMaxValues['min'];
             }
-        } else {
-            // Add default min if missing
-            $merged_rules[] = 'min:' . $minMaxValues['min'];
-        }
 
-        // Validate and replace 'max' rule
-        if ($maxValue !== null) {
-            if ($maxValue > $minMaxValues['max']) {
-                // Replace invalid max value with default
-                $merged_rules = array_filter($merged_rules, fn($rule) => strpos($rule, 'max:') !== 0);
+            // Validate and replace 'max' rule
+            if ($maxValue !== null) {
+                if ($maxValue > $minMaxValues['max']) {
+                    // Replace invalid max value with default
+                    $merged_rules = array_filter($merged_rules, fn($rule) => strpos($rule, 'max:') !== 0);
+                    $merged_rules[] = 'max:' . $minMaxValues['max'];
+                }
+            } else {
+                // Add default max if missing
                 $merged_rules[] = 'max:' . $minMaxValues['max'];
             }
-        } else {
-            // Add default max if missing
-            $merged_rules[] = 'max:' . $minMaxValues['max'];
         }
 
         return array_unique($merged_rules);
