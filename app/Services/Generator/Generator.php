@@ -27,13 +27,14 @@ class Generator
             $template = str_replace(
                 [
                     '{{modelName}}',
-                ], [
+                ],
+                [
                     $this->name,
                 ],
                 $this->getStub('ResourcefulModel'),
             );
 
-            $this->makeFile(app_path('Models/Admin/'.$this->name.'.php'), $template);
+            $this->makeFile(app_path('Models/Admin/' . $this->name . '.php'), $template);
 
             return $this->getModelNamespace($this->name);
         }
@@ -51,6 +52,7 @@ class Generator
     public function makeFile(string $file_path, string $content)
     {
         $this->makeFolderIfNotExists(dirname($file_path));
+
         file_put_contents($file_path, $content);
 
         return $file_path;
@@ -66,6 +68,6 @@ class Generator
         $stubs = count($this->stubs ?? []) > 0 ? $this->stubs : getFilesWithPaths(app_path('Stubs'), 'stub');
         $stub = $stubs[trim(Str::studly($name))];
 
-        return app_path('Stubs/'.$stub);
+        return app_path('Stubs/' . $stub);
     }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Services\Generator\SchemaResource\SchemaRules;
 
-use App\Contracts\Imperium\Generator\SchemaRuleInterface;
-use App\Services\Generator\SchemaResource\SchemaSuppliers\MysqlSchemaSupplier;
 use stdClass;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
+use App\Contracts\Imperium\Generator\SchemaRuleInterface;
+use App\Services\Generator\SchemaResource\SchemaSuppliers\MysqlSchemaSupplier;
 
 class MysqlSchemaRule implements SchemaRuleInterface
 {
@@ -65,77 +66,103 @@ class MysqlSchemaRule implements SchemaRuleInterface
 
     protected function generateColumnRules(stdClass $column): array
     {
+        $relationRules = $this->generateRelationRules($column);
+        $uniqueRules = $this->generateUniqueRules($column);
+        $typeRules = $this->generateTypeRules($column);
+
+        return $this->getRulesForColumn(
+            $typeRules['rule_type'],
+            array_merge($relationRules, $uniqueRules, $typeRules['defined_rules']),
+            $typeRules['is_unsigned']
+        );
+    }
+
+    protected function generateRelationRules(stdClass $column): array
+    {
         $relationRules = [];
         $relationRules[] = $column->Null === 'YES' ? 'nullable' : 'required';
 
-        if (! empty($column->Foreign)) {
+        if (!empty($column->Foreign)) {
             $relationRules[] = 'exists:' . implode(',', $column->Foreign);
         }
 
+        return $relationRules;
+    }
+
+    public function generateUniqueRules(stdClass $column): array
+    {
+        $uniqueRules = [];
+        $field = $column->Field;
+        if (Schema::hasIndex($this->table_name, [$field], 'unique')) {
+            $uniqueRules[] = 'unique:' . $this->table_name . ',' . $field;
+        }
+        return $uniqueRules;
+    }
+
+    protected function generateTypeRules(stdClass $column): array
+    {
         $type = Str::of($column->Type);
         $is_unsigned = false;
         $defined_rules = [];
+        $rule_type = 'default';
+
         if ($type->contains('char')) {
             $defined_rules[] = 'max:' . filter_var($type, FILTER_SANITIZE_NUMBER_INT);
+            $rule_type = 'char';
         } elseif ($type->contains('int')) {
             $is_unsigned = $type->contains('unsigned');
-            $type = $type->before(' unsigned');
-            $rule_type = $type->value;
-            // prevent int(xx) for mysql
-            $rule_type = preg_replace("/\([^)]+\)/", '', $type);
-
-            if (! array_key_exists($rule_type, self::$minMaxDefault)) {
-                $type = 'int';
-            }
+            $rule_type = $this->normalizeIntType($type);
         } elseif ($type->contains('enum') || $type->contains('set')) {
-            preg_match_all("/'([^']*)'/", $type, $matches);
-            $columnRules[] = 'in:' . implode(',', $matches[1]);
-        }
-        if ($type->contains('char')) {
-            $rule_type = 'char';
-        } elseif ($type->contains('text')) {
-            $rule_type = 'text';
-        } elseif ($type->contains('enum')) {
-            $rule_type = 'enum';
-        } elseif ($type->contains('set')) {
-            $rule_type = 'set';
-        } elseif ($type->contains('double')) {
-            $rule_type = 'double';
-        } elseif ($type->contains('float')) {
-            $rule_type = 'float';
-        } elseif ($type->contains('decimal')) {
-            $rule_type = 'decimal';
-        } elseif ($type->contains('dec')) {
-            $rule_type = 'dec';
-        } elseif ($type->contains('year')) {
-            $rule_type = 'year';
-        } elseif ($type->contains('time')) {
-            $rule_type = 'time';
-        } elseif ($type->contains('timestamp')) {
-            $rule_type = 'timestamp';
-        } elseif ($type->contains('json')) {
-            $rule_type = 'json';
+            $rule_type = $type->contains('enum') ? 'enum' : 'set';
+            $defined_rules[] = $this->generateEnumSetRule($type);
         } else {
-            $rule_type = 'default';
+            $rule_type = $this->determineRuleType($type);
         }
-        $rule_type = strtolower($rule_type);
 
-        return $this->getRulesForColumn($rule_type, array_merge($relationRules, $defined_rules), $is_unsigned);
+        return [
+            'rule_type' => strtolower($rule_type),
+            'defined_rules' => $defined_rules,
+            'is_unsigned' => $is_unsigned,
+        ];
     }
 
-    /*************  ✨ Codeium Command ⭐  *************/
-    /**
-     * Gets the rules for the given column type and merges them with the provided rules.
-     *
-     * If the column type is present in the $minMaxDefault array, it will also validate
-     * and replace any 'min' or 'max' rules with the default values if they are invalid.
-     *
-     * @param string $column_type The column type to get the rules for.
-     * @param array $rules The rules to merge with the default rules.
-     * @param bool $is_unsigned Whether the column is unsigned.
-     * @return array The merged rules.
-     */
-    /******  ca21a485-1a82-4b86-9bfd-a5a11be4e1ee  *******/
+    protected function normalizeIntType($type): string
+    {
+        $type = $type->before(' unsigned');
+        $rule_type = preg_replace("/\([^)]+\)/", '', $type->value);
+
+        return array_key_exists($rule_type, self::$minMaxDefault) ? $rule_type : 'int';
+    }
+
+    protected function generateEnumSetRule($type): string
+    {
+        preg_match_all("/'([^']*)'/", $type, $matches);
+        return 'in:' . implode(',', $matches[1]);
+    }
+
+    protected function determineRuleType($type): string
+    {
+        $ruleTypes = [
+            'text' => 'text',
+            'double' => 'double',
+            'float' => 'float',
+            'decimal' => 'decimal',
+            'dec' => 'dec',
+            'year' => 'year',
+            'time' => 'time',
+            'timestamp' => 'timestamp',
+            'json' => 'json',
+        ];
+
+        foreach ($ruleTypes as $keyword => $ruleType) {
+            if ($type->contains($keyword)) {
+                return $ruleType;
+            }
+        }
+
+        return 'default';
+    }
+
     public function getRulesForColumn(string $column_type, array $rules = [], bool $is_unsigned = false): array
     {
         $default_rules = config('imperium.schema.rules.' . trim($column_type) . '.default', []);
