@@ -101,6 +101,8 @@ import { useToast } from "primevue/usetoast";
 import axios from "axios";
 import { watchDebounced } from "@vueuse/core";
 
+const toast = useToast();
+
 // Form Success State Management
 const eventsStore = useEventsStore();
 
@@ -183,8 +185,6 @@ watchDebounced(
     resourceForm.fields.forEach(async (field) => {
       if (field.dependsOn) {
         const parentValue = newForm[field.dependsOn];
-
-        console.log(parentValue, field);
         axios
           .post(
             route("getDependencies", {

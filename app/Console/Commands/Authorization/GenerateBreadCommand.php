@@ -2,17 +2,18 @@
 
 namespace App\Console\Commands\Authorization;
 
-use App\Models\Admin\Permission;
+use App\Models\User;
 use App\Models\Admin\Role;
 use Illuminate\Console\Command;
 
-use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\error;
+use App\Models\Admin\Permission;
 use function Laravel\Prompts\info;
-use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\note;
-use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
+use function Laravel\Prompts\error;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\multiselect;
 
 class GenerateBreadCommand extends Command
 {
@@ -28,12 +29,17 @@ class GenerateBreadCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Command to generate BREAD authorization for a module';
 
     /**
      * Execute the console command.
      */
     public function handle()
+    {
+        $this->generateBREAD();
+    }
+
+    protected function generateBREAD()
     {
         // Select Role
         $roles = Role::all();
@@ -56,7 +62,7 @@ class GenerateBreadCommand extends Command
         // Generate BREAD
         $module_with_no_bread = $role->modules_with_no_bread;
         if (count($module_with_no_bread ?? []) === 0) {
-            info('Seems like role '.$role->name.' already has BREAD for all modules.');
+            info('Seems like role ' . $role->name . ' already has BREAD for all modules.');
 
             return;
         }
@@ -70,16 +76,9 @@ class GenerateBreadCommand extends Command
             $model = getModelHavingName($module_name);
             if (! $model) {
                 error('Model not found.');
-
-                // If last iteration, then return
-                if ($module_name === end($module_names)) {
-                    return;
-                }
-
-                break;
             }
 
-            info('Select BREAD for module '.$module_name.' and role '.$role->name);
+            info('Select BREAD for module ' . $module_name . ' and role ' . $role->name);
             $active_breads = multiselect(
                 label: 'Authorized BREAD',
                 options: [
@@ -94,7 +93,7 @@ class GenerateBreadCommand extends Command
 
             Permission::generateBREADForModel($model, $role, $active_breads);
 
-            info('BREAD generated successfully for role '.$role->name.' and module '.$module_name);
+            info('BREAD generated successfully for role ' . $role->name . ' and module ' . $module_name);
         }
     }
 
@@ -114,11 +113,12 @@ class GenerateBreadCommand extends Command
                 'name' => $name_of_role_to_be_created,
             ];
 
-            $createRole = Role::create($data);
-            note('Role created successfully: '.$createRole->name);
-            $this->handle();
-        } else {
-            return;
+            $createdRole = Role::create($data);
+
+            // Assigning created role for users who does not have any role
+            User::whereNull('role_id')->update(['role_id' => $createdRole->id]);
+
+            note('Role created successfully: ' . $createdRole->name);
         }
     }
 }

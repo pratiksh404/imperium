@@ -27,12 +27,6 @@ const emit = defineEmits(["update:modelValue"]);
 
 const props = defineProps({
   ...useResourceInputProps(),
-  modelValue: {
-    type: String,
-    default: null,
-  },
-  error: { type: String, default: null },
-  field: { type: Object, default: () => ({}) },
 });
 
 const { modelValue, hasError, updateValue, getProp } = useResourceInput(props);

@@ -24,7 +24,7 @@ class RoleRequest extends FormRequest
         $id = $this->role->id ?? '';
 
         return [
-            'name' => 'required|unique:roles,name,'.$id,
+            'name' => 'required|unique:roles,name,' . $id,
         ];
     }
 }
