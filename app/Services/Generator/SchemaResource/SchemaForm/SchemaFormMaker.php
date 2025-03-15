@@ -3,20 +3,23 @@
 namespace App\Services\Generator\SchemaResource\SchemaForm;
 
 use App\Services\Generator\SchemaResource\DatabaseSchema;
-use Illuminate\Support\Str;
+use App\Services\Generator\SchemaResource\SchemaForm\Fields\InputFieldMaker;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class SchemaFormMaker
 {
     public FormRequest $request;
+
     public string $module_name;
+
     public function __construct(string $module_name)
     {
         $this->module_name = $module_name;
 
-        $requestFileName = Str::studly($module_name) . 'Request';
+        $requestFileName = Str::studly($module_name).'Request';
 
-        if (!isset(getFilesWithPaths(app_path('Http/Requests'))[$requestFileName])) {
+        if (! isset(getFilesWithPaths(app_path('Http/Requests'))[$requestFileName])) {
             throw new \Exception('Request file not found');
         } else {
             $this->request = (new (getFilesWithPaths(app_path('Http/Requests'))[$requestFileName]));
@@ -38,17 +41,14 @@ class SchemaFormMaker
         foreach ($requestRules as $filed_name => $request_rule) {
             $information_data[$filed_name] = [
                 'request_rules' => $request_rule,
-                'database_column' => $databaseColumns[$filed_name]
+                'database_column' => $databaseColumns[$filed_name],
             ];
         }
 
         $fieldCode = '';
         foreach ($information_data as $fieldName => $info) {
-            $field = $this->generateInputField($fieldName, $info['request_rules']);
-            $fieldCode .= $field . "\n";
+            $fieldCode .= (InputFieldMaker::for($info))->grab()."\n";
         }
-
-
 
         return $fieldCode;
     }
@@ -60,24 +60,24 @@ class SchemaFormMaker
 
         foreach ($rules as $rule) {
             if (strpos($rule, 'min:') === 0) {
-                $minValue = (int)substr($rule, 4);
+                $minValue = (int) substr($rule, 4);
                 $fieldCode .= "->min($minValue)";
             } elseif (strpos($rule, 'max:') === 0) {
-                $maxValue = (int)substr($rule, 4);
+                $maxValue = (int) substr($rule, 4);
                 $fieldCode .= "->max($maxValue)";
             } elseif ($rule === 'required') {
-                $fieldCode .= "->required()";
+                $fieldCode .= '->required()';
             } elseif (strpos($rule, 'unique:') === 0) {
-                $fieldCode .= "->unique('" . substr($rule, 7) . "')";
+                $fieldCode .= "->unique('".substr($rule, 7)."')";
             } elseif (strpos($rule, 'exists:') === 0) {
-                $fieldCode .= "->exists('" . substr($rule, 7) . "')";
+                $fieldCode .= "->exists('".substr($rule, 7)."')";
             }
         }
 
         // Assuming 'user_id' needs to be a SelectField
         if ($fieldName === 'user_id') {
             $fieldCode = "SelectField::make('$fieldName', 'User')"
-                . "->optionCollection(User::all(), 'name', 'id')";
+                ."->optionCollection(User::all(), 'name', 'id')";
         }
 
         return $fieldCode;

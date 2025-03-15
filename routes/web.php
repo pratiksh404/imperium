@@ -1,14 +1,15 @@
 <?php
 
-use Inertia\Inertia;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Admin\FileUploadController;
 use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\FileUploadController;
 use App\Http\Controllers\Admin\Resourceful\RoleController;
+use App\Http\Controllers\Imperium\DevToolController;
 use App\Http\Controllers\Imperium\ImperiumResourceController;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -29,7 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     $resourcefulControllers = getFilesWithPaths($path);
     foreach ($resourcefulControllers as $name => $file_name) {
         $route = Str::plural(strtolower(str_replace('Controller', '', $name)));
-        $controller = $namespace . '\\' . $name;
+        $controller = $namespace.'\\'.$name;
         Route::resource($route, $controller)->except(['show', 'create', 'edit']);
     }
 
@@ -59,7 +60,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/upload/revert', [FileUploadController::class, 'revert'])
         ->name('upload.revert');
 
+    // Imperium Routes
     Route::post('get-dependencies/{module_name}/{dependable_field_name}', [ImperiumResourceController::class, 'getDependencyValues'])->name('getDependencies');
+    Route::get('migration-generator', [DevToolController::class, 'migration_generator'])->name('migrationGenerator');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
