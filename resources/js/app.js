@@ -20,6 +20,13 @@ import { useDark } from '@vueuse/core';
 
 import Container from './Components/Container.vue';
 
+// Highlight Js
+import hljs from 'highlight.js/lib/core';
+import php from 'highlight.js/lib/languages/php';
+import hljsVuePlugin from "@highlightjs/vue-plugin";
+
+hljs.registerLanguage('php', php);
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 const darkMode = useDark(); // set Light/Dark Mode
 
@@ -45,6 +52,7 @@ createInertiaApp({
             })
             .use(ToastService)
             .use(ConfirmationService)
+            .use(hljsVuePlugin, { hljs })
             .component('Head', Head)
             .component('Link', Link)
             .component('Container', Container)

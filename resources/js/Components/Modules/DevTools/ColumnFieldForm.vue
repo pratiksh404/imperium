@@ -2,7 +2,7 @@
     <div class="w-full">
         <div class="mt-4">
             <FloatLabel variant="on">
-                <InputText id="name" v-model="name" fluid />
+                <InputText id="name" v-model="name" fluid autofocus />
                 <label for="name">Field Name</label>
             </FloatLabel>
         </div>
@@ -14,24 +14,37 @@
             </FloatLabel>
         </div>
         <div class="mt-4">
-            <ToggleButton v-model="autoIncrement" onIcon="pi pi-check" offIcon="pi pi-times" class="w-full"
-                aria-label="autoIncrement" onLabel="Auto Increment" fluid offLabel="Not Auto Increment" />
+            <Checkbox v-model="autoIncrement" inputId="autoIncrement" name="autoIncrement" binary />
+            <label for="autoIncrement"> Auto Increment </label>
         </div>
-        <div class="mt-4">
-            <ToggleButton v-model="nullable" onIcon="pi pi-check" offIcon="pi pi-times" class="w-full"
-                aria-label="nullable" onLabel="Nullable" offLabel="Not Nullable" fluid />
+        <div class="mt-2">
+            <Checkbox v-model="nullable" inputId="nullable" name="nullable" binary />
+            <label for="nullable"> Nullable </label>
         </div>
-        <div class="mt-4">
-            <ToggleButton v-model="unique" onIcon="pi pi-check" offIcon="pi pi-times" class="w-full" aria-label="unique"
-                onLabel="Unique" offLabel="Not Unique" fluid />
+        <div class="mt-2">
+            <Checkbox v-model="unsigned" inputId="unsigned" name="unsigned" binary />
+            <label for="unsigned"> Unsigned </label>
         </div>
-        <div class="mt-4">
-            <ToggleButton v-model="unsigned" onIcon="pi pi-check" offIcon="pi pi-times" class="w-full"
-                aria-label="unsigned" onLabel="Unsigned" offLabel="Not Unsigned" fluid />
+        <div class="mt-2">
+            <Checkbox v-model="unique" inputId="unique" name="unique" binary />
+            <label for="unique"> Unique </label>
         </div>
+        <div class="mt-2">
+            <Checkbox v-model="constrained" inputId="constrained" name="constrained" binary />
+            <label for="constrained"> Constrained </label>
+        </div>
+        <div class="mt-2">
+            <Checkbox v-model="cascadeOnDelete" inputId="cascadeOnDelete" name="cascadeOnDelete" binary />
+            <label for="cascadeOnDelete"> Cascade On Delete </label>
+        </div>
+        <div class="mt-2">
+            <Checkbox v-model="nullOnDelete" inputId="nullOnDelete" name="nullOnDelete" binary />
+            <label for="nullOnDelete"> Null On Delete </label>
+        </div>
+        <Divider />
         <div class="mt-4">
             <Button label="Save" icon="pi pi-check" class="w-full"
-                @click="$emit('save', { name, type, autoIncrement, nullable, unique, unsigned })" />
+                @click="$emit('save', { name, type, autoIncrement, nullable, unique, unsigned, constrained, cascadeOnDelete, nullOnDelete })" />
         </div>
     </div>
 </template>
@@ -44,12 +57,16 @@ const props = defineProps({
     }
 })
 // Attributes
+const id = ref(props.modelValue?.id ?? Math.random(),);
 const name = ref(props.modelValue?.name ?? null);
 const type = ref(props.modelValue?.type ?? null);
 const autoIncrement = ref(props.modelValue?.autoIncrement ?? false);
 const nullable = ref(props.modelValue?.nullable ?? false);
 const unique = ref(props.modelValue?.unique ?? false);
 const unsigned = ref(props.modelValue?.unsigned ?? false);
+const constrained = ref(props.modelValue?.constrained ?? false);
+const cascadeOnDelete = ref(props.modelValue?.cascadeOnDelete ?? false);
+const nullOnDelete = ref(props.modelValue?.nullOnDelete ?? false);
 
 const fieldTypes = ref([
     { name: 'string' },
