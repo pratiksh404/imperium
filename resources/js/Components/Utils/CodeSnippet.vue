@@ -9,10 +9,10 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import Clipboard from "clipboard";
 import "highlight.js/styles/github-dark.css"; // Choose a style for syntax highlighting
 import { useToast } from "primevue/usetoast";
 import { useIntervalFn } from "@vueuse/core";
+import { useClipboard } from "@vueuse/core";
 
 const toast = useToast();
 
@@ -25,18 +25,17 @@ const props = defineProps({
 
 const copyToClipboardText = ref("copy");
 const copyToClipboard = () => {
-  const clipboard = new Clipboard(".copy-button", {
-    text: () => props.code,
-  });
+  const { copy, isSupported } = useClipboard();
 
-  clipboard.on("success", () => {
+  if (isSupported) {
+    copy(props.code);
+
     toast.add({
       severity: "success",
       summary: "Success",
       detail: "Code copied to clipboard",
       life: 3000,
     });
-    clipboard.destroy(); // Clean up the clipboard instance
 
     // Displaying Copied to clipboard for 3 seconds
     copyToClipboardText.value = "Copied to clipboard";
@@ -44,18 +43,14 @@ const copyToClipboard = () => {
     useIntervalFn(() => {
       copyToClipboardText.value = "Copy";
     }, 2000);
-  });
-
-  clipboard.on("error", () => {
+  } else {
     toast.add({
       severity: "error",
       summary: "Error",
-      detail: "Failed to copy code",
+      detail: "Clipboard not supported",
       life: 3000,
     });
-    alert("Failed to copy code.");
-    clipboard.destroy(); // Clean up the clipboard instance
-  });
+  }
 };
 </script>
 
