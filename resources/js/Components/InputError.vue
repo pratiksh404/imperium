@@ -1,12 +1,17 @@
 <script setup>
-defineProps({
+import { computed } from "vue";
+const props = defineProps({
   error: {
     type: String,
   },
 });
+const validError = computed(() => {
+  return props.error && typeof myVariable != "undefined";
+});
+console.log(props.error);
 </script>
 
-<template v-if="error">
+<template v-if="validError">
   <Message
     v-for="(err, index) in error.split(',')"
     severity="error"
