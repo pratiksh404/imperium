@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Str;
 use App\Imperium\Application;
+use Illuminate\Support\Facades\File;
 
 if (! function_exists('setting')) {
     function setting($name)
@@ -33,7 +34,8 @@ if (! function_exists('resources')) {
         // $resources = getFilesWithPaths(base_path(str_replace('\\', '/', $namespace)));
         $data = [];
         foreach ($resources as $resource => $resource_file) {
-            $resource_data = (new ($namespace . '\\' . $resource))->get();
+            $resource_class = $namespace . '\\' . (trim(Str::ucfirst($resource)));
+            $resource_data = (new ($resource_class))->get();
             $data[$resource_data['name']] = $resource_data;
         }
 
@@ -125,5 +127,33 @@ if (! function_exists('getDatabaseDriverName')) {
         $connection = config('database.default');
         $driver = config("database.connections.{$connection}.driver");
         return $driver;
+    }
+}
+
+if (! function_exists('migrationExistsForTable')) {
+    function migrationExistsForTable($tableName)
+    {
+        return !is_null(getMigrationFileForTable($tableName));
+    }
+}
+
+if (! function_exists('getMigrationFileForTable')) {
+    function getMigrationFileForTable($tableName)
+    {
+        // Get the migration folder path
+        $migrationPath = database_path('migrations');
+
+        // Get all migration files
+        $migrationFiles = File::files($migrationPath);
+
+        // Loop through migration files and check if any match the table name
+        foreach ($migrationFiles as $migrationFile) {
+            // Check if the migration file contains the table name
+            if (Str::contains($migrationFile->getFilename(), 'create_' . $tableName . '_table')) {
+                return $migrationFile;
+            }
+        }
+
+        return null;
     }
 }

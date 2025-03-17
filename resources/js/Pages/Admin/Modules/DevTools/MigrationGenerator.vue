@@ -1,8 +1,8 @@
 <template>
   <Head title="Migration Generator" />
   <AuthenticatedLayout title="Migration Generator">
-    <div class="flex h-full">
-      <div class="w-2/5 h-full p-3">
+    <div class="flex flex-col lg:flex-row h-full w-full">
+      <div class="lg:w-2/5 w-full h-full p-3">
         <Card
           :pt="{
             root: {
@@ -175,7 +175,16 @@
           </template>
         </Card>
       </div>
-      <div class="w-3/5 h-full">
+      <div class="lg:w-3/5 w-full h-full">
+        <div class="card flex justify-center gap-2">
+          <Button
+            @click="confirmGenerateMigration($event)"
+            label="Generate Migration"
+            icon="pi pi-database"
+          />
+          <Button label="Run Migration" icon="pi pi-play" />
+          <Button label="Generate Request File" icon="pi pi-code" />
+        </div>
         <CodeSnippet :code="code" />
       </div>
     </div>
@@ -192,6 +201,7 @@ import CodeSnippet from "@/Components/Utils/CodeSnippet.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ColumnFieldForm from "@/Components/Modules/DevTools/ColumnFieldForm.vue";
 import CopyToClipboard from "@/Components/Utils/CopyToClipboard.vue";
+import { useConfirm } from "primevue/useconfirm";
 
 const tableName = ref("");
 const tableNewName = ref("");
@@ -221,6 +231,40 @@ const removeField = (event, field) => {
 
 const removeAllField = () => {
   columnFields.value = [];
+};
+
+// Migration Actions
+const confirm = useConfirm();
+const confirmGenerateMigration = (event) => {
+  confirm.require({
+    target: event.currentTarget,
+    message: "Are you sure you want to generate this migration?",
+    icon: "pi pi-exclamation-triangle",
+    rejectProps: {
+      label: "Cancel",
+      severity: "secondary",
+      outlined: true,
+    },
+    acceptProps: {
+      label: "Save",
+    },
+    accept: () => {
+      toast.add({
+        severity: "info",
+        summary: "Confirmed",
+        detail: "You have accepted",
+        life: 3000,
+      });
+    },
+    reject: () => {
+      toast.add({
+        severity: "error",
+        summary: "Rejected",
+        detail: "You have rejected",
+        life: 3000,
+      });
+    },
+  });
 };
 
 // Migration Generator
