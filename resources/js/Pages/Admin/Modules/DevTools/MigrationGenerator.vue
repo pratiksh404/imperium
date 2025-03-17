@@ -47,10 +47,7 @@
                   readonly
                   v-model="migrationCommand"
                 />
-                <Button
-                  @click="copyMigrationCommandToClipboard"
-                  :label="copyMigrationCommandToClipboardText"
-                />
+                <CopyToClipboard :copyText="migrationCommand" />
               </InputGroup>
             </div>
             <div class="mt-4 mb-4">
@@ -194,11 +191,7 @@ import { ref, computed, watch } from "vue";
 import CodeSnippet from "@/Components/Utils/CodeSnippet.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ColumnFieldForm from "@/Components/Modules/DevTools/ColumnFieldForm.vue";
-import { useClipboard } from "@vueuse/core";
-import { useToast } from "primevue/usetoast";
-import { useIntervalFn } from "@vueuse/core";
-
-const toast = useToast();
+import CopyToClipboard from "@/Components/Utils/CopyToClipboard.vue";
 
 const tableName = ref("");
 const tableNewName = ref("");
@@ -216,35 +209,6 @@ watch(tableName, (newVal) => {
       newVal
     : "";
 });
-
-const copyMigrationCommandToClipboardText = ref("Copy");
-const copyMigrationCommandToClipboard = () => {
-  const { copy, isSupported } = useClipboard();
-  if (isSupported) {
-    copy(migrationCommand.value);
-
-    toast.add({
-      severity: "success",
-      summary: "Success",
-      detail: "Copied to clipboard",
-      life: 3000,
-    });
-
-    // Displaying Copied to clipboard for 3 seconds
-    copyMigrationCommandToClipboardText.value = "Copied";
-
-    useIntervalFn(() => {
-      copyMigrationCommandToClipboardText.value = "Copy";
-    }, 2000);
-  } else {
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: "Clipboard not supported",
-      life: 3000,
-    });
-  }
-};
 
 const addField = (field) => {
   columnFields.value.push(field);
