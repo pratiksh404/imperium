@@ -33,7 +33,13 @@ class Application extends Imperium
             ->navigation(
                 (new HeaderNavigation)
                     ->headerLinkMenus([
-                        MenuItem::make('Migration Generator')->icon('pi pi-database')->url(route('migrationGenerator'))->authorize(env('APP_ENV') === 'local'),
+                        MenuItem::make('Migration Generator')->icon('pi pi-database')->url(route('dev-tools.migration-generator'))->authorize(env('APP_ENV') === 'local'),
+                        MenuItem::make('Documentation')->children([
+                            MenuItem::make('PrimeVue')->url('https://primevue.org/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                            MenuItem::make('Vue')->url('https://vuejs.org/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                            MenuItem::make('Laravel')->url('https://laravel.com/')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                            MenuItem::make('Inertia')->url('https://inertiajs.com')->type(MenuItem::URL)->authorize(env('APP_ENV') === 'local'),
+                        ])->type(MenuItem::URL),
                     ])
                     ->profileMenus([
                         MenuItem::make('Profile')->url(route('users.my-profile'))->icon('pi pi-user'),

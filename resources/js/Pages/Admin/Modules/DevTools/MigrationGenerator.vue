@@ -157,16 +157,14 @@
                           </td>
                         </tr>
                       </template>
-                      <template else>
-                        <tr>
-                          <td
-                            colspan="3"
-                            class="text-center whitespace-nowrap px-3 py-4 text-sm"
-                          >
-                            No Fields
-                          </td>
-                        </tr>
-                      </template>
+                      <tr else>
+                        <td
+                          colspan="3"
+                          class="text-center whitespace-nowrap px-3 py-4 text-sm"
+                        >
+                          No Fields
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -176,8 +174,14 @@
         </Card>
       </div>
       <div class="lg:w-3/5 w-full h-full">
-        <div class="card flex justify-center gap-2">
+        <ProgressBar
+          v-if="loading"
+          mode="indeterminate"
+          style="height: 6px; width: 100%"
+        ></ProgressBar>
+        <div class="card flex justify-center gap-2" v-if="!loading">
           <Button
+            v-if="tableName && fieldsString"
             @click="confirmGenerateMigration($event)"
             label="Generate Migration"
             icon="pi pi-database"
@@ -193,6 +197,29 @@
     <Drawer v-model:visible="toggleFieldDrawer" header="Column Field">
       <ColumnFieldForm @save="addField" />
     </Drawer>
+    <!-- Confirm Popup -->
+    <ConfirmPopup>
+      <template #container="{ message, acceptCallback, rejectCallback }">
+        <div class="rounded p-4">
+          <span>{{ message.message }}</span>
+          <div class="flex content-end gap-2 mt-4 w-full">
+            <Button
+              label="Generate"
+              @click="acceptCallback"
+              size="small"
+            ></Button>
+            <Button
+              label="Cancel"
+              outlined
+              @click="rejectCallback"
+              severity="secondary"
+              size="small"
+              text
+            ></Button>
+          </div>
+        </div>
+      </template>
+    </ConfirmPopup>
   </AuthenticatedLayout>
 </template>
 <script setup>
@@ -202,6 +229,11 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ColumnFieldForm from "@/Components/Modules/DevTools/ColumnFieldForm.vue";
 import CopyToClipboard from "@/Components/Utils/CopyToClipboard.vue";
 import { useConfirm } from "primevue/useconfirm";
+import { useServerAction } from "@/Composables/useServerAction";
+
+const { serverAction, loading, error } = useServerAction();
+
+console.log(loading.value);
 
 const tableName = ref("");
 const tableNewName = ref("");
@@ -249,11 +281,10 @@ const confirmGenerateMigration = (event) => {
       label: "Save",
     },
     accept: () => {
-      toast.add({
-        severity: "info",
-        summary: "Confirmed",
-        detail: "You have accepted",
-        life: 3000,
+      serverAction({
+        action: "generateResourceMigration",
+        table_name: tableName.value,
+        schema: fieldsString.value,
       });
     },
     reject: () => {

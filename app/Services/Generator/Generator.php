@@ -68,6 +68,6 @@ class Generator
         $stubs = count($this->stubs ?? []) > 0 ? $this->stubs : getFilesWithPaths(app_path('Stubs'), 'stub');
         $stub = $stubs[trim(Str::studly($name))];
 
-        return app_path('Stubs/' . $stub);
+        return $stub;
     }
 }

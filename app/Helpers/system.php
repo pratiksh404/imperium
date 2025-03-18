@@ -70,19 +70,45 @@ if (! function_exists('getFilesWithPaths')) {
                 // Get the relative path from the base path
                 $relativePath = str_replace($basePath . DIRECTORY_SEPARATOR, '', $file->getPathname());
 
-                // Ensure we are correctly mapping to "App\Http\Requests"
-                $namespacePath = 'App\\Http\\Requests\\' . str_replace(
-                    [DIRECTORY_SEPARATOR, '.' . $extension],
-                    ['\\', ''],
-                    $relativePath
-                );
 
-                $filesWithPaths[basename($file->getFilename(), '.' . $extension)] = $namespacePath;
+
+                $filesWithPaths[basename($file->getFilename(), '.' . $extension)] = $basePath . DIRECTORY_SEPARATOR . $relativePath;
             }
         }
 
         return $filesWithPaths;
     }
+}
+
+function getFilesWithNameSpace(string $basePath, string $extension = 'php'): array
+{
+    $filesWithPaths = getFilesWithPaths($basePath, $extension);
+    $filesWithNamespace = [];
+
+    foreach ($filesWithPaths as $className => $filePath) {
+        $namespace = extractNamespace($filePath);
+        if ($namespace) {
+            $filesWithNamespace[$className] = $namespace . '\\' . $className;
+        }
+    }
+
+    return $filesWithNamespace;
+}
+
+/**
+ * Extracts the namespace from a PHP file.
+ */
+function extractNamespace(string $filePath): ?string
+{
+    $lines = file($filePath);
+
+    foreach ($lines as $line) {
+        if (strpos($line, 'namespace ') === 0) {
+            return trim(str_replace(['namespace', ';'], '', $line));
+        }
+    }
+
+    return null;
 }
 
 if (! function_exists('getAllModels')) {

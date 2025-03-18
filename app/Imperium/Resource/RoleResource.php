@@ -5,6 +5,7 @@ namespace App\Imperium\Resource;
 use App\Models\Admin\Role;
 use App\Services\Resource\DataTable\Columns\TextColumn;
 use App\Services\Resource\DataTable\DataTable;
+use App\Services\Resource\Form\Fields\TextareaField;
 use App\Services\Resource\Form\Fields\TextField;
 use App\Services\Resource\Form\Form;
 use App\Services\Resource\Form\InputFieldAttributes;
@@ -41,7 +42,12 @@ class RoleResource extends Resource
         return (new Form)
             ->fields([
                 TextField::make('name'),
-            ])->opensIn(Form::DIALOG_MODE);
+                TextareaField::make('description')->dependsOn('name', function (Request $request) {
+                    return Str::lower($request->name) . 'test';
+                }),
+
+
+            ])->opensIn(Form::DRAWER_MODE);
     }
 
     public function navigation(): Navigation

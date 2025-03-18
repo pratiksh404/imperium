@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\Resourceful\RoleController;
 use App\Http\Controllers\Imperium\DevToolController;
+use App\Http\Controllers\Imperium\ImperiumActionController;
 use App\Http\Controllers\Imperium\ImperiumResourceController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -27,10 +28,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     $namespace = 'App\\Http\\Controllers\\Admin\\Resourceful';
     // $resourcefulControllers = getFilesWithPaths(base_path(str_replace('\\', '/', $namespace)));
     $path = base_path('app/Http/Controllers/Admin/Resourceful');
-    $resourcefulControllers = getFilesWithPaths($path);
-    foreach ($resourcefulControllers as $name => $file_name) {
+    $resourcefulControllers = getFilesWithNameSpace($path);
+    foreach ($resourcefulControllers as $name => $controller) {
         $route = Str::plural(strtolower(str_replace('Controller', '', $name)));
-        $controller = $namespace.'\\'.$name;
         Route::resource($route, $controller)->except(['show', 'create', 'edit']);
     }
 
@@ -62,7 +62,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Imperium Routes
     Route::post('get-dependencies/{module_name}/{dependable_field_name}', [ImperiumResourceController::class, 'getDependencyValues'])->name('getDependencies');
-    Route::get('migration-generator', [DevToolController::class, 'migration_generator'])->name('migrationGenerator');
+    Route::post('resource-action/{module_name}/{action_name}', [ImperiumResourceController::class, 'resourceAction'])->name('resourceAction');
+    Route::post('imperium/action', [ImperiumActionController::class, 'handleAction'])->name('imperium.action');
+    // Dev Tools
+    Route::group(['prefix' => 'dev-tools', 'as' => 'dev-tools.'], function () {
+        Route::inertia('migration-generator', 'Admin/Modules/DevTools/MigrationGenerator')->name('migration-generator');
+    });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

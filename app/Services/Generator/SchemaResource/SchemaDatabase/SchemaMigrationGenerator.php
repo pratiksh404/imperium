@@ -5,16 +5,19 @@ namespace App\Services\Generator\SchemaResource\SchemaDatabase;
 use Exception;
 use Illuminate\Support\Str;
 use App\Services\Generator\Generator;
-use App\Contracts\Imperium\Generator\GeneratorInterface;
 
-class SchemaMigrationGenerator extends Generator implements GeneratorInterface
+class SchemaMigrationGenerator
 {
     public string $table_name;
     public string $migration_schemas;
-    public function __construct(string $name)
+    public function __construct(string $table_name)
     {
-        parent::__construct($name);
-        $this->table_name = strtolower(Str::plural($name));
+        $this->table_name = trim($table_name);
+    }
+
+    public static function for(string $table_name): self
+    {
+        return new self($table_name);
     }
 
     public function schemas(string $migration_schemas)
@@ -41,5 +44,25 @@ class SchemaMigrationGenerator extends Generator implements GeneratorInterface
         } else {
             throw new Exception('Migration file already exists for table ' . $this->table_name);
         }
+    }
+
+    public function makeFile(string $file_path, string $content)
+    {
+        file_put_contents($file_path, $content);
+
+        return $file_path;
+    }
+
+    public function getStubPath(string $name)
+    {
+        $stubs = getFilesWithPaths(app_path('Stubs'), 'stub');
+        $stub = $stubs[trim(Str::studly($name))];
+
+        return $stub;
+    }
+
+    private function getStub(string $name)
+    {
+        return file_get_contents($this->getStubPath($name));
     }
 }

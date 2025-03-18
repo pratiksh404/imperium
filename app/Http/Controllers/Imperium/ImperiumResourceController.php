@@ -23,11 +23,21 @@ class ImperiumResourceController extends Controller
 
                     return $dependable_field->getDependencies($request);
                 } else {
-                    return response()->json(['error' => $module_name.' resource class does not have any dependable fields '.$dependable_field_name], 400);
+                    return response()->json(['error' => $module_name . ' resource class does not have any dependable fields ' . $dependable_field_name], 400);
                 }
             } else {
-                return response()->json(['error' => $module_name.' resource class does not have any form fields'], 400);
+                return response()->json(['error' => $module_name . ' resource class does not have any form fields'], 400);
             }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function resourceAction($module_name, $action_name, Request $request)
+    {
+        try {
+            $resource = getResource($module_name);
+            return $resource[$action_name]($request);
         } catch (\Throwable $th) {
             throw $th;
         }

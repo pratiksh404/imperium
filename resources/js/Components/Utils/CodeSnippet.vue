@@ -1,9 +1,7 @@
 <template>
   <div class="code-snippet h-full">
     <highlightjs language="php" :code="code" />
-    <button @click="copyToClipboard" class="copy-button">
-      {{ copyToClipboardText }}
-    </button>
+    <button @click="copyToClipboard" class="copy-button" />
     <div class="copy-button">
       <CopyToClipboard :copyText="code" />
     </div>
