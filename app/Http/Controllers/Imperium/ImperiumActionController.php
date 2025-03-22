@@ -6,8 +6,9 @@ use App\Contracts\Imperium\HasActionInterface;
 use App\Http\Controllers\Controller;
 use App\Services\Action\ActionResponse;
 use App\Services\Generator\SchemaResource\SchemaDatabase\SchemaMigrationGenerator;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class ImperiumActionController extends Controller implements HasActionInterface
 {
@@ -19,22 +20,24 @@ class ImperiumActionController extends Controller implements HasActionInterface
                 $batchActions = $request->batchActions;
                 foreach ($batchActions as $index => $batchAction) {
                     $action_name = $batchAction['action'] ?? null;
-                    if (!is_null($action_name)) {
-                        if (method_exists($this, $action_name)) {;
+                    if (! is_null($action_name)) {
+                        if (method_exists($this, $action_name)) {
                             $responses[] = $this->$action_name($batchAction);
                         } else {
-                            $responses[] = ActionResponse::error("#" . ($index + 1) . " Batch action not found");
+                            $responses[] = ActionResponse::error('#'.($index + 1).' Batch action not found');
                         }
                     } else {
-                        $responses[] = ActionResponse::error("#" . ($index + 1) . " Batch action not provided");
+                        $responses[] = ActionResponse::error('#'.($index + 1).' Batch action not provided');
                     }
                 }
             }
+
             return $responses;
         } catch (\Throwable $th) {
             return ActionResponse::error($th->getMessage());
         }
     }
+
     public function handleAction(Request $request): JsonResponse
     {
         try {
@@ -43,11 +46,11 @@ class ImperiumActionController extends Controller implements HasActionInterface
                 if (method_exists($this, $action_name)) {
                     return $this->$action_name($request);
                 } else {
-                    return ActionResponse::error($action_name . ' method not found in ' . get_class($this));
+                    return ActionResponse::error($action_name.' method not found in '.get_class($this));
                 }
             } else {
                 return ActionResponse::error('Action not provided');
-            };
+            }
         } catch (\Throwable $th) {
             return ActionResponse::error($th->getMessage());
         }
@@ -58,17 +61,29 @@ class ImperiumActionController extends Controller implements HasActionInterface
     {
         $request->validate([
             'table_name' => 'required',
-            'schema' => 'required'
+            'schema' => 'required',
         ]);
         $table_name = $request->table_name;
         $schema = $request->schema;
 
         try {
             $migration_file = SchemaMigrationGenerator::for($table_name)->schemas($schema)->generate();
+
             return ActionResponse::success([
                 'table_name' => $request->table_name,
-                'schema' => $schema
-            ], "Migration generated successfully");
+                'schema' => $schema,
+            ], 'Migration generated successfully');
+        } catch (\Throwable $th) {
+            return ActionResponse::error($th->getMessage());
+        }
+    }
+
+    public function runMigration(Request $request): JsonResponse
+    {
+        try {
+            Artisan::call('migrate');
+
+            return ActionResponse::success([], 'Migration run successfully');
         } catch (\Throwable $th) {
             return ActionResponse::error($th->getMessage());
         }
