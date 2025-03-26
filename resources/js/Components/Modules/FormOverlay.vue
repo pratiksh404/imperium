@@ -40,7 +40,7 @@ import { resolveFormOpenerComponent } from "@/Utils/Resource/FormOpenerMapper";
 
 // Form Resource
 const eventsStore = useEventsStore();
-const CREATE_RESOURCE_DRAWER_SHORTCUT = "\\";
+// const CREATE_RESOURCE_DRAWER_SHORTCUT = "\\";
 const props = defineProps({
   name: {
     required: true,
@@ -56,7 +56,7 @@ const props = defineProps({
   },
   shortcut: {
     type: String,
-    default: CREATE_RESOURCE_DRAWER_SHORTCUT,
+    default: null,
   },
 });
 
@@ -70,16 +70,17 @@ const formOpensIn = computed(() => {
   return resourceForm.opensIn;
 });
 
-console.log(formOpensIn.value);
-
 const formOpenerComponent = computed(() => {
   return resolveFormOpenerComponent(formOpensIn.value || null);
 });
 
 const createResourceDrawerShortcut = props.shortcut;
-useShortcut(createResourceDrawerShortcut, () => {
-  localVisible.value = !localVisible.value;
-});
+console.log(createResourceDrawerShortcut);
+if (createResourceDrawerShortcut) {
+  useShortcut(createResourceDrawerShortcut, () => {
+    localVisible.value = !localVisible.value;
+  });
+}
 
 watch(localVisible, (newVal) => {
   emit("update:visible", newVal);
