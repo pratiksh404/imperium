@@ -1,11 +1,27 @@
 <template>
-  <component :is="formOpenerComponent" v-model:visible="localVisible" :header="label"
-    v-bind="{ ...(formOpensIn === 'dialog' ? { modal: true, maximizable: true, breakpoints: { '1199px': '75vw', '575px': '90vw' }, class: 'w-3/4 md:w-1/3 sm:w-full' } : {}), ... (formOpensIn === 'Drawer' ? { position: isMobile ? 'full' : 'right', class: 'w-1/4' } : {}) }"
+  <component
+    :is="formOpenerComponent"
+    v-model:visible="localVisible"
+    :header="label"
+    v-bind="{
+      ...(formOpensIn === 'dialog'
+        ? {
+            modal: true,
+            maximizable: true,
+            breakpoints: { '1199px': '75vw', '575px': '90vw' },
+            class: 'w-3/4 md:w-1/3 sm:w-full',
+          }
+        : {}),
+      ...(formOpensIn === 'drawer'
+        ? { position: isMobile ? 'full' : 'right', class: 'w-1/4' }
+        : {}),
+    }"
     :pt="{
       title: {
         class: 'text-900 text-xl',
       },
-    }">
+    }"
+  >
     <!-- Form -->
     <slot name="form" @form-success="handleFormSuccess"></slot>
   </component>
@@ -16,14 +32,7 @@
   </div>
 </template>
 <script setup>
-import {
-  computed,
-  defineProps,
-  ref,
-  watch,
-  onMounted,
-  onUnmounted,
-} from "vue";
+import { computed, defineProps, ref, watch, onMounted, onUnmounted } from "vue";
 import { useEventsStore } from "@/Store/events";
 import { useShortcut } from "@/Composables/shortcut";
 import { usePage } from "@inertiajs/vue3";
@@ -61,9 +70,11 @@ const formOpensIn = computed(() => {
   return resourceForm.opensIn;
 });
 
+console.log(formOpensIn.value);
+
 const formOpenerComponent = computed(() => {
   return resolveFormOpenerComponent(formOpensIn.value || null);
-})
+});
 
 const createResourceDrawerShortcut = props.shortcut;
 useShortcut(createResourceDrawerShortcut, () => {
