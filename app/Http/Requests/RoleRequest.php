@@ -24,6 +24,7 @@ class RoleRequest extends FormRequest
         return [
             'name' => [
                 'min:0',
+                'numeric',
                 'required',
                 'unique:roles,name',
                 'max:255',

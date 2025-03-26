@@ -26,6 +26,8 @@ class Form
 
     public string $opensIn = self::DRAWER_MODE;
 
+    public bool $precognition_mode = false;
+
     /**
      * Form authorization
      *
@@ -82,6 +84,18 @@ class Form
     public function opensIn(string $opensIn): self
     {
         $this->opensIn = $opensIn;
+
+        return $this;
+    }
+
+    /**
+     * Sets a precognition mode in which form can be rendered
+     *
+     * @return $this
+     */
+    public function precognitionMode(bool $precognition_mode = true): self
+    {
+        $this->precognition_mode = $precognition_mode;
 
         return $this;
     }

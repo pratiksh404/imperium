@@ -1,16 +1,17 @@
 <?php
 
-use App\Http\Controllers\Admin\FileUploadController;
+use Inertia\Inertia;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
 use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\Resourceful\RoleController;
+use App\Http\Controllers\Admin\FileUploadController;
 use App\Http\Controllers\Imperium\DevToolController;
+use App\Http\Controllers\Admin\Resourceful\RoleController;
 use App\Http\Controllers\Imperium\ImperiumActionController;
 use App\Http\Controllers\Imperium\ImperiumResourceController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-use Inertia\Inertia;
+use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -21,7 +22,7 @@ Route::get('/', function () {
     ]);
 })->name('welcome');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', HandlePrecognitiveRequests::class])->group(function () {
 
     Route::inertia('/dashboard', 'Admin/Dashboard')->name('dashboard');
 

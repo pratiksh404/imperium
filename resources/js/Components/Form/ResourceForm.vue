@@ -6,6 +6,7 @@
         :key="`input-${field.field}`"
       >
         <ResourceInput
+          @change="precognitionMode ? form.validate(field.field) : null"
           v-model="form[field.field]"
           :field="field"
           :error="form.errors[field.field]"
@@ -34,6 +35,7 @@
                 :key="`input-${field.field}`"
               >
                 <ResourceInput
+                  v-bind="precognitionValidation(field)"
                   v-model="form[field.field]"
                   :field="field"
                   :error="form.errors[field.field]"
@@ -76,6 +78,7 @@
         >
           <template v-for="field in tab.fields" :key="`input-${field.field}`">
             <ResourceInput
+              v-bind="precognitionValidation(field)"
               v-model="form[field.field]"
               :field="field"
               :error="form.errors[field.field]"
@@ -93,13 +96,15 @@
 </template>
 <script setup>
 import { defineProps, computed, ref, watch } from "vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 import { useEventsStore } from "@/Store/events";
 import ResourceInput from "@/Components/Form/ResourceInput.vue";
 import SubmitButton from "@/Components/Form/SubmitButton.vue";
 import { useToast } from "primevue/usetoast";
 import axios from "axios";
 import { watchDebounced } from "@vueuse/core";
+import { useForm as inertiaUseForm } from "@inertiajs/vue3";
+import { useForm as precognitionUseForm } from "laravel-precognition-vue-inertia";
 
 const toast = useToast();
 
@@ -127,14 +132,14 @@ const props = defineProps({
 });
 
 // Form Resource
-const resourceForm = usePage().props.resources[props.name].form;
+const resourceForm = computed(() => usePage().props.resources[props.name].form);
 
 const resourceSteppers = computed(() => {
-  return getGroup(resourceForm.steppers);
+  return getGroup(resourceForm.value.steppers);
 });
 
 const resourceTabs = computed(() => {
-  return getGroup(resourceForm.tabs);
+  return getGroup(resourceForm.value.tabs);
 });
 
 const getGroup = (group) => {
@@ -147,12 +152,19 @@ const activeStep = ref(1);
 
 const activeTab = ref(0);
 
-const form = useForm(
-  resourceForm.fields.reduce((acc, key) => {
-    acc[key.field] = props.formData?.[key.field] ?? null;
-    return acc;
-  }, {})
-);
+const precognitionMode = computed(() => {
+  return resourceForm.value.precognition_mode ?? false;
+});
+
+const formData = resourceForm.value.fields.reduce((acc, key) => {
+  acc[key.field] = props.formData?.[key.field] ?? null;
+  return acc;
+}, {});
+
+// Create the form object dynamically
+const form = precognitionMode.value
+  ? precognitionUseForm(props.method, props.url, formData)
+  : inertiaUseForm(formData);
 
 const submit = () => {
   form[props.method](props.url, {
@@ -167,13 +179,24 @@ const submit = () => {
       form.reset();
       eventsStore.triggerFormSuccess();
     },
-    onError: () => {
-      toast.add({
-        severity: "error",
-        summary: "Error",
-        detail: "Something went wrong",
-        life: 3000,
-      });
+    onError: (errors) => {
+      if (Object.keys(errors).length > 0) {
+        Object.values(errors).forEach((error) => {
+          toast.add({
+            severity: "error",
+            summary: "Error",
+            detail: error,
+            life: 5000,
+          });
+        });
+      } else {
+        toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "Something went wrong",
+          life: 3000,
+        });
+      }
     },
   });
 };
@@ -182,7 +205,7 @@ const submit = () => {
 watchDebounced(
   () => form, // Watch the entire form object
   (newForm) => {
-    resourceForm.fields.forEach(async (field) => {
+    resourceForm.value.fields.forEach(async (field) => {
       if (field.dependsOn) {
         const parentValue = newForm[field.dependsOn];
         axios
