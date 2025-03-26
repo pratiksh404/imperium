@@ -29,7 +29,7 @@ class {{modelName}}Resource extends Resource
     {
         return (new DataTable)
             ->columns([
-                TextColumn::make('name'),
+                TextColumn::make('id'),
             ]);
     }
 
@@ -37,7 +37,7 @@ class {{modelName}}Resource extends Resource
     {
         return (new Form)
             ->fields([
-                TextField::make('id'),
+                // Add fields here
             ]);
     }
 
