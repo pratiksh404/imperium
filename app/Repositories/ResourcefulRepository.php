@@ -34,11 +34,21 @@ class ResourcefulRepository implements ResourcefulInterface
 
             return $item;
         });
-        $trashed_model = $this->model::onlyTrashed()->get();
+        $trashed_model = $this->model::onlyTrashed()->get()->map(function ($item) use ($user) {
+            $item->can = [
+                'view' => $user->can('view', $item),
+                'update' => $user->can('update', $item),
+                'delete' => $user->can('delete', $item),
+                'restore' => $user->can('restore', $item),
+                'forceDelete' => $user->can('forceDelete', $item),
+            ];
+
+            return $item;
+        });
 
         return [
             Str::plural($this->name) => $model,
-            'trashed_'.Str::plural($this->name) => $trashed_model,
+            'trashed_' . Str::plural($this->name) => $trashed_model,
         ];
     }
 

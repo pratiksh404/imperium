@@ -75,7 +75,7 @@ const formOpenerComponent = computed(() => {
 });
 
 const createResourceDrawerShortcut = props.shortcut;
-console.log(createResourceDrawerShortcut);
+
 if (createResourceDrawerShortcut) {
   useShortcut(createResourceDrawerShortcut, () => {
     localVisible.value = !localVisible.value;

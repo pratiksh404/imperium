@@ -36,7 +36,7 @@ Route::middleware(['auth', 'verified', HandlePrecognitiveRequests::class])->grou
     }
 
     // Profile Routes
-    Route::get('/my-profile', [RoleController::class, 'profile'])->name('users.my-profile');
+    Route::get('/my-profile', [ProfileController::class, 'edit'])->name('users.my-profile');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
