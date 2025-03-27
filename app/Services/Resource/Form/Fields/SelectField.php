@@ -171,7 +171,7 @@ class SelectOption
      *
      * @return $this
      */
-    public function icon(string $icon = null)
+    public function icon(?string $icon = null)
     {
         $this->icon = $icon;
 
@@ -183,7 +183,7 @@ class SelectOption
      *
      * @return $this
      */
-    public function image(string $image = null)
+    public function image(?string $image = null)
     {
         $this->image = $image;
 

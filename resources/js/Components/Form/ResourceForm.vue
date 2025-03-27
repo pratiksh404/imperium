@@ -97,38 +97,17 @@
 <script setup>
 import { defineProps, computed, ref, watch } from "vue";
 import { usePage } from "@inertiajs/vue3";
-import { useEventsStore } from "@/Store/events";
 import ResourceInput from "@/Components/Form/ResourceInput.vue";
 import SubmitButton from "@/Components/Form/SubmitButton.vue";
-import { useToast } from "primevue/usetoast";
 import axios from "axios";
 import { watchDebounced } from "@vueuse/core";
 import { useForm as inertiaUseForm } from "@inertiajs/vue3";
 import { useForm as precognitionUseForm } from "laravel-precognition-vue-inertia";
-
-const toast = useToast();
-
-// Form Success State Management
-const eventsStore = useEventsStore();
+import { useFormProps } from "@/Composables/useFormProps";
+import { useFormSubmit } from "@/Composables/useFormSubmit";
 
 const props = defineProps({
-  name: {
-    required: true,
-    type: String,
-  },
-  method: {
-    required: true,
-    type: String,
-    default: "post",
-  },
-  url: {
-    required: true,
-    type: String,
-  },
-  formData: {
-    type: Object,
-    default: () => {},
-  },
+  ...useFormProps(),
 });
 
 // Form Resource
@@ -166,40 +145,7 @@ const form = precognitionMode.value
   ? precognitionUseForm(props.method, props.url, formData)
   : inertiaUseForm(formData);
 
-const submit = () => {
-  form[props.method](props.url, {
-    preserveScroll: true,
-    onSuccess: () => {
-      toast.add({
-        severity: "success",
-        summary: "Success",
-        detail: props.name + " saved successfully",
-        life: 3000,
-      });
-      form.reset();
-      eventsStore.triggerFormSuccess();
-    },
-    onError: (errors) => {
-      if (Object.keys(errors).length > 0) {
-        Object.values(errors).forEach((error) => {
-          toast.add({
-            severity: "error",
-            summary: "Error",
-            detail: error,
-            life: 5000,
-          });
-        });
-      } else {
-        toast.add({
-          severity: "error",
-          summary: "Error",
-          detail: "Something went wrong",
-          life: 3000,
-        });
-      }
-    },
-  });
-};
+const { submit } = useFormSubmit(form, props);
 
 // Watching Dependent Fields
 watchDebounced(

@@ -1,5 +1,4 @@
 import { computed, ref } from 'vue';
-import { usePage } from '@inertiajs/vue3';
 
 export function useMenu(initialMenu = []) {
     // Current Route

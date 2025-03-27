@@ -2,21 +2,25 @@
 
 namespace App\Imperium\Resource;
 
+use App\Models\User;
 use App\Models\Admin\Role;
-use App\Services\Resource\DataTable\Columns\TextColumn;
-use App\Services\Resource\DataTable\DataTable;
-use App\Services\Resource\Form\Fields\TextareaField;
-use App\Services\Resource\Form\Fields\TextField;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Services\Resource\Resource;
 use App\Services\Resource\Form\Form;
-use App\Services\Resource\Navigation\Breadcrumb;
-use App\Services\Resource\Navigation\BreadcrumbItem;
-use App\Services\Resource\Navigation\HeaderPoint;
+use App\Services\Resource\DataTable\DataTable;
 use App\Services\Resource\Navigation\MenuItem;
+use App\Services\Resource\Form\Fields\TextField;
+use App\Services\Resource\Navigation\Breadcrumb;
 use App\Services\Resource\Navigation\Navigation;
 use App\Services\Resource\Navigation\PageHeader;
-use App\Services\Resource\Resource;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Services\Resource\Navigation\HeaderPoint;
+use App\Services\Resource\Form\Fields\SelectField;
+use App\Services\Resource\Form\Fields\TextareaField;
+use App\Services\Resource\Navigation\BreadcrumbItem;
+use App\Services\Resource\Form\Fields\DatePickerField;
+use App\Services\Resource\DataTable\Columns\TextColumn;
+use App\Services\Resource\Form\Fields\SelectOption;
 
 class RoleResource extends Resource
 {
@@ -41,12 +45,7 @@ class RoleResource extends Resource
         return (new Form)
             ->fields([
                 TextField::make('name'),
-                TextareaField::make('description')->dependsOn('name', function (Request $request) {
-                    return Str::lower($request->name) . 'test';
-                }),
-
-
-            ])->opensIn(Form::DRAWER_MODE);
+            ])->precognitionMode()->opensIn(Form::DIALOG_MODE);
     }
 
     public function navigation(): Navigation
