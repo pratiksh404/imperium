@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
@@ -11,9 +10,8 @@ const props = defineProps({
   status: {
     type: String,
   },
+  errors: Object,
 });
-
-const errors = ref({});
 
 const form = useForm({
   email: "",
@@ -42,13 +40,13 @@ const submit = () => {
             id="email"
             v-model="form.email"
             autocomplete="off"
-            :invalid="form.errors.email ? true : false"
+            :invalid="errors.email ? true : false"
             size="large"
             fluid
           />
           <label for="email">Email</label>
         </FloatLabel>
-        <InputError v-if="errors.email" class="mt-2" :message="errors.email" />
+        <InputError v-if="errors.email" class="mt-2" :error="errors.email" />
       </div>
 
       <div class="mt-4">
@@ -70,7 +68,7 @@ const submit = () => {
         <InputError
           v-if="errors.password"
           class="mt-2"
-          :message="errors.password"
+          :error="errors.password"
         />
       </div>
 
