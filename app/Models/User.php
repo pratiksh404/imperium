@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Admin\Role;
-use App\Traits\HasPermission;
+use Pratiksh\Imperium\Traits\HasPermission;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;

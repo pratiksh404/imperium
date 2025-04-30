@@ -2,6 +2,6 @@
 
 namespace App\Contracts;
 
-use App\Contracts\ResourcefulInterface;
+use Pratiksh\Imperium\Contracts\ResourcefulInterface;
 
-interface UserRepositoryInterface extends ResourcefulInterface{}
+interface UserRepositoryInterface extends ResourcefulInterface {}

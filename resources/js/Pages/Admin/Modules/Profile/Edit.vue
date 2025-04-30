@@ -1,10 +1,10 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Container from "@/Components/Container.vue";
+import AuthenticatedLayout from "@/Imperium/Layouts/AuthenticatedLayout.vue";
+import Container from "@/Imperium/Components/Container.vue";
 import DeleteUserForm from "./Partials/DeleteUserForm.vue";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm.vue";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm.vue";
-import PageHeader from "@/Components/PageHeader.vue";
+import PageHeader from "@/Imperium/Components/PageHeader.vue";
 
 const props = defineProps({
   auth: Object,

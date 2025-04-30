@@ -6,21 +6,22 @@ use App\Models\User;
 use App\Models\Admin\Role;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Services\Resource\Resource;
-use App\Services\Resource\Form\Form;
-use App\Services\Resource\DataTable\DataTable;
-use App\Services\Resource\Navigation\MenuItem;
-use App\Services\Resource\Form\Fields\TextField;
-use App\Services\Resource\Navigation\Breadcrumb;
-use App\Services\Resource\Navigation\Navigation;
-use App\Services\Resource\Navigation\PageHeader;
-use App\Services\Resource\Navigation\HeaderPoint;
-use App\Services\Resource\Form\Fields\SelectField;
-use App\Services\Resource\Form\Fields\TextareaField;
-use App\Services\Resource\Navigation\BreadcrumbItem;
-use App\Services\Resource\Form\Fields\DatePickerField;
-use App\Services\Resource\DataTable\Columns\TextColumn;
-use App\Services\Resource\Form\Fields\SelectOption;
+use Pratiksh\Imperium\Services\Resource\Resource;
+use Pratiksh\Imperium\Services\Resource\Form\Form;
+use Pratiksh\Imperium\Services\Resource\DataTable\DataTable;
+use Pratiksh\Imperium\Services\Resource\Navigation\MenuItem;
+use Pratiksh\Imperium\Services\Resource\Form\Fields\TextField;
+use Pratiksh\Imperium\Services\Resource\Navigation\Breadcrumb;
+use Pratiksh\Imperium\Services\Resource\Navigation\Navigation;
+use Pratiksh\Imperium\Services\Resource\Navigation\PageHeader;
+use Pratiksh\Imperium\Services\Resource\Navigation\HeaderPoint;
+use Pratiksh\Imperium\Services\Resource\Form\Fields\SelectField;
+use Pratiksh\Imperium\Services\Resource\Form\Fields\TextareaField;
+use Pratiksh\Imperium\Services\Resource\Navigation\BreadcrumbItem;
+use Pratiksh\Imperium\Services\Resource\Form\Fields\DatePickerField;
+use Pratiksh\Imperium\Services\Resource\DataTable\Columns\TextColumn;
+use Pratiksh\Imperium\Services\Resource\Form\Fields\NumberField;
+use Pratiksh\Imperium\Services\Resource\Form\Fields\SelectOption;
 
 class RoleResource extends Resource
 {
@@ -36,7 +37,7 @@ class RoleResource extends Resource
     {
         return (new DataTable)
             ->columns([
-                TextColumn::make('name'),
+                TextColumn::make('name')->searchable(),
             ]);
     }
 
@@ -45,6 +46,9 @@ class RoleResource extends Resource
         return (new Form)
             ->fields([
                 TextField::make('name'),
+                NumberField::make('age')->dependsOn('name', function (Request $request) {
+                    return rand(1, 100);
+                })
             ])->precognitionMode()->opensIn(Form::DIALOG_MODE);
     }
 

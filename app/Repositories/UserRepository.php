@@ -2,11 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Contracts\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\Eloquent\Model;
+use App\Contracts\UserRepositoryInterface;
 use Illuminate\Foundation\Http\FormRequest;
+use Pratiksh\Imperium\Repositories\ResourcefulRepository;
 
 class UserRepository extends ResourcefulRepository implements UserRepositoryInterface
 {

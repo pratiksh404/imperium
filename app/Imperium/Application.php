@@ -2,14 +2,14 @@
 
 namespace App\Imperium;
 
-use App\Services\Control\Header\Header;
-use App\Services\Control\Header\Navigation\HeaderNavigation;
-use App\Services\Control\Imperium;
-use App\Services\Control\Menu;
-use App\Services\Control\Sidebar;
-use App\Services\Resource\Navigation\MenuGroup;
-use App\Services\Resource\Navigation\MenuItem;
-use App\Services\Resource\Navigation\MenuResourceItem;
+use Pratiksh\Imperium\Services\Control\Header\Header;
+use Pratiksh\Imperium\Services\Control\Header\Navigation\HeaderNavigation;
+use Pratiksh\Imperium\Services\Control\Imperium;
+use Pratiksh\Imperium\Services\Control\Menu;
+use Pratiksh\Imperium\Services\Control\Sidebar;
+use Pratiksh\Imperium\Services\Resource\Navigation\MenuGroup;
+use Pratiksh\Imperium\Services\Resource\Navigation\MenuItem;
+use Pratiksh\Imperium\Services\Resource\Navigation\MenuResourceItem;
 
 class Application extends Imperium
 {

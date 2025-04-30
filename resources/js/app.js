@@ -18,7 +18,7 @@ import FocusTrap from 'primevue/focustrap';
 import customThemePreset from '@/theme-preset.js';
 import { useDark } from '@vueuse/core';
 
-import Container from './Components/Container.vue';
+import Container from '@/Imperium/Components/Container.vue';
 
 // Highlight Js
 import hljs from 'highlight.js/lib/core';

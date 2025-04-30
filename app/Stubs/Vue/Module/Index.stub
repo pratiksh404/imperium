@@ -10,7 +10,7 @@
     </div>
 </template>
 <script setup>
-import ModuleDataListPage from "@/Components/Modules/ListPage.vue"
-import {{modelName}}Form from "@/Components/Form/{{modelName}}/Form.vue"
-import ModuleTable from "@/Components/Modules/Table.vue"
+import ModuleDataListPage from "@/Imperium/Components/Modules/ListPage.vue"
+import {{modelName}}Form from "@/Imperium/Components/Form/{{modelName}}/Form.vue"
+import ModuleTable from "@/Imperium/Components/Modules/Table.vue"
 </script>

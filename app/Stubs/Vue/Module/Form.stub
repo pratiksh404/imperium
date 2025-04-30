@@ -10,9 +10,9 @@
 <script setup>
 import { defineProps } from 'vue';
 import { useForm } from '@inertiajs/vue3';
-import { useEventsStore } from '@/stores/events';
-import TextInput from '@/Components/Form/TextInput.vue'
-import SubmitButton from '@/Components/Form/SubmitButton.vue';
+import { useEventsStore } from '@/Imperium/Stores/events';
+import TextInput from '@/Imperium/Components/Form/TextInput.vue'
+import SubmitButton from '@/Imperium/Components/Form/SubmitButton.vue';
 import { useToast } from "primevue/usetoast";
 const toast = useToast();
 

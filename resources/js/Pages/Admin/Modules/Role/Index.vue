@@ -31,10 +31,10 @@
   </AuthenticatedLayout>
 </template>
 <script setup>
-import ModuleFormOverlay from "@/Components/Modules/FormOverlay.vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import PageHeader from "@/Components/PageHeader.vue";
-import ModuleTable from "@/Components/Modules/Table.vue";
-import BreadPermissionPanel from "@/Components/Modules/Role/BreadPermissionPanel.vue";
-import ResourceForm from "@/Components/Form/ResourceForm.vue";
+import ModuleFormOverlay from "@/Imperium/Components/Modules/FormOverlay.vue";
+import AuthenticatedLayout from "@/Imperium/Layouts/AuthenticatedLayout.vue";
+import PageHeader from "@/Imperium/Components/PageHeader.vue";
+import ModuleTable from "@/Imperium/Components/Modules/Table.vue";
+import BreadPermissionPanel from "@/Components/Admin/Role/Components/BreadPermissionPanel.vue";
+import ResourceForm from "@/Imperium/Components/Form/ResourceForm.vue";
 </script>

@@ -3,15 +3,15 @@
 namespace App\Models\Admin;
 
 use App\Models\User;
-use App\Traits\HasPosition;
-use App\Traits\Role\ImplementsBreadAuthorization;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Pratiksh\Imperium\Traits\HasPosition;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Pratiksh\Imperium\Traits\Role\ImplementsBreadAuthorization;
 
 class Role extends Model
 {
-    use HasFactory,HasPosition,ImplementsBreadAuthorization,SoftDeletes;
+    use HasFactory, HasPosition, ImplementsBreadAuthorization, SoftDeletes;
 
     protected $guarded = [];
 

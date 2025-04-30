@@ -2,11 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Contracts\RoleRepositoryInterface;
-use App\Models\Admin\Permission;
 use App\Models\Admin\Role;
 use Illuminate\Http\Request;
+use App\Models\Admin\Permission;
 use Illuminate\Support\Facades\DB;
+use App\Contracts\RoleRepositoryInterface;
+use Pratiksh\Imperium\Repositories\ResourcefulRepository;
 
 class RoleRepository extends ResourcefulRepository implements RoleRepositoryInterface
 {
