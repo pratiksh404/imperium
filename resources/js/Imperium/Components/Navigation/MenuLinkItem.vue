@@ -4,35 +4,34 @@
     :href="item.url"
     v-ripple
     v-bind="{ ...(item.type === 'url' ? { target: '_blank' } : {}) }"
-    class="flex items-center justify-between cursor-pointer px-2 py-3 rounded text-surface-700 dark:text-surface-0 no-underline duration-150 transition-colors p-ripple"
+    :class="[
+      active
+        ? 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-white'
+        : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-400',
+      'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
+      collapsed ? 'justify-center' : '',
+    ]"
   >
-    <div class="flex items-start">
-      <i
-        :class="item.icon"
-        class="mr-2"
-        v-tooltip="item.label"
-        v-if="includeIcon"
-      ></i>
-      <span :class="active ? 'font-bold' : 'font-medium'" v-if="!collapsed">{{
-        item.label
-      }}</span>
-      <span
-        v-if="active"
-        class="flex w-2 h-2 ml-1 bg-green-500 rounded-full"
-      ></span>
-    </div>
+    <!-- Icon Component Start -->
+    <IconComponent
+      :includeIcon="includeIcon"
+      :label="item.label"
+      :icon="item.icon"
+    />
+    <!-- Icon Component End -->
+    <span v-if="!collapsed">{{ item.label }}</span>
     <span
-      v-if="item.badge"
-      class="inline-flex items-center justify-center ml-2 bg-primary text-primary-contrast rounded-full"
-      style="min-width: 1.3rem; height: 1.3rem; font-size: 12px"
+      v-if="!collapsed && item.badge"
+      class="ml-auto w-9 min-w-max rounded-full bg-black dark:bg-white px-2.5 py-0.5 text-center text-xs/5 font-medium whitespace-nowrap text-gray-200 dark:text-gray-700 ring-1 ring-gray-200 ring-inset"
+      aria-hidden="true"
+      >{{ item.badge }}</span
     >
-      {{ item.badge }}
-    </span>
   </component>
 </template>
 
 <script setup>
 import { useLinkComponentResolver } from "@/Imperium/Composables/useLinkComponentResolver";
+import IconComponent from "@/Imperium/Components/Utils/IconComponent.vue";
 const props = defineProps({
   item: {
     type: Object,

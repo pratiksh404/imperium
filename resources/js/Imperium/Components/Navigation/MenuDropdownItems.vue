@@ -1,53 +1,56 @@
 <template>
   <!-- Dropdown Item -->
-  <span
-    @click="toggleDropdown"
-    v-ripple
-    v-styleclass="{
-      selector: '@next',
-      enterFromClass: 'hidden',
-      enterActiveClass: 'animate-slidedown',
-      leaveToClass: 'hidden',
-      leaveActiveClass: 'animate-slideup',
-    }"
-    class="flex items-center justify-between cursor-pointer px-2 py-3 rounded text-surface-700 dark:text-surface-0 duration-150 transition-colors p-ripple"
+  <button
+    @click="() => toggleSubMenu()"
+    :class="[
+      active
+        ? 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-white'
+        : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-400',
+      'cursor-pointer bg-transparent flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-semibold',
+      collapsed ? 'justify-center' : '',
+    ]"
   >
-    <div>
-      <i
-        :class="item.icon"
-        class="mr-2"
-        v-tooltip="item.label"
-        v-if="includeIcon"
-      ></i>
-      <span :class="active ? 'font-bold' : 'font-medium'" v-if="!collapsed">{{
-        item.label
-      }}</span>
-      <span
-        v-if="item.badge && !collapsed"
-        class="inline-flex items-center justify-center ml-2 bg-primary text-primary-contrast rounded-full"
-        style="min-width: 1.3rem; height: 1.3rem; font-size: 12px"
-        >{{ item.badge }}</span
-      >
-    </div>
-    <div class="flex justify-end gap-2" v-if="!collapsed">
-      <i class="pi pi-chevron-down ml-auto"></i>
-    </div>
-  </span>
-  <ul
-    :class="dropDown ? '' : 'hidden'"
-    v-if="!collapsed && dropDown"
-    class="list-none py-0 pl-4 pr-0 m-0 overflow-y-hidden transition-all duration-[400ms] ease-in-out"
-  >
-    <MenuItem
-      v-for="subitem in item.items"
+    <!-- Icon Component Start -->
+    <IconComponent
       :includeIcon="includeIcon"
-      :item="subitem"
-      :key="subitem.label"
+      :label="item.label"
+      :icon="item.icon"
     />
-  </ul>
+    <!-- Icon Component End -->
+    <span v-if="!collapsed">{{ item.label }}</span>
+    <ChevronRightIcon
+      v-if="!collapsed"
+      :class="[
+        openSubmenu
+          ? 'rotate-90 text-gray-500 dark:text-gray-400'
+          : 'text-gray-400 dark:text-gray-600',
+        'ml-auto size-5 shrink-0',
+      ]"
+      aria-hidden="true"
+    />
+  </button>
+  <transition
+    enter-active-class="transition duration-200 ease-out"
+    enter-from-class="transform scale-95 opacity-0"
+    enter-to-class="transform scale-100 opacity-100"
+    leave-active-class="transition duration-150 ease-in"
+    leave-from-class="transform scale-100 opacity-100"
+    leave-to-class="transform scale-95 opacity-0"
+  >
+    <ul v-if="openSubmenu && !collapsed" class="pl-3">
+      <MenuItem
+        v-for="subitem in item.items"
+        :includeIcon="includeIcon"
+        :item="subitem"
+        :key="subitem.label"
+      />
+    </ul>
+  </transition>
 </template>
 <script setup>
 import MenuItem from "@/Imperium/Components/Navigation/MenuItem.vue";
+import { ChevronRightIcon } from "@heroicons/vue/24/outline";
+import IconComponent from "@/Imperium/Components/Utils/IconComponent.vue";
 import { ref } from "vue";
 const props = defineProps({
   item: {
@@ -69,9 +72,9 @@ const props = defineProps({
   },
 });
 
-const dropDown = ref(props.active || false);
-
-const toggleDropdown = () => {
-  dropDown.value = !dropDown.value;
+const openSubmenu = ref(props.active);
+const toggleSubMenu = () => {
+  openSubmenu.value = !openSubmenu.value;
+  console.log(openSubmenu.value);
 };
 </script>

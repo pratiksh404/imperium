@@ -25,7 +25,9 @@ export default ({ mode }) => {
                 },
             }),
             Components({
-                resolvers: [PrimeVueResolver()],
+                resolvers: [
+                    PrimeVueResolver(),
+                ],
             }),
         ],
         server: {

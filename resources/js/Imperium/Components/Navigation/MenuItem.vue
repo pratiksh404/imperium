@@ -5,10 +5,16 @@
       :item="item"
       :active="active"
       :includeIcon="includeIcon"
+      :collapsed="collapsed"
     />
   </li>
   <li v-else>
-    <MenuLinkItem :item="item" :active="active" :includeIcon="includeIcon" />
+    <MenuLinkItem
+      :item="item"
+      :active="active"
+      :includeIcon="includeIcon"
+      :collapsed="collapsed"
+    />
   </li>
 </template>
 
@@ -25,6 +31,10 @@ const props = defineProps({
   includeIcon: {
     type: Boolean,
     default: true,
+  },
+  collapsed: {
+    type: Boolean,
+    default: false,
   },
 });
 

@@ -29,7 +29,7 @@ class RoleResource extends Resource
 
     public static $name = 'Role';
 
-    public static $icon = 'pi pi-shield';
+    public static $icon = 'shield-check';
 
     public static $route = 'roles';
 

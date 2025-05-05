@@ -6,7 +6,7 @@
       :key="'flyover-' + flyoverIndex"
     >
       <PopoverButton
-        class="text-gray-300 hover:bg-gray-700 hover:text-white bg-transparent rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex content-between"
+        class="text-gray-300 bg-black hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex content-between"
       >
         <span>{{ flyover.label }}</span>
         <ChevronDownIcon class="size-5" aria-hidden="true" />
