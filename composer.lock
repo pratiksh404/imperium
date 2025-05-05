@@ -2721,7 +2721,7 @@
             "dist": {
                 "type": "path",
                 "url": "../imperium-core",
-                "reference": "d79fe8f6fe96dba524cd48164bb4f6ee3f1e83b9"
+                "reference": "f69a1c92e0ad97744f55ec1c4b0e2bc8424ab3aa"
             },
             "require": {
                 "illuminate/contracts": "^10.0||^11.0||^12.0",
@@ -2793,17 +2793,17 @@
             ],
             "authors": [
                 {
-                    "name": "Pratik Shrestha",
+                    "name": ":Pratik Shrestha",
                     "email": "pratikdai404@gmail.com",
                     "role": "Developer"
                 }
             ],
-            "description": "Imperium admin panel core",
+            "description": ":package_description",
             "homepage": "https://github.com/pratiksh404/imperium-core",
             "keywords": [
+                ":pratiksh",
                 "imperium",
-                "laravel",
-                "pratiksh"
+                "laravel"
             ],
             "transport-options": {
                 "symlink": true,
