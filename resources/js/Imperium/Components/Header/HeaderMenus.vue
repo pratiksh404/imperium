@@ -73,32 +73,25 @@
 </template>
 <script setup>
 import { useMediaQuery } from "@vueuse/core";
-import { computed, ref } from "vue";
-import { usePage } from "@inertiajs/vue3";
+import { ref, defineProps } from "vue";
 import HeaderLinkItems from "@/Imperium/Components/Header/HeaderLinkItems.vue";
 import HeaderFlyoutItems from "@/Imperium/Components/Header/HeaderFlyoutItems.vue";
 import { useMenu } from "@/Imperium/Composables/useMenu";
 import MobileMenuItem from "@/Imperium/Components/Navigation/MenuItem.vue";
 const showHeaderMenu = ref(false);
-const appHeader = computed(() => usePage().props.appHeader);
-const appHeaderNavigation = computed(() => appHeader.value.navigation ?? []);
-const appHeaderLinkMenuItems = computed(() =>
-  Object.values(appHeaderNavigation.value).length > 0
-    ? appHeaderNavigation.value.headerLinkMenuItems ?? {}
-    : {}
-);
-const appProfileMenuItems = computed(() =>
-  Object.values(appHeaderNavigation.value).length > 0
-    ? appHeaderNavigation.value.profileMenuItems ?? {}
-    : {}
-);
-const appHeaderFlyoutMenuItems = computed(() =>
-  Object.values(appHeaderNavigation.value).length > 0
-    ? appHeaderNavigation.value.headerFlyoutMenuItems ?? {}
-    : {}
-);
 
 const isMobile = useMediaQuery("(max-width: 768px)");
 
-const { menuItems, menuGroups } = useMenu(appHeaderLinkMenuItems.value);
+const props = defineProps({
+  appHeaderLinkMenuItems: {
+    type: Object,
+    required: true,
+  },
+  appHeaderFlyoutMenuItems: {
+    type: Object,
+    required: true,
+  },
+});
+
+const { menuItems, menuGroups } = useMenu(props.appHeaderLinkMenuItems);
 </script>

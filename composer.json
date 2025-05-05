@@ -76,14 +76,5 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true,
-    "repositories": {
-        "pratiksh/imperium": {
-            "type": "path",
-            "url": "../imperium-core",
-            "options": {
-                "symlink": true
-            }
-        }
-    }
+    "prefer-stable": true
 }
