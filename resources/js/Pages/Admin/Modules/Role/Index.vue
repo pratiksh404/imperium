@@ -15,8 +15,7 @@
               name="Role"
               method="post"
               :url="route('roles.store')"
-            >
-            </component>
+            />
           </template>
         </ModuleFormOverlay>
       </template>
@@ -24,6 +23,7 @@
 
     <ModuleTable
       name="Role"
+      :module-form="ResourceForm"
       :data="$page.props.roles"
       :trashed-data="$page.props.trashed_roles"
       :action-components="[BreadPermissionPanel]"

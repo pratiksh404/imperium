@@ -1,6 +1,14 @@
 <template>
   <DataTable
     ref="dt"
+    :pt="{
+      root: {
+        class: 'p-datatable-sm h-full',
+      },
+      header: {
+        class: 'flex justify-end',
+      },
+    }"
     :value="
       showTrash
         ? props.trashedData?.length
@@ -16,7 +24,7 @@
     :rows="rows"
     :rowsPerPageOptions="rowsPerPageOptions"
     :loading="loading"
-    :filterDisplay="'row'"
+    :filterDisplay="'menu'"
     :filters="filters"
     :global-filter-fields="globalFilterFields"
     v-model:selection="selectedData"
@@ -57,10 +65,19 @@
       :field="col.field"
       :header="col.label"
       :sortable="col.sortable"
-      :filter="col.searchable"
-      :filterPlaceholder="`Search ${col.label}`"
-      :filterMatchMode="'contains'"
-    />
+      style="min-width: 12rem"
+    >
+      <template #body="{ data }">
+        {{ data.name }}
+      </template>
+      <template #filter="{ filterModel }">
+        <InputText
+          v-model="filterModel.value"
+          type="text"
+          :placeholder="'Search by ' + col.label"
+        />
+      </template>
+    </Column>
 
     <!-- Action Column -->
     <Column
@@ -93,7 +110,7 @@
 <script setup>
 import { ref, computed, defineProps } from "vue";
 import { usePage, router } from "@inertiajs/vue3";
-import { FilterMatchMode } from "@primevue/core";
+import { FilterMatchMode, FilterOperator } from "@primevue/core";
 import Menubar from "primevue/menubar";
 import Column from "primevue/column";
 import DataTable from "primevue/datatable";
@@ -104,6 +121,8 @@ import { useToast } from "primevue/usetoast";
 import { useConfirm } from "primevue/useconfirm";
 import ActionButtons from "@/Imperium/Components/Modules/ActionButtons.vue";
 import { pluralize } from "@/Imperium/Utils/Resource/Pluralize";
+import axios from "axios";
+import { useServerAction } from "@/Imperium/Composables/useServerAction";
 
 const toast = useToast();
 const confirm = useConfirm();
@@ -140,9 +159,31 @@ const stripedRows = config.value.stripedRows ?? false;
 const showGridlines = config.value.showGridlines ?? false;
 const bulkDeletable = config.value.bulkDeletable ?? true;
 
-const filters = ref({
-  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-});
+const filters = ref();
+
+const initFilters = (columns) => {
+  const dynamicFilters = {
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  };
+
+  columns.value.forEach((col) => {
+    if (col.searchable) {
+      dynamicFilters[col.field] = {
+        operator: FilterOperator.AND,
+        constraints: [
+          {
+            value: null,
+            matchMode: FilterMatchMode.STARTS_WITH, // You can customize this per column type if needed
+          },
+        ],
+      };
+    }
+  });
+
+  filters.value = dynamicFilters;
+};
+initFilters(columns);
+
 const globalFilterFields = computed(() =>
   columns.value.filter((col) => col.searchable).map((col) => col.field)
 );
@@ -151,7 +192,17 @@ const exportCSV = () => {
   dt.value.exportCSV();
 };
 
+const clearFilter = () => {
+  initFilters(columns);
+};
+
 const menuItems = computed(() => [
+  {
+    label: "Clear",
+    icon: "pi pi-filter-slash",
+    visible: true,
+    command: clearFilter,
+  },
   {
     label: "Export",
     icon: "pi pi-download",
@@ -172,34 +223,29 @@ const menuItems = computed(() => [
   },
 ]);
 
-const onRowReorder = (event) => {
-  router.post(
-    route("reorder", props.name.toLowerCase()),
-    {
-      ids: event.value.map((d) => d.id),
+const refreshPage = () => {
+  loading.value = true;
+  router.reload({
+    onFinish: () => {
+      loading.value = false;
     },
-    {
-      onBefore: () => (loading.value = true),
-      onSuccess: (response) => {
-        console.log(response);
-        toast.add({
-          severity: "success",
-          summary: "Reordered",
-          detail: "Saved",
-          life: 3000,
-        });
-      },
-      onError: () => {
-        toast.add({
-          severity: "error",
-          summary: "Error",
-          detail: "Could not reorder",
-          life: 3000,
-        });
-      },
-      onFinish: () => (loading.value = false),
-    }
-  );
+  });
+};
+
+const onRowReorder = (event) => {
+  axios
+    .post(route("reorder", props.name.toLowerCase()), {
+      ids: event.value.map((d) => d.id),
+    })
+    .then((response) => {
+      toast.add({
+        severity: "success",
+        summary: "Reordered",
+        detail: response.message || "Saved",
+        life: 3000,
+      });
+      refreshPage();
+    });
 };
 
 const bulkDelete = (event) => {
@@ -211,31 +257,9 @@ const bulkDelete = (event) => {
     rejectLabel: "Cancel",
     acceptClass: "p-button-danger",
     accept: () => {
-      router.delete(route("bulk-delete", props.name.toLowerCase()), {
-        data: {
-          ids: selectedData.value.map((d) => d.id),
-        },
-        onBefore: () => (loading.value = true),
-        onSuccess: () => {
-          toast.add({
-            severity: "success",
-            summary: "Deleted",
-            detail: "Records deleted",
-            life: 3000,
-          });
-          selectedData.value = [];
-        },
-        onError: (errors) => {
-          Object.values(errors).forEach((err) =>
-            toast.add({
-              severity: "error",
-              summary: "Error",
-              detail: err,
-              life: 3000,
-            })
-          );
-        },
-        onFinish: () => (loading.value = false),
+      const { destroy } = useServerAction();
+      destroy(route("bulk-delete", props.name.toLowerCase()), {
+        ids: selectedData.value.map((d) => d.id),
       });
     },
     reject: () => {

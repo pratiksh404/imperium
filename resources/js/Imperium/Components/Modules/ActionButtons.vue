@@ -84,6 +84,7 @@ import { router } from "@inertiajs/vue3";
 import ModuleFormOverlay from "@/Imperium/Components/Modules/FormOverlay.vue";
 import FieldPresentationPanel from "@/Imperium/Components/Presentation/FieldPresentationPanel.vue";
 import { useToast } from "primevue/usetoast";
+import { useServerAction } from "@/Imperium/Composables/useServerAction";
 const toast = useToast();
 
 import { useConfirm } from "primevue/useconfirm";
@@ -161,13 +162,8 @@ const restoreEvent = (event) => {
       severity: "success",
     },
     accept: () => {
-      router.patch(route("restore", ["role", props.data.id]));
-      toast.add({
-        severity: "success",
-        summary: "Success",
-        detail: "Data restored",
-        life: 3000,
-      });
+      const { put } = useServerAction();
+      put(route("restore", [props.name.toLowerCase(), props.data.id]));
     },
     reject: () => {
       toast.add({

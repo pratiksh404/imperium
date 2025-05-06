@@ -21,13 +21,7 @@ class Application extends Imperium
     {
         return Menu::make([
             MenuGroup::make('ADMINISTRATION')->group([
-                MenuItem::make('Dashboard')->icon('home')
-                    ->children([
-                        MenuItem::make('Test')->url(route('welcome'))->icon('home')->children([
-                            MenuItem::make('Dashboard')->url(route('dashboard'))->icon('home')->badge('2'),
-                        ]),
-                        MenuItem::make('Dashboard')->url(route('dashboard'))->icon('home')->badge('2'),
-                    ]),
+                MenuItem::make('Dashboard')->url(route('dashboard'))->icon('home'),
                 MenuResourceItem::make(\App\Imperium\Resource\RoleResource::class),
             ]),
         ]);
