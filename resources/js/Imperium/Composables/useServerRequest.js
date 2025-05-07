@@ -1,13 +1,11 @@
 import { ref } from "vue";
 import axios from "axios";
-import { Inertia } from "@inertiajs/inertia";
-import { useToast } from "primevue/usetoast";
+import { router } from '@inertiajs/vue3'
 
-export function useServerRequest() {
+export function useServerRequest(toast) {
     const data = ref(null);
     const error = ref(null);
     const loading = ref(false);
-    const toast = useToast();
 
     const api = axios.create({
         headers: {
@@ -31,22 +29,20 @@ export function useServerRequest() {
             onError,
             toastSuccess = true,
             toastError = true,
-            redirectTo, // allow passing a custom redirect
+            redirectTo,
         } = {}
     ) => {
         loading.value = true;
         error.value = null;
 
         try {
-            // If no custom redirect is provided, fallback to the current route
             const finalRedirectTo = redirectTo || route().current();
-
             const promise = typeof promiseOrFn === "function" ? promiseOrFn(api) : promiseOrFn;
             const response = await promise;
             const responseData = handleResponse(response);
             data.value = responseData;
 
-            if (toastSuccess) {
+            if (toastSuccess && toast) {
                 toast.add({
                     severity: "success",
                     summary: "Success",
@@ -55,7 +51,6 @@ export function useServerRequest() {
                 });
             }
 
-            // 🔁 Inertia Redirect Handling
             if (responseData.redirect) {
                 const inertiaOptions = {
                     preserveScroll: true,
@@ -64,10 +59,9 @@ export function useServerRequest() {
                     ...(responseData.inertia || {}),
                 };
 
-                Inertia.visit(responseData.redirect, inertiaOptions);
+                router.visit(responseData.redirect, inertiaOptions);
             } else if (responseData.redirect === undefined) {
-                // If no redirect is in the response, use the provided or fallback current route
-                Inertia.visit(finalRedirectTo, {
+                router.visit(finalRedirectTo, {
                     preserveScroll: true,
                     preserveState: true,
                     replace: false,
@@ -81,7 +75,7 @@ export function useServerRequest() {
             console.error(err);
             error.value = err;
 
-            if (toastError) {
+            if (toastError && toast) {
                 toast.add({
                     severity: "error",
                     summary: "Error",
@@ -98,13 +92,16 @@ export function useServerRequest() {
         }
     };
 
-    // Resourceful shortcut methods
     const index = (url, config = {}) => serverRequest(() => api.get(url, config));
     const show = (url, config = {}) => serverRequest(() => api.get(url, config));
     const store = (url, payload, config = {}) => serverRequest(() => api.post(url, payload, config));
     const update = (url, payload, config = {}) => serverRequest(() => api.put(url, payload, config));
-    const destroy = (url, config = {}) => serverRequest(() => api.delete(url, config));
+    const destroy = (url, config = {}) => serverRequest(() => api.destroy(url, config));
 
+    const post = (url, payload, config = {}) => serverRequest(() => api.post(url, payload, config));
+    const put = (url, payload, config = {}) => serverRequest(() => api.put(url, payload, config));
+    const patch = (url, payload, config = {}) => serverRequest(() => api.patch(url, payload, config));
+    const get = (url, config = {}) => serverRequest(() => api.get(url, config));
     return {
         data,
         error,
@@ -116,5 +113,9 @@ export function useServerRequest() {
         update,
         destroy,
         api,
+        post,
+        put,
+        patch,
+        get,
     };
 }

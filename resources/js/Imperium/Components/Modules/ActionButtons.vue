@@ -64,7 +64,7 @@
       v-tooltip.top="'Delete'"
     />
   </div>
-  <div v-if="data.deleted_at !== null">
+  <template v-if="data.deleted_at !== null">
     <Button
       class="mx-2"
       size="small"
@@ -76,7 +76,7 @@
       raised
       v-tooltip.top="'Restore'"
     />
-  </div>
+  </template>
 </template>
 <script setup>
 import { defineProps, ref } from "vue";
@@ -84,7 +84,7 @@ import { router } from "@inertiajs/vue3";
 import ModuleFormOverlay from "@/Imperium/Components/Modules/FormOverlay.vue";
 import FieldPresentationPanel from "@/Imperium/Components/Presentation/FieldPresentationPanel.vue";
 import { useToast } from "primevue/usetoast";
-import { useServerAction } from "@/Imperium/Composables/useServerAction";
+import { useServerRequest } from "@/Imperium/Composables/useServerRequest";
 const toast = useToast();
 
 import { useConfirm } from "primevue/useconfirm";
@@ -109,6 +109,14 @@ const props = defineProps({
   },
 });
 
+const showToast = () => {
+  toast.add({
+    severity: "info",
+    summary: "Info",
+    detail: "Message Content",
+    life: 3000,
+  });
+};
 const visibleRight = ref(false);
 
 const confirm = useConfirm();
@@ -162,8 +170,8 @@ const restoreEvent = (event) => {
       severity: "success",
     },
     accept: () => {
-      const { put } = useServerAction();
-      put(route("restore", [props.name.toLowerCase(), props.data.id]));
+      const { update } = useServerRequest(toast);
+      update(route("restore", [props.name.toLowerCase(), props.data.id]));
     },
     reject: () => {
       toast.add({

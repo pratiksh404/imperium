@@ -137,6 +137,7 @@
 
       <main class="py-2">
         <div class="px-4 sm:px-6 lg:px-8">
+          <Toast />
           <slot />
         </div>
       </main>
@@ -147,9 +148,8 @@
 <script setup>
 import { ref } from "vue";
 import ApplicationLogo from "@/Imperium/Components/ApplicationLogo.vue";
-
 import SideMenu from "@/Imperium/Layouts/Partials/SideMenu.vue";
-
+import Toast from "primevue/toast";
 import Header from "@/Imperium/Layouts/Partials/Header.vue";
 import {
   ChevronRightIcon,

@@ -122,9 +122,9 @@ import { useConfirm } from "primevue/useconfirm";
 import ActionButtons from "@/Imperium/Components/Modules/ActionButtons.vue";
 import { pluralize } from "@/Imperium/Utils/Resource/Pluralize";
 import axios from "axios";
-import { useServerAction } from "@/Imperium/Composables/useServerAction";
-
+import { useServerRequest } from "@/Imperium/Composables/useServerRequest";
 const toast = useToast();
+
 const confirm = useConfirm();
 
 const props = defineProps({
@@ -233,19 +233,10 @@ const refreshPage = () => {
 };
 
 const onRowReorder = (event) => {
-  axios
-    .post(route("reorder", props.name.toLowerCase()), {
-      ids: event.value.map((d) => d.id),
-    })
-    .then((response) => {
-      toast.add({
-        severity: "success",
-        summary: "Reordered",
-        detail: response.message || "Saved",
-        life: 3000,
-      });
-      refreshPage();
-    });
+  const { post } = useServerRequest(toast);
+  post(route("reorder", props.name.toLowerCase()), {
+    ids: event.value.map((d) => d.id),
+  });
 };
 
 const bulkDelete = (event) => {
@@ -257,8 +248,8 @@ const bulkDelete = (event) => {
     rejectLabel: "Cancel",
     acceptClass: "p-button-danger",
     accept: () => {
-      const { destroy } = useServerAction();
-      destroy(route("bulk-delete", props.name.toLowerCase()), {
+      const { post } = useServerRequest(toast);
+      post(route("bulk-delete", props.name.toLowerCase()), {
         ids: selectedData.value.map((d) => d.id),
       });
     },

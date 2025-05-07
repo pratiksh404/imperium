@@ -55,7 +55,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', HandlePrecognitiveReques
     Route::post('imperium/action', [ImperiumActionController::class, 'handleAction'])->name('imperium.action');
 
     // Module Routes
-    Route::delete('/bulk-delete/{model}', [ModuleController::class, 'bulkDelete'])
+    Route::post('/bulk-delete/{model}', [ModuleController::class, 'bulkDelete'])
         ->name('bulk-delete');
 
     Route::post('/reorder/{model}', [ModuleController::class, 'reorder'])
