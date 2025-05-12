@@ -58,7 +58,7 @@
             },
           }"
         >
-          <template #item="{ item, props }">
+          <template #item="{ item }">
             <component
               :is="linkComponentResolver(item.type)"
               :key="item.key"
