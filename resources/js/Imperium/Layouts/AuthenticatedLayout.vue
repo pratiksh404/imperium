@@ -97,10 +97,14 @@
             >
             <ChevronRightIcon
               v-if="collapsed"
-              class="size-5"
+              class="size-5 cursor-pointer"
               aria-hidden="true"
             />
-            <ChevronLeftIcon v-else class="size-5" aria-hidden="true" />
+            <ChevronLeftIcon
+              v-else
+              class="size-5 cursor-pointer"
+              aria-hidden="true"
+            />
           </button>
         </div>
         <!-- Side Menu Start -->
