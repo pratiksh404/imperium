@@ -14,7 +14,7 @@
     />
 
     <span v-if="!collapsed" class="sr-only">Your profile</span>
-    <span v-if="!collapsed" aria-hidden="true">Tom Cook</span>
+    <span v-if="!collapsed" aria-hidden="true">{{ user.name ?? "Guest" }}</span>
 
     <ChevronUpDownIcon
       v-if="!collapsed"
