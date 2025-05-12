@@ -137,7 +137,8 @@
 
       <main class="py-2">
         <div class="px-4 sm:px-6 lg:px-8">
-          <Toast />
+          <MultiPageTabs />
+          <Toast position="bottom-right" />
           <slot />
         </div>
       </main>
@@ -151,6 +152,7 @@ import ApplicationLogo from "@/Imperium/Components/ApplicationLogo.vue";
 import SideMenu from "@/Imperium/Layouts/Partials/SideMenu.vue";
 import Toast from "primevue/toast";
 import Header from "@/Imperium/Layouts/Partials/Header.vue";
+import MultiPageTabs from "@/Imperium/Layouts/Partials/MultiPageTabs.vue";
 import {
   ChevronRightIcon,
   ChevronLeftIcon,

@@ -11,6 +11,7 @@
       'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
       collapsed ? 'justify-center' : '',
     ]"
+    @contextmenu="menuRightClick"
   >
     <!-- Icon Component Start -->
     <IconComponent
@@ -27,11 +28,17 @@
       >{{ item.badge }}</span
     >
   </component>
+  <!-- Context Menu -->
+  <ContextMenu ref="contextMenu" :model="contextMenuItems" />
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useLinkComponentResolver } from "@/Imperium/Composables/useLinkComponentResolver";
 import IconComponent from "@/Imperium/Components/Utils/IconComponent.vue";
+import { usePage } from "@inertiajs/vue3";
+import { useMenuTabStore } from "@/Imperium/Store/menu_tabs";
+
 const props = defineProps({
   item: {
     type: Object,
@@ -52,4 +59,31 @@ const props = defineProps({
 });
 
 const linkComponentResolver = (type) => useLinkComponentResolver(type);
+const page = usePage();
+const tabStore = useMenuTabStore();
+
+const contextMenu = ref();
+const rightClickedItem = ref(null);
+
+const contextMenuItems = ref([
+  {
+    label: "Open In New Tab",
+    icon: "pi pi-external-link",
+    command: () => {
+      if (rightClickedItem.value) {
+        tabStore.openTab({
+          key: rightClickedItem.value.label,
+          label: rightClickedItem.value.label,
+          url: rightClickedItem.value.url,
+          icon: rightClickedItem.value.icon,
+        });
+      }
+    },
+  },
+]);
+
+const menuRightClick = (event) => {
+  rightClickedItem.value = props.item;
+  contextMenu.value.show(event);
+};
 </script>
