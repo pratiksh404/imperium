@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { router } from '@inertiajs/vue3'
 
 export const useMenuTabStore = defineStore('menuTabs', {
   state: () => ({
@@ -26,7 +27,7 @@ export const useMenuTabStore = defineStore('menuTabs', {
           const fallback = this.tabs[index - 1] || this.tabs[0]
           this.activeTab = fallback?.url ?? null
           if (fallback?.url) {
-            Inertia.visit(fallback.url)
+            router.visit(fallback.url)
           }
         }
       }
@@ -34,5 +35,5 @@ export const useMenuTabStore = defineStore('menuTabs', {
     setActive(url) {
       this.activeTab = url
     },
-  }
+  },persist: true,
 })

@@ -8,6 +8,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
 import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
@@ -32,7 +33,8 @@ const darkMode = useDark(); // set Light/Dark Mode
 
 
 
-const pinia = createPinia()
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
