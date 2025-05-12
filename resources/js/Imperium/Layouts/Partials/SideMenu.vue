@@ -63,7 +63,7 @@
         </ul>
       </li>
       <li class="-mx-6 mt-auto">
-        <SidebarUserMenu />
+        <SidebarUserMenu :collapsed="collapsed" />
       </li>
     </ul>
   </nav>
