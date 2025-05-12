@@ -53,6 +53,9 @@
             root: {
               class: 'border-none',
             },
+            itemContent: {
+              class: 'p-3',
+            },
           }"
         >
           <template #item="{ item, props }">
