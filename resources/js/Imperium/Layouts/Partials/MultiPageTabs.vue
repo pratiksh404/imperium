@@ -1,39 +1,20 @@
 <template>
   <div class="hidden sm:block">
-    <div
-      class="border-b border-gray-200 dark:border-gray-700 flex justify-between"
-    >
-      <nav
-        ref="sortableRoot"
-        class="-mb-px flex space-x-4 overflow-x-auto"
-        aria-label="Tabs"
-      >
-        <div
-          v-for="tab in tabStore.tabs"
-          :key="tab.url"
-          :data-id="tab.url"
-          class="group inline-flex items-center border-b-2 px-1 py-4 text-sm font-medium whitespace-nowrap cursor-pointer"
+    <div class="border-b border-gray-200 dark:border-gray-700 flex justify-between">
+      <nav ref="sortableRoot" class="-mb-px flex space-x-2 overflow-x-auto" aria-label="Tabs">
+        <div v-for="tab in tabStore.tabs" :key="tab.url" :data-id="tab.url"
+          class="group inline-flex items-center border-b-2 px-1 py-2 text-sm font-medium whitespace-nowrap cursor-pointer"
           :class="[
             isActive(tab.url)
               ? 'border-indigo-500 text-indigo-600 dark:text-white'
               : 'border-transparent text-gray-700 dark:text-gray-200 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white',
-          ]"
-          @click.prevent="switchTab(tab.url)"
-        >
+          ]" @click.prevent="switchTab(tab.url)">
           <span>{{ tab.label }}</span>
-          <XMarkIcon
-            class="ml-2 size-4 text-gray-400 hover:text-red-500"
-            @click.stop="tabStore.closeTab(tab.url)"
-          />
+          <XMarkIcon class="ml-2 size-4 text-gray-400 hover:text-red-500" @click.stop="tabStore.closeTab(tab.url)" />
         </div>
       </nav>
-      <Button
-        v-if="tabStore.tabs.length > 1"
-        label="Close All Tabs"
-        icon="pi pi-times"
-        @click="closeAllTabs()"
-        variant="link"
-      />
+      <Button v-if="tabStore.tabs.length > 1" label="Close All Tabs" @click="closeAllTabs()" variant="link"
+        size="small" />
     </div>
   </div>
 </template>
@@ -71,7 +52,8 @@ useSortable(sortableRoot, tabStore.tabs, {
 
 <style>
 .drag-ghost {
-  background-color: #e5e7eb; /* gray-200 */
+  background-color: #e5e7eb;
+  /* gray-200 */
   opacity: 0.7;
 }
 </style>
