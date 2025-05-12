@@ -37,6 +37,7 @@
         "@tiptap/starter-kit": "^2.11.0",
         "@tiptap/vue-3": "^2.11.0",
         "@vueuse/core": "^12.7.0",
+        "@vueuse/integrations": "^13.1.0",
         "filepond": "^4.32.6",
         "filepond-plugin-file-validate-size": "^2.2.8",
         "filepond-plugin-file-validate-type": "^1.2.9",
@@ -47,6 +48,7 @@
         "lodash": "^4.17.21",
         "mitt": "^3.0.1",
         "pinia": "^2.3.0",
+        "sortablejs": "^1.15.6",
         "vue-filepond": "^7.0.4"
     }
 }
