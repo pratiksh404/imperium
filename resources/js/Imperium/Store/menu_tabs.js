@@ -7,6 +7,10 @@ export const useMenuTabStore = defineStore('menuTabs', {
     activeTab: null,
   }),
   actions: {
+    closeAllTabs() {
+      this.tabs = []
+      this.activeTab = null
+    },
     openTab(item) {
       const exists = this.tabs.find(tab => tab.url === item.url)
       if (!exists) {

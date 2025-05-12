@@ -1,6 +1,8 @@
 <template>
   <div class="hidden sm:block">
-    <div class="border-b border-gray-200 dark:border-gray-700">
+    <div
+      class="border-b border-gray-200 dark:border-gray-700 flex justify-between"
+    >
       <nav
         ref="sortableRoot"
         class="-mb-px flex space-x-4 overflow-x-auto"
@@ -25,6 +27,13 @@
           />
         </div>
       </nav>
+      <Button
+        v-if="tabStore.tabs.length > 1"
+        label="Close All Tabs"
+        icon="pi pi-times"
+        @click="closeAllTabs()"
+        variant="link"
+      />
     </div>
   </div>
 </template>
@@ -45,6 +54,10 @@ const switchTab = (url) => {
     preserveState: true,
     preserveScroll: true,
   });
+};
+
+const closeAllTabs = () => {
+  tabStore.closeAllTabs();
 };
 
 const isActive = (url) => tabStore.activeTab === url;
